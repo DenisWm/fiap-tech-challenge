@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  db:
+    container_name: postgresql-lanchonete
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lanchonete
+    ports:
+      - 5432:5432
