@@ -9,5 +9,4 @@ public class FiapTechChallengeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FiapTechChallengeApplication.class, args);
 	}
-
 }
