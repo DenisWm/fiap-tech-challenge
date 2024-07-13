@@ -1,5 +1,92 @@
-INSERT INTO categories (id, name, description) values ('cf652d83-7f40-422d-9cdd-e9d522390e8d', 'lanches', 'somente lanches');
-INSERT INTO categories (id, name, description) values ('5bde9622-56a0-41ce-897f-e479eea2694f', 'acompanhamentos', 'somente acompanhamentos');
-INSERT INTO categories (id, name, description) values ('d20a4508-d537-4eaa-bf2b-2d75b796f55e', 'bebidas', 'somente bebidas');
-INSERT INTO categories (id, name, description) values ('00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 'sobremesas', 'somente sobremesas');
-INSERT INTO products (id, name, description, category_id, price) values ('0b166a5c-5917-4954-bde8-f22518501bbe', 'hamburguer', 'primeiro lanche', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 15.99);
+INSERT INTO categories (id, name, description) VALUES
+                                                   ('cf652d83-7f40-422d-9cdd-e9d522390e8d', 'Lanches', 'Deliciosos lanches preparados com ingredientes frescos e selecionados. Opções variadas para todos os gostos, desde clássicos como hambúrgueres até alternativas vegetarianas e veganas.'),
+                                                   ('5bde9622-56a0-41ce-897f-e479eea2694f', 'Acompanhamentos', 'Acompanhamentos irresistíveis para complementar seu lanche. Escolha entre batatas fritas crocantes, onion rings, saladas frescas e outros petiscos saborosos'),
+                                                   ('d20a4508-d537-4eaa-bf2b-2d75b796f55e', 'Bebidas', 'Bebidas refrescantes para acompanhar sua refeição. Oferecemos uma seleção de sucos naturais, refrigerantes, chás gelados e opções alcoólicas para agradar a todos os paladares'),
+                                                   ('00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 'Sobremesas', 'Sobremesas deliciosas para finalizar sua refeição com chave de ouro. Desfrute de tortas, bolos, sorvetes e outras delícias preparadas com ingredientes de alta qualidade.');
+
+INSERT INTO products (id, name, description, category_id, price) VALUES
+                                                                     ('cfb1a50d-d6d6-4a9c-93d7-8bfa2a8470f7', 'Hambúrguer Clássico', 'Hambúrguer suculento com queijo, alface, tomate e maionese.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 15.00),
+                                                                     ('bba344d4-3060-4d93-9bbf-0848e4dff26d', 'Cheeseburger', 'Hambúrguer com queijo derretido, alface e tomate.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 16.00),
+                                                                     ('7b4f2574-b0c8-473d-89fa-320e7c949e2b', 'X-Bacon', 'Hambúrguer com queijo, bacon crocante e molho especial.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 18.00),
+                                                                     ('fa9d41e3-f734-4e55-8ac4-b8cc9b1d59eb', 'Vegetariano', 'Hambúrguer de grão-de-bico com alface, tomate e molho especial.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 17.00),
+                                                                     ('65cc8dd4-6b4d-4ac0-83d8-8728c2fc69c1', 'Cheddar Melt', 'Hambúrguer com queijo cheddar derretido e cebola caramelizada.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 19.00),
+                                                                     ('a9d7e617-7683-4b89-8709-2c38c0734cc1', 'X-Salada', 'Hambúrguer com queijo, alface, tomate e maionese.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 16.00),
+                                                                     ('edb1c5c4-20e0-4b4b-82ae-c63e8c4c5b62', 'Frango Crocante', 'Sanduíche de frango empanado com alface e maionese.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 18.00),
+                                                                     ('3ad9a8e2-33a3-4fa5-84ab-cf36423627ad', 'Fish Burger', 'Hambúrguer de peixe com alface, tomate e molho tártaro.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 20.00),
+                                                                     ('24bdbbc5-f3b3-4f91-abe2-7dbf2ecfddf8', 'Double Burger', 'Dois hambúrgueres com queijo, alface e tomate.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 22.00),
+                                                                     ('6e88f6b3-7eb8-43ee-9404-c2e4c9bff5b2', 'Triple Cheese', 'Três hambúrgueres com queijo extra.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 25.00),
+                                                                     ('4c5477e8-7d90-4f5b-8ad8-981d2a79d22e', 'X-Egg', 'Hambúrguer com queijo, ovo, alface e tomate.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 17.00),
+                                                                     ('19bcb9a1-1df5-4c11-9b1e-732177b27e08', 'Burger de Cordeiro', 'Hambúrguer de cordeiro com queijo de cabra e rúcula.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 24.00),
+                                                                     ('45b96385-4925-45e7-8a70-cc88d25b77a2', 'Caprese Burger', 'Hambúrguer com mussarela de búfala, tomate e pesto.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 23.00),
+                                                                     ('6f60e68e-9df0-4b99-853e-f35fbbbd8357', 'X-Picanha', 'Hambúrguer de picanha com queijo e cebola roxa.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 26.00),
+                                                                     ('7a41ad9e-76a7-44e2-b26d-8882f5c7d3ad', 'X-Calabresa', 'Hambúrguer com calabresa, queijo e molho especial.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 20.00),
+                                                                     ('3f76e3ed-7b57-4dc2-8461-d9b9c07e5d7c', 'X-Tudo', 'Hambúrguer com queijo, bacon, ovo, alface, tomate e maionese.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 24.00),
+                                                                     ('7d2615b2-25ad-4d60-8a0e-59a41fbfae80', 'X-Frango', 'Sanduíche de frango grelhado com queijo e alface.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 17.00),
+                                                                     ('3b7f2555-0718-4132-929f-e0d38075a135', 'X-Filet Mignon', 'Sanduíche de filet mignon com queijo e cebola caramelizada.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 28.00),
+                                                                     ('2b64e5da-8ab5-45b5-bd8e-d802d05c1623', 'Quarteirão', 'Hambúrguer com queijo, alface, tomate e picles.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 16.00),
+                                                                     ('7fae2d5d-1d4a-4d50-877d-6e1fb7bc22cf', 'Vegan Burger', 'Hambúrguer vegano com alface, tomate e molho vegano.', 'cf652d83-7f40-422d-9cdd-e9d522390e8d', 19.00);
+INSERT INTO products (id, name, description, category_id, price) VALUES
+                                                                     ('70c8b96e-5fc0-4a3f-9435-b8e3c0f0e1be', 'Batata Frita', 'Batatas fritas crocantes e douradas.', '5bde9622-56a0-41ce-897f-e479eea2694f', 8.00),
+                                                                     ('82c6d51b-5290-4e9e-8c7a-8cb8b8d88a4a', 'Onion Rings', 'Anéis de cebola empanados e fritos.', '5bde9622-56a0-41ce-897f-e479eea2694f', 10.00),
+                                                                     ('3397a7b4-f5d3-4644-9c8d-8fc6fda6b4a8', 'Salada Verde', 'Mix de folhas verdes frescas.', '5bde9622-56a0-41ce-897f-e479eea2694f', 7.00),
+                                                                     ('57fc9181-76d8-4e39-911f-87ad9a497d96', 'Batata Rústica', 'Batatas rústicas assadas com ervas.', '5bde9622-56a0-41ce-897f-e479eea2694f', 9.00),
+                                                                     ('f3a56db3-95b2-4c10-98f0-cb9eebc9b11e', 'Polenta Frita', 'Polenta crocante frita.', '5bde9622-56a0-41ce-897f-e479eea2694f', 10.00),
+                                                                     ('d9914812-5c9f-4a79-90c5-d01ff67d81cb', 'Queijo Coalho', 'Espetinhos de queijo coalho grelhados.', '5bde9622-56a0-41ce-897f-e479eea2694f', 12.00),
+                                                                     ('a7d15eb9-f1a1-4854-b364-2e33c930d8e0', 'Coxinha', 'Coxinhas de frango com massa crocante.', '5bde9622-56a0-41ce-897f-e479eea2694f', 6.00),
+                                                                     ('36c6a76c-6348-4738-b273-37856f8a9348', 'Mini Kibe', 'Mini kibes crocantes e recheados.', '5bde9622-56a0-41ce-897f-e479eea2694f', 8.00),
+                                                                     ('b35c23e7-eced-47b2-bb50-d4a708ee7d02', 'Bolinho de Bacalhau', 'Bolinho de bacalhau com massa leve.', '5bde9622-56a0-41ce-897f-e479eea2694f', 10.00),
+                                                                     ('4f3ff1e1-4892-4699-bfcf-9f8f09b9c56a', 'Batata Doce Frita', 'Batata doce frita e crocante.', '5bde9622-56a0-41ce-897f-e479eea2694f', 9.00),
+                                                                     ('30e473b0-ff05-45a3-8b5f-6ea1d3db097d', 'Mandioca Frita', 'Mandioca frita crocante.', '5bde9622-56a0-41ce-897f-e479eea2694f', 8.00),
+                                                                     ('ff4b2eb2-1ad6-4b9c-9e6f-87d8c46ea2ee', 'Pão de Alho', 'Pão de alho assado e crocante.', '5bde9622-56a0-41ce-897f-e479eea2694f', 7.00),
+                                                                     ('c4e93d50-8b1a-4e09-97f2-37f928d8b1cb', 'Empada de Frango', 'Empadas de frango com massa crocante.', '5bde9622-56a0-41ce-897f-e479eea2694f', 6.00),
+                                                                     ('eeb7fae2-78aa-496b-b8e6-78f02b1bcd43', 'Pastel de Queijo', 'Pastel de queijo crocante e recheado.', '5bde9622-56a0-41ce-897f-e479eea2694f', 5.00),
+                                                                     ('9dd7f1c2-7008-43e5-bc9c-144a0d3d8dff', 'Pastel de Carne', 'Pastel de carne crocante e recheado.', '5bde9622-56a0-41ce-897f-e479eea2694f', 5.00),
+                                                                     ('d328ab6f-71cb-4b77-9216-d19ff7a4f9f8', 'Salada de Frutas', 'Mix de frutas frescas.', '5bde9622-56a0-41ce-897f-e479eea2694f', 8.00),
+                                                                     ('65a7bbd4-9b73-4d5b-9649-0b4a223c0868', 'Azeitonas', 'Azeitonas temperadas.', '5bde9622-56a0-41ce-897f-e479eea2694f', 5.00),
+                                                                     ('b7c3e6a0-2d22-48ec-94ea-dadf57e5a353', 'Nachos', 'Nachos com molho de queijo.', '5bde9622-56a0-41ce-897f-e479eea2694f', 11.00),
+                                                                     ('a9d7fbf2-8079-4e32-b8e4-9a0e594a7d8a', 'Bruschetta', 'Bruschetta com tomate e manjericão.', '5bde9622-56a0-41ce-897f-e479eea2694f', 10.00),
+                                                                     ('8f6cbb39-3e4c-4b5c-89b3-60472b3a36e5', 'Torresmo', 'Torresmo crocante.', '5bde9622-56a0-41ce-897f-e479eea2694f', 9.00);
+INSERT INTO products (id, name, description, category_id, price) VALUES
+                                                                     ('34bdf3d0-5305-4ad2-bb28-b6e9a2cdb769', 'Suco de Laranja', 'Suco natural de laranja.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 6.00),
+                                                                     ('738baf07-7a13-42a1-b79f-02f98beae7d4', 'Suco de Limão', 'Suco natural de limão.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 6.00),
+                                                                     ('49f2dcbc-d1bc-4d29-9f7b-d287eecbc7a4', 'Refrigerante', 'Diversos sabores de refrigerante.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 5.00),
+                                                                     ('16c3124f-ec15-47c5-b269-7ed4d842bc94', 'Chá Gelado', 'Chá gelado de limão ou pêssego.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 6.00),
+                                                                     ('8811e4d4-d8b2-42d2-89a0-44b0d8fbd85e', 'Água Mineral', 'Água mineral com ou sem gás.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 3.00),
+                                                                     ('8702efcc-2e6e-4b22-9504-beb4f7582b8b', 'Água de Coco', 'Água de coco natural.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 7.00),
+                                                                     ('aa29f51c-c317-4201-8087-669c344c60be', 'Cerveja', 'Cervejas nacionais e importadas.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 8.00),
+                                                                     ('6c67ad4d-8d93-4e68-975d-3c8c47e51f16', 'Vinho Tinto', 'Taça de vinho tinto.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 10.00),
+                                                                     ('6b89765e-6f2b-4e1b-a8c2-5bce7a37f51a', 'Vinho Branco', 'Taça de vinho branco.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 10.00),
+                                                                     ('bb5a3126-f165-4a2b-97c0-624b00df30c5', 'Milkshake', 'Milkshake de chocolate, morango ou baunilha.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 12.00),
+                                                                     ('d6063445-8d94-40cb-9386-b86a931c88d1', 'Smoothie', 'Smoothie de frutas variadas.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 11.00),
+                                                                     ('8a4e5d76-56a6-4ec0-9092-0450a842cb16', 'Café Expresso', 'Café expresso tradicional.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 5.00),
+                                                                     ('9134980d-8a85-4dd8-bd1a-9124fca5c4ea', 'Capuccino', 'Café capuccino cremoso.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 7.00),
+                                                                     ('24eac78b-213e-4033-bc27-167a73c131e8', 'Mocha', 'Café mocha com chantilly.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 8.00),
+                                                                     ('80294f42-d374-41e1-a3cf-f87f4c402cf5', 'Suco Detox', 'Suco detox de vegetais e frutas.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 9.00),
+                                                                     ('13488e7b-9510-4d83-a9b4-508f90ffec35', 'Suco de Abacaxi', 'Suco natural de abacaxi.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 6.00),
+                                                                     ('c73d7f19-5163-4b07-98aa-ffebfbb8b9b2', 'Chá Mate', 'Chá mate gelado com limão.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 5.00),
+                                                                     ('c9b0ed9c-5f22-4b93-a370-bcc9c0e0c93e', 'Suco de Uva', 'Suco natural de uva.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 6.00),
+                                                                     ('5eeb8a50-ec84-4980-87b6-3a82d80b7d6b', 'Suco de Manga', 'Suco natural de manga.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 6.00),
+                                                                     ('eaf90613-51b0-4b5f-b00b-f2c6db0a14dc', 'Iced Coffee', 'Café gelado refrescante.', 'd20a4508-d537-4eaa-bf2b-2d75b796f55e', 7.00);
+INSERT INTO products (id, name, description, category_id, price) VALUES
+                                                                     ('b5eb1f6b-44f7-4da1-a8d3-ffbbfceaa2b5', 'Torta de Maçã', 'Torta de maçã com canela.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 10.00),
+                                                                     ('afc82f24-647d-4203-87a0-36c49d2d6a7a', 'Cheesecake', 'Cheesecake com calda de frutas vermelhas.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 12.00),
+                                                                     ('f5d2c8a7-3a6e-4fd4-8b49-b4d12e7287f1', 'Brownie', 'Brownie de chocolate com sorvete.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 8.00),
+                                                                     ('4d4d6e82-6c9a-4291-8045-7d9f1e5bcfd4', 'Sorvete', 'Bola de sorvete de diversos sabores.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 6.00),
+                                                                     ('c1a7e237-d001-4ef6-b1ef-3a2c517d8c54', 'Petit Gateau', 'Bolo de chocolate com recheio cremoso e sorvete.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 15.00),
+                                                                     ('8b8a6b6d-8585-4af6-8460-2056fd9f63d2', 'Mousse de Maracujá', 'Mousse de maracujá com calda de chocolate.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 7.00),
+                                                                     ('6a3a3452-bb60-49d1-bb6d-6f43e5d5f5e0', 'Pavê de Chocolate', 'Pavê de chocolate cremoso.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 9.00),
+                                                                     ('d3b8e9d8-b3d8-448b-865e-df6438b5b8db', 'Bolo de Cenoura', 'Bolo de cenoura com cobertura de chocolate.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 8.00),
+                                                                     ('e2d65ac7-b2b5-4e6c-8e87-9e9b94f4e2f6', 'Tiramisu', 'Clássico tiramisu italiano.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 14.00),
+                                                                     ('1f4f7746-9402-4a9a-8edb-51f0e50223a3', 'Pudim', 'Pudim de leite condensado.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 8.00),
+                                                                     ('b9e2aeb5-13cc-4ef1-90f6-17e3e8485d98', 'Torta de Limão', 'Torta de limão com merengue.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 10.00),
+                                                                     ('5f61ac2f-c80f-4938-8836-3ea3e8cf85b8', 'Brigadeiro', 'Brigadeiro tradicional de chocolate.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 3.00),
+                                                                     ('9dc434d6-6c69-4692-bd10-3af2e4b4d745', 'Canoli', 'Canoli recheado de creme de ricota.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 11.00),
+                                                                     ('dd6715e7-c272-42bb-bc76-61f060a2a1be', 'Mil Folhas', 'Mil folhas com creme patissiere.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 12.00),
+                                                                     ('171d4e94-1f44-4a4b-b1da-bcd3acb5c978', 'Biscoito', 'Biscoitos de chocolate.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 5.00),
+                                                                     ('1454d5d2-2a6d-4e6b-9822-b8b2fc16a1af', 'Profiteroles', 'Profiteroles com sorvete e calda de chocolate.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 13.00),
+                                                                     ('a90b40b5-5d27-4b6e-8056-f84d4f1762ee', 'Gelatina', 'Gelatina de frutas.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 4.00),
+                                                                     ('0074a3a3-e7f1-4313-bd4b-8f4384d51e6e', 'Creme Brulée', 'Clássico creme brulée com crosta de açúcar.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 15.00),
+                                                                     ('2df9e4b8-3cf2-49cb-9ae1-2f635d253e7e', 'Sorvete Sundae', 'Sundae com calda de chocolate e castanhas.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 10.00),
+                                                                     ('c4127b5c-5d55-4095-b7f3-5fdcd3e8adbb', 'Crepe de Nutella', 'Crepe recheado com Nutella e frutas.', '00ec6bbe-536b-4fe8-87dc-c2fa463a7377', 12.00);
+
+

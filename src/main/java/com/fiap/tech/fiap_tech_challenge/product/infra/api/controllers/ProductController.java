@@ -11,6 +11,7 @@ import com.fiap.tech.fiap_tech_challenge.product.application.retrieve.list.ListP
 import com.fiap.tech.fiap_tech_challenge.product.application.update.UpdateProductCommand;
 import com.fiap.tech.fiap_tech_challenge.product.application.update.UpdateProductOutput;
 import com.fiap.tech.fiap_tech_challenge.product.application.update.UpdateProductUseCase;
+import com.fiap.tech.fiap_tech_challenge.product.domain.pagination.ProductSearchQuery;
 import com.fiap.tech.fiap_tech_challenge.product.infra.api.ProductAPI;
 import com.fiap.tech.fiap_tech_challenge.product.infra.api.presenters.ProductApiPresenter;
 import com.fiap.tech.fiap_tech_challenge.product.infra.models.CreateProductRequest;
@@ -61,13 +62,13 @@ public class ProductController implements ProductAPI {
 
     @Override
     public Pagination<ProductResponse> listProducts(
-            final String search,
+            final String categoryId,
             final int page,
             final int perPage,
             final String sort,
             final String direction) {
 
-        final var aQuery = new SearchQuery(page, perPage, search, sort, direction);
+        final var aQuery = new ProductSearchQuery(page, perPage, categoryId, sort, direction);
         return listProductsUseCase.execute(aQuery).map(ProductApiPresenter::present);
     }
 

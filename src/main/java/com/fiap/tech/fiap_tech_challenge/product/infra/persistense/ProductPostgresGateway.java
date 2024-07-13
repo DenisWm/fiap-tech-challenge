@@ -1,16 +1,12 @@
 package com.fiap.tech.fiap_tech_challenge.product.infra.persistense;
 
-import com.fiap.tech.fiap_tech_challenge.categories.infra.CategoryJpaEntity;
 import com.fiap.tech.fiap_tech_challenge.categories.infra.CategoryRepository;
-import com.fiap.tech.fiap_tech_challenge.common.domain.exceptions.NotFoundException;
 import com.fiap.tech.fiap_tech_challenge.common.domain.pagination.Pagination;
-import com.fiap.tech.fiap_tech_challenge.common.domain.pagination.SearchQuery;
 import com.fiap.tech.fiap_tech_challenge.common.infra.utils.SpecificationUtils;
 import com.fiap.tech.fiap_tech_challenge.product.domain.Product;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductGateway;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductID;
-import com.fiap.tech.fiap_tech_challenge.product.infra.persistense.ProductJpaEntity;
-import com.fiap.tech.fiap_tech_challenge.product.infra.persistense.ProductRepository;
+import com.fiap.tech.fiap_tech_challenge.product.domain.pagination.ProductSearchQuery;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -54,14 +50,14 @@ public class ProductPostgresGateway implements ProductGateway {
     }
 
     @Override
-    public Pagination<Product> findAll(final SearchQuery aQuery) {
+    public Pagination<Product> findAll(final ProductSearchQuery aQuery) {
         final var page = PageRequest.of(
                 aQuery.page(),
                 aQuery.perPage(),
                 Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())
         );
 
-        final var where = Optional.ofNullable(aQuery.terms())
+        final var where = Optional.ofNullable(aQuery.categoryId())
                 .filter(str -> !str.isBlank())
                 .map(this::assembleSpecification)
                 .orElse(null);
@@ -75,13 +71,11 @@ public class ProductPostgresGateway implements ProductGateway {
         );
     }
 
-    private Specification<ProductJpaEntity> assembleSpecification(final String terms) {
-        return SpecificationUtils.like("name", terms);
+    private Specification<ProductJpaEntity> assembleSpecification(final String category) {
+        return SpecificationUtils.equal("categoryId", category);
     }
 
     private ProductJpaEntity save(Product aProduct) {
-        CategoryJpaEntity category = categoryRepository.findById(aProduct.getCategory().getValue())
-                .orElseThrow(() -> new RuntimeException("Category not found: " + aProduct.getCategory().getValue()));
-        return this.productRepository.save(ProductJpaEntity.from(aProduct, category));
+        return this.productRepository.save(ProductJpaEntity.from(aProduct));
     }
 }
