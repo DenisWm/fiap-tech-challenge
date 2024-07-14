@@ -46,7 +46,6 @@ public interface ProductAPI {
 
     @GetMapping(
             value = "{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Operation(summary = "Get a product by it's identifier")
@@ -75,9 +74,7 @@ public interface ProductAPI {
     );
 
     @DeleteMapping(
-            value = "{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
+            value = "{id}"
     )
     @Operation(summary = "Delete a product by it's identifier")
     @ResponseStatus(HttpStatus.NO_CONTENT)
