@@ -1,6 +1,10 @@
 package com.fiap.tech.fiap_tech_challenge.categories.infra;
 
 
+import com.fiap.tech.fiap_tech_challenge.categories.domain.Category;
+import com.fiap.tech.fiap_tech_challenge.categories.domain.CategoryID;
+import com.fiap.tech.fiap_tech_challenge.product.domain.Product;
+import com.fiap.tech.fiap_tech_challenge.product.domain.ProductID;
 import com.fiap.tech.fiap_tech_challenge.product.infra.persistense.ProductJpaEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -24,5 +28,9 @@ public class CategoryJpaEntity {
 
     @OneToMany(mappedBy = "category")
     private List<ProductJpaEntity> products;
+
+    public Category toAggregate() {
+        return Category.with(CategoryID.from(this.getId()), this.getName(), this.getDescription());
+    }
 
 }
