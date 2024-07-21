@@ -20,4 +20,13 @@ public class NotFoundException extends DomainException{
         final var anErrorMessage = "%s with ID %s was not found".formatted(anAggregate.getSimpleName(), id.getValue());
         return new NotFoundException(anErrorMessage, Collections.emptyList());
     }
+
+    public static NotFoundException with(
+            final Class<? extends AggregateRoot<?>> anAggregate,
+            final String cpf
+    ) {
+        final var anErrorMessage = "%s with CPF %s was not found".formatted(anAggregate.getSimpleName(),cpf);
+        return new NotFoundException(anErrorMessage, Collections.emptyList());
+    }
+
 }
