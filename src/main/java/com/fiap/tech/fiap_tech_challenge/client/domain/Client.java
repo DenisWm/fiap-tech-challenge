@@ -1,7 +1,9 @@
 package com.fiap.tech.fiap_tech_challenge.client.domain;
 
 import com.fiap.tech.fiap_tech_challenge.common.domain.AggregateRoot;
+import com.fiap.tech.fiap_tech_challenge.common.domain.exceptions.NotificationException;
 import com.fiap.tech.fiap_tech_challenge.common.domain.validation.ValidationHandler;
+import com.fiap.tech.fiap_tech_challenge.common.domain.validation.handler.Notification;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +20,18 @@ public class Client extends AggregateRoot<ClientID> {
         this.name = name;
         this.email = email;
         this.cpf = cpf;
+
+        selfValidate();
+    }
+
+    private void selfValidate() {
+        final var notification = Notification.create();
+
+        validate(notification);
+
+        if(notification.hasErrors()) {
+            throw new NotificationException("", notification);
+        }
     }
 
     public static Client newClient (

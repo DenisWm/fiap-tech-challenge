@@ -11,5 +11,7 @@ public interface ClientGateway {
 
     Optional<Client> findByCpf(String cpf);
     Client create(Client client);
+    boolean existsByEmail(String email);
 
+    boolean existsByCpf(String cpf);
 }

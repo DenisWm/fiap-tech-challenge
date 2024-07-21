@@ -2,7 +2,6 @@ package com.fiap.tech.fiap_tech_challenge.client.infra.persistence;
 
 import com.fiap.tech.fiap_tech_challenge.client.domain.Client;
 import com.fiap.tech.fiap_tech_challenge.client.domain.ClientGateway;
-import com.fiap.tech.fiap_tech_challenge.product.infra.persistense.ProductJpaEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,5 +21,15 @@ public class ClientPostgresGateway implements ClientGateway {
     @Override
     public Client create(Client client) {
         return this.clientRepository.save(ClientJpaEntity.from(client)).toAggregate();
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return clientRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByCpf(String cpf) {
+        return clientRepository.existsByCpf(cpf);
     }
 }
