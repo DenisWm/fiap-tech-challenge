@@ -8,7 +8,7 @@ import com.fiap.tech.fiap_tech_challenge.common.domain.exceptions.NotificationEx
 import com.fiap.tech.fiap_tech_challenge.common.domain.validation.Error;
 import com.fiap.tech.fiap_tech_challenge.common.domain.validation.ValidationHandler;
 import com.fiap.tech.fiap_tech_challenge.common.domain.validation.handler.Notification;
-import com.fiap.tech.fiap_tech_challenge.common.domain.validation.handler.ThrowsValidationHandler;
+
 
 public class DefaultCreateClientUseCase extends CreateClientUseCase {
     private final ClientGateway clientGateway;
@@ -29,7 +29,7 @@ public class DefaultCreateClientUseCase extends CreateClientUseCase {
         notification.append(validateCpf(cpf));
         notification.append(validateEmail(email));
 
-        final var client = notification.validate(() -> Client.newClient(name, email, cpf));
+        final var client = notification.validate(() -> Client.newClient(name, email, cpf.replaceAll("[^0-9]", "")));
 
         if (notification.hasErrors()) {
             throw new NotificationException("Could not create Aggregate Client", notification);
