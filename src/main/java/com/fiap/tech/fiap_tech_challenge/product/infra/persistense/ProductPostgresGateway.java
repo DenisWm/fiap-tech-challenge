@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 @Component
@@ -38,6 +39,12 @@ public class ProductPostgresGateway implements ProductGateway {
             productRepository.deleteById(aGenreId);
         }
     }
+
+    @Override
+    public List<ProductID> existsByIds(List<String> products) {
+        return List.of(); //TODO - terminar
+    }
+
     @Override
     public Optional<Product> findById(final ProductID anId) {
         return this.productRepository.findById(anId.getValue()).map(ProductJpaEntity::toAggregate);

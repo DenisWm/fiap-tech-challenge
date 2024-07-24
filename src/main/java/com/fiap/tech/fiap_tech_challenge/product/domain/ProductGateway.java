@@ -17,4 +17,5 @@ public interface ProductGateway {
     void deleteById(ProductID anId);
 
 
+    List<ProductID> existsByIds(List<String> products);
 }

@@ -32,4 +32,9 @@ public class ClientPostgresGateway implements ClientGateway {
     public boolean existsByCpf(String cpf) {
         return clientRepository.existsByCpf(cpf);
     }
+
+    @Override
+    public boolean existsByID(String id) {
+        return false; //TODO - terminar
+    }
 }

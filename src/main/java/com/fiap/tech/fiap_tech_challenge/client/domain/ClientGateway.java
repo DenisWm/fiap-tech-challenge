@@ -14,4 +14,6 @@ public interface ClientGateway {
     boolean existsByEmail(String email);
 
     boolean existsByCpf(String cpf);
+
+    boolean existsByID(String id);
 }
