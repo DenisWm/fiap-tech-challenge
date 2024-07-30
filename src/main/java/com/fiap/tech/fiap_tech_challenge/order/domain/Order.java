@@ -5,12 +5,14 @@ import com.fiap.tech.fiap_tech_challenge.common.domain.AggregateRoot;
 import com.fiap.tech.fiap_tech_challenge.common.domain.validation.ValidationHandler;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductID;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
 @Getter
+@Setter
 public class Order extends AggregateRoot<OrderID> {
 
     private Instant timestamp;
@@ -52,4 +54,5 @@ public class Order extends AggregateRoot<OrderID> {
     public void validate(ValidationHandler handler) {
 
     }
+
 }

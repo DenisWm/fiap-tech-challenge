@@ -35,6 +35,6 @@ public class ClientPostgresGateway implements ClientGateway {
 
     @Override
     public boolean existsByID(String id) {
-        return false; //TODO - terminar
+        return this.clientRepository.existsById(id);
     }
 }

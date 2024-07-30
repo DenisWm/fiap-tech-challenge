@@ -1,6 +1,5 @@
 package com.fiap.tech.fiap_tech_challenge.product.infra.persistense;
 
-import com.fiap.tech.fiap_tech_challenge.categories.infra.CategoryRepository;
 import com.fiap.tech.fiap_tech_challenge.common.domain.pagination.Pagination;
 import com.fiap.tech.fiap_tech_challenge.common.infra.utils.SpecificationUtils;
 import com.fiap.tech.fiap_tech_challenge.product.domain.Product;
@@ -20,11 +19,9 @@ import java.util.Optional;
 public class ProductPostgresGateway implements ProductGateway {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
 
-    public ProductPostgresGateway(final ProductRepository productRepository, final CategoryRepository categoryRepository) {
+    public ProductPostgresGateway(final ProductRepository productRepository) {
         this.productRepository = Objects.requireNonNull(productRepository);
-        this.categoryRepository = Objects.requireNonNull(categoryRepository);
     }
 
     @Override
@@ -42,7 +39,15 @@ public class ProductPostgresGateway implements ProductGateway {
 
     @Override
     public List<ProductID> existsByIds(List<String> products) {
-        return List.of(); //TODO - terminar
+        return this.productRepository.existsByIds(products)
+                .stream()
+                .map(ProductID::from)
+                .toList();
+    }
+
+    @Override
+    public List<Product> findByIds(List<String> productIds) {
+        return this.productRepository.findAllByIdContainingIn(productIds);
     }
 
     @Override
@@ -85,4 +90,6 @@ public class ProductPostgresGateway implements ProductGateway {
     private ProductJpaEntity save(Product aProduct) {
         return this.productRepository.save(ProductJpaEntity.from(aProduct));
     }
+
+
 }

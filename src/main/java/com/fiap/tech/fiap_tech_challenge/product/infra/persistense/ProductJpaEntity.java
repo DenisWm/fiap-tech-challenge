@@ -9,7 +9,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Entity
+@Entity(name="Product")
 @Table(name="products")
 @Data
 public class ProductJpaEntity {

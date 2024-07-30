@@ -18,4 +18,6 @@ public interface ProductGateway {
 
 
     List<ProductID> existsByIds(List<String> products);
+
+    List<Product> findByIds(List<String> productIds);
 }

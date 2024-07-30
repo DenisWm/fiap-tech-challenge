@@ -11,6 +11,7 @@ import com.fiap.tech.fiap_tech_challenge.order.domain.OrderGateway;
 import com.fiap.tech.fiap_tech_challenge.product.domain.Product;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductGateway;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductID;
+import com.fiap.tech.fiap_tech_challenge.product.infra.persistense.ProductJpaEntity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -43,8 +44,15 @@ public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
         if(notification.hasErrors()){
             throw NotificationException.with(notification.getErrors());
         }
-        final var order = Order.newOrder(ClientID.from(client), BigDecimal.ZERO, products.stream().map(ProductID::from).toList()); //TODO: somar o valor dos produtos
-        return null;
+        final var order = Order.newOrder(ClientID.from(client), BigDecimal.ZERO, products.stream().map(ProductID::from).toList());
+
+        List<Product> productsList = productGateway.findByIds(products);
+
+        final var total = productsList.stream().mapToDouble(product -> product.getPrice().doubleValue()).sum();
+
+        order.setTotal(BigDecimal.valueOf(total));
+
+        return CreateOrderOutput.from(this.orderGateway.create(order));
     }
 
     private ValidationHandler validateClient(String client) {
