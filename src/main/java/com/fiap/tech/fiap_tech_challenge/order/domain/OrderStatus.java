@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public final class OrderStatus extends ValueObject {
-        private final String status;
+        private final String value;
 
-        private OrderStatus(String status) {
-            this.status = status;
+        private OrderStatus(String value) {
+            this.value = value;
         }
 
         public static final OrderStatus RECEIVED = new OrderStatus("received");
@@ -16,23 +16,27 @@ public final class OrderStatus extends ValueObject {
         public static final OrderStatus READY = new OrderStatus("ready");
         public static final OrderStatus COMPLETED = new OrderStatus("completed");
 
+    public static OrderStatus valueOf(String status) {
+        return new OrderStatus(status);
+    }
+
     @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             OrderStatus that = (OrderStatus) o;
-            return status.equals(that.status);
+            return value.equals(that.value);
         }
 
         @Override
         public int hashCode() {
-            return status.hashCode();
+            return value.hashCode();
         }
 
         @Override
         public String toString() {
             return "OrderStatus{" +
-                    "status='" + status + '\'' +
+                    "status='" + value + '\'' +
                     '}';
         }
 }

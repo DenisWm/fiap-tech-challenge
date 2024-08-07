@@ -4,8 +4,6 @@ package com.fiap.tech.fiap_tech_challenge.order.application.retrieve.get;
 import com.fiap.tech.fiap_tech_challenge.order.domain.Order;
 import com.fiap.tech.fiap_tech_challenge.order.domain.OrderGateway;
 import com.fiap.tech.fiap_tech_challenge.order.domain.OrderID;
-import com.fiap.tech.fiap_tech_challenge.product.application.retrieve.get.GetProductByIdUseCase;
-import com.fiap.tech.fiap_tech_challenge.product.application.retrieve.get.ProductOutput;
 import com.fiap.tech.fiap_tech_challenge.product.domain.Product;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductGateway;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductID;
@@ -21,9 +19,9 @@ public class DefaultGetOrderByIdUseCase extends GetOrderByIdUseCase {
     private final ProductGateway productGateway;
     private final OrderGateway orderGateway;
 
-    public DefaultGetOrderByIdUseCase(final ProductGateway genreGateway, OrderGateway orderGateway) {
-        this.productGateway = Objects.requireNonNull(genreGateway);
-        this.orderGateway = orderGateway;
+    public DefaultGetOrderByIdUseCase(final ProductGateway productGateway, final OrderGateway orderGateway) {
+        this.productGateway = Objects.requireNonNull(productGateway);
+        this.orderGateway = Objects.requireNonNull(orderGateway);
     }
 
     @Override
@@ -36,7 +34,8 @@ public class DefaultGetOrderByIdUseCase extends GetOrderByIdUseCase {
         List<Product> products = productGateway.findByIds(order.getProducts()
                 .stream().map(ProductID::getValue ).toList());
 
-        final var orderOutput = OrderOutput.from(order).withProducts(products.stream().map(OrderOutput.ProductOutput::from).toList());
+        final var orderOutput = OrderOutput.from(order).withProducts(products.stream().map(
+                OrderOutput.OrderProductOutput::from).toList());
         return orderOutput;
 
     }

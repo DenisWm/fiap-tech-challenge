@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 @Component
-
 public class ProductPostgresGateway implements ProductGateway {
 
     private final ProductRepository productRepository;
@@ -47,7 +46,10 @@ public class ProductPostgresGateway implements ProductGateway {
 
     @Override
     public List<Product> findByIds(List<String> productIds) {
-        return this.productRepository.findAllByIdContainingIn(productIds);
+        return this.productRepository.findByIdIn(productIds)
+                .stream()
+                .map(ProductJpaEntity::toAggregate)
+                .toList();
     }
 
     @Override

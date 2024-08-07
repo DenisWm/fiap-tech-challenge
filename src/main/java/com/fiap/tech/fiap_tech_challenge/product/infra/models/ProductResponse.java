@@ -11,4 +11,5 @@ public record ProductResponse(
         @JsonProperty("price") BigDecimal price,
         @JsonProperty("category_id") String categoryId
 ) {
+
 }

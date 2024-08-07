@@ -22,7 +22,8 @@ public record ProductListOutput(
                 aProduct.getName(),
                 aProduct.getDescription(),
                 aProduct.getPrice(),
-                aProduct.getCategory().getValue()
+                aProduct.getCategory()
+                        .getValue()
         );
     }
 }

@@ -1,7 +1,6 @@
 package com.fiap.tech.fiap_tech_challenge.product.infra.persistense;
 
 
-import com.fiap.tech.fiap_tech_challenge.product.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
 public interface ProductRepository extends JpaRepository<ProductJpaEntity, String> {
 
@@ -21,5 +19,5 @@ public interface ProductRepository extends JpaRepository<ProductJpaEntity, Strin
     @Query(value ="select p.id from Product p where p.id in :ids")
     List<String> existsByIds(@Param("ids") List<String> ids);
 
-    List<Product> findAllByIdContainingIn(List<String> productIds);
+    List<ProductJpaEntity> findByIdIn(List<String> productIds);
 }

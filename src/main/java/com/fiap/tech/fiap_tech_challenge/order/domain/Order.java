@@ -17,7 +17,7 @@ public class Order extends AggregateRoot<OrderID> {
 
     private Instant timestamp;
 
-    private ClientID client;
+    private ClientID clientId;
 
     private List<ProductID> products;
 
@@ -25,12 +25,12 @@ public class Order extends AggregateRoot<OrderID> {
 
     private OrderStatus status;
 
-    private Order(OrderID orderID, Instant timestamp, BigDecimal total, List<ProductID> products, ClientID client,OrderStatus status) {
+    private Order(OrderID orderID, Instant timestamp, BigDecimal total, List<ProductID> products, ClientID clientId, OrderStatus status) {
         super(orderID);
         this.timestamp = timestamp;
         this.total = total;
         this.products = products;
-        this.client = client;
+        this.clientId = clientId;
         this.status = status;
     }
 
@@ -47,7 +47,7 @@ public class Order extends AggregateRoot<OrderID> {
     }
 
     public static Order with(Order order){
-        return with(order.getId(), order.getTimestamp(), order.getTotal(), order.getProducts(), order.getClient(), order.getStatus());
+        return with(order.getId(), order.getTimestamp(), order.getTotal(), order.getProducts(), order.getClientId(), order.getStatus());
     }
 
     @Override
