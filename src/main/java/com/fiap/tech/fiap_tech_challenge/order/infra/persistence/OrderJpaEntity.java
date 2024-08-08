@@ -44,7 +44,7 @@ public class OrderJpaEntity {
         final var entity = new OrderJpaEntity(
                 order.getId().getValue(),
                 order.getTimestamp(),
-                order.getClientId().getValue(),
+                order.getClientId() != null ? order.getClientId().getValue() : null,
                 order.getTotal(),
                 order.getStatus().getValue()
         );
@@ -58,7 +58,7 @@ public class OrderJpaEntity {
                 this.timestamp,
                 this.total,
                 getProductIDs(),
-                ClientID.from(this.clientId),
+                this.clientId != null ? ClientID.from(this.clientId) : null,
                 this.status != null ? OrderStatus.valueOf(this.status) : null
         );
     }

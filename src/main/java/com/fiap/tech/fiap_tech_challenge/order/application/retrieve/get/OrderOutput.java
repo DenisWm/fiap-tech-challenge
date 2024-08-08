@@ -34,7 +34,7 @@ public class OrderOutput {
                 aOrder.getTimestamp(),
                 aOrder.getTotal(),
                 new ArrayList<>(),
-                aOrder.getClientId().getValue(),
+                aOrder.getClientId() != null ? aOrder.getClientId().getValue() : null,
                 aOrder.getStatus()
         );
     }

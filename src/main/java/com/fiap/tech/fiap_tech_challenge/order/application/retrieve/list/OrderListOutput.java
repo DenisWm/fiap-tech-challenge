@@ -17,7 +17,7 @@ public record OrderListOutput(
         return new OrderListOutput(
                 anOrder.getId().getValue(),
                 anOrder.getTimestamp(),
-                anOrder.getClientId().getValue(),
+                anOrder.getClientId() != null ? anOrder.getClientId().getValue() : null,
                 anOrder.getTotal(),
                 anOrder.getStatus().getValue()
         );

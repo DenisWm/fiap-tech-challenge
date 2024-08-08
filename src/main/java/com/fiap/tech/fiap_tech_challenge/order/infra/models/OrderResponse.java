@@ -24,7 +24,7 @@ public record OrderResponse(
                 output.getTimestamp(),
                 output.getClientId(),
                 output.getTotal(),
-                output.getStatus().getValue(),
+                output.getStatus() != null ? output.getStatus().getValue() : null,
                 output.getProducts().stream().map(OrderProductResponse::from).toList()
         );
     }

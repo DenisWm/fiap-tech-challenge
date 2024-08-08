@@ -12,6 +12,7 @@ import com.fiap.tech.fiap_tech_challenge.product.domain.Product;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductGateway;
 import com.fiap.tech.fiap_tech_challenge.product.domain.ProductID;
 import com.fiap.tech.fiap_tech_challenge.product.infra.persistense.ProductJpaEntity;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
         if(notification.hasErrors()){
             throw NotificationException.with(notification.getErrors());
         }
-        final var order = Order.newOrder(ClientID.from(client), BigDecimal.ZERO, products.stream().map(ProductID::from).toList());
+        final var order = Order.newOrder(client != null ? ClientID.from(client) : null, BigDecimal.ZERO, products.stream().map(ProductID::from).toList());
 
         List<Product> productsList = productGateway.findByIds(products);
 
@@ -56,8 +57,8 @@ public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
     }
 
     private ValidationHandler validateClient(String client) {
-        if(client == null){
-           return Notification.create(new Error("Client ID can't be null."));
+        if(!StringUtils.hasText(client)){
+           return Notification.create();
         }
         final var existClient = clientGateway.existsByID(client);
 
