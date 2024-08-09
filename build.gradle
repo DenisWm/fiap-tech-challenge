@@ -13,6 +13,14 @@ java {
 	}
 }
 
+bootJar {
+	mainClass.set('com.fiap.tech.FiapTechChallengeApplication')
+}
+
+springBoot {
+	mainClass = 'com.fiap.tech.FiapTechChallengeApplication'
+}
+
 repositories {
 	mavenCentral()
 }
@@ -28,6 +36,7 @@ dependencies {
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
 	annotationProcessor 'org.projectlombok:lombok:1.18.20'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
