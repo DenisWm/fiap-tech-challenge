@@ -29,7 +29,7 @@ public class DefaultCreateClientUseCase extends CreateClientUseCase {
         notification.append(validateCpf(cpf));
         notification.append(validateEmail(email));
 
-        final var client = notification.validate(() -> Client.newClient(name, email, cpf.replaceAll("[^0-9]", "")));
+        final var client = notification.validate(() -> Client.newClient(name, email, cpf != null ? cpf.replaceAll("[^0-9]", "") : null));
 
         if (notification.hasErrors()) {
             throw new NotificationException("Could not create Aggregate Client", notification);
