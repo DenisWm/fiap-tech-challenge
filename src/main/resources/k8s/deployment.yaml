@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiap-tech-challenge
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fiap-tech-challenge
+  template:
+    metadata:
+      labels:
+        app: fiap-tech-challenge
+    spec:
+      containers:
+        - name: fiap-tech-challenge
+          image: fiap-tech-challenge-app
+          ports:
+            - containerPort: 8080
