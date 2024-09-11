@@ -13,10 +13,8 @@ public class OrderOrderedItemID implements Serializable {
     @Column(name = "ordered_item_id", nullable = false)
     private String orderedItemId;
 
-
     public OrderOrderedItemID() {
     }
-
     private OrderOrderedItemID(final String aOrderId, final String orderedItemId) {
         this.orderId = aOrderId;
         this.orderedItemId = orderedItemId;

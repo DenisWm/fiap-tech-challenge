@@ -8,8 +8,6 @@ public interface OrderedItemGateway {
     OrderedItem create(OrderedItem orderedItem);
     OrderedItem update(OrderedItem orderedItem);
     Optional<OrderedItem> findById(OrderedItemID anId);
-
     List<OrderedItem> findByIds(List<String> orderedItemIds);
-
 
 }

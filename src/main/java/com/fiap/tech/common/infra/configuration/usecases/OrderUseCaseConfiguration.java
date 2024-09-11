@@ -25,9 +25,9 @@ public class OrderUseCaseConfiguration {
 
     public OrderUseCaseConfiguration(final OrderGateway orderGateway, final ClientGateway clientGateway, final ProductGateway productGateway, OrderedItemGateway orderedItemGateway) {
         this.orderGateway = Objects.requireNonNull(orderGateway);
-        this.clientGateway = Objects.requireNonNull(clientGateway);
         this.productGateway = Objects.requireNonNull(productGateway);
-        this.orderedItemGateway = orderedItemGateway;
+        this.clientGateway = Objects.requireNonNull(clientGateway);
+        this.orderedItemGateway = Objects.requireNonNull(orderedItemGateway);
     }
 
     @Bean
@@ -37,7 +37,7 @@ public class OrderUseCaseConfiguration {
 
     @Bean
     public GetOrderByIdUseCase getOrderByIdUseCase() {
-        return new DefaultGetOrderByIdUseCase(productGateway, orderedItemGateway, orderGateway);
+        return new DefaultGetOrderByIdUseCase(productGateway, orderedItemGateway, orderGateway, clientGateway);
     }
 
     @Bean

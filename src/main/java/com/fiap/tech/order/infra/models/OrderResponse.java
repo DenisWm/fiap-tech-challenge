@@ -2,7 +2,6 @@ package com.fiap.tech.order.infra.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fiap.tech.order.application.retrieve.get.OrderOutput;
-import com.fiap.tech.product.application.retrieve.get.ProductOutput;
 
 
 import java.math.BigDecimal;
@@ -12,7 +11,7 @@ import java.util.List;
 public record OrderResponse(
         @JsonProperty("id") String id,
         @JsonProperty("timestamp") Instant timestamp,
-        @JsonProperty("client_id") String clientId,
+        @JsonProperty("client") OrderClientResponse client,
         @JsonProperty("total") BigDecimal total,
         @JsonProperty("status") String status,
         @JsonProperty("items") List<OrderItemResponse> items
@@ -22,7 +21,7 @@ public record OrderResponse(
         return new OrderResponse(
                 output.getId(),
                 output.getTimestamp(),
-                output.getClientId(),
+                output.getClient() != null ? OrderClientResponse.from(output.getClient()) : null,
                 output.getTotal(),
                 output.getStatus() != null ? output.getStatus().getValue() : null,
                 output.getOrderedItems().stream().map(OrderItemResponse::from).toList()
@@ -30,14 +29,14 @@ public record OrderResponse(
     }
 
     public record OrderItemResponse(
-            String id, Integer quantity, BigDecimal price, OrderedItemProductResponse product
+            String id, Integer quantity, BigDecimal subTotal, OrderedItemProductResponse product
     ) {
 
         public static OrderItemResponse from(final OrderOutput.OrderedItemOutput output) {
             return new OrderItemResponse(
                     output.id(),
                     output.quantity(),
-                    output.price(),
+                    output.subTotal(),
                     OrderItemResponse.OrderedItemProductResponse.from(output.product())
             );
         }

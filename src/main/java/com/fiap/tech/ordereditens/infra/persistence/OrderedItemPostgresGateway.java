@@ -33,31 +33,11 @@ public class OrderedItemPostgresGateway implements OrderedItemGateway {
 
     @Override
     public Optional<OrderedItem> findById(OrderedItemID anId) {
-        return repository.findById(anId.getValue()).map(entity -> {
-            var product = productRepository.findById(entity.getProductId()).orElseThrow();
-            return OrderedItem.with(
-                    OrderedItemID.from(entity.getId()),
-                    ProductID.from(product.getId()),
-                    product.getName(),
-                    product.getPrice(),
-                    entity.getQuantity(),
-                    entity.getPrice()
-            );
-        });
+        return repository.findById(anId.getValue()).map(OrderedItemJpaEntity::toAggregate);
     }
 
     @Override
     public List<OrderedItem> findByIds(List<String> orderedItemIds) {
-        return repository.findAllById(orderedItemIds).stream().map(entity -> {
-            var product = productRepository.findById(entity.getProductId()).orElseThrow();
-            return OrderedItem.with(
-                    OrderedItemID.from(entity.getId()),
-                    ProductID.from(product.getId()),
-                    product.getName(),
-                    product.getPrice(),
-                    entity.getQuantity(),
-                    entity.getPrice()
-            );
-        }).toList();
+        return repository.findAllById(orderedItemIds).stream().map(OrderedItemJpaEntity::toAggregate).toList();
     }
 }

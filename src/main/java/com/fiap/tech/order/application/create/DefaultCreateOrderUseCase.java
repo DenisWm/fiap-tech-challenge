@@ -22,9 +22,7 @@ import java.util.stream.Collectors;
 public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
 
     private final OrderGateway orderGateway;
-
     private final ClientGateway clientGateway;
-
     private final ProductGateway productGateway;
     private final OrderedItemGateway orderedItemGateway;
 
@@ -56,13 +54,13 @@ public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
         for (int i = 0; i < items.size(); i++) {
             final var item = items.get(i);
             final var product = productsList.get(i);
-            final var orderedItem = OrderedItem.newOrderedItem(product.getId(),product.getName(), product.getPrice(), item.quantity(), product.getPrice());
+            final var orderedItem = OrderedItem.newOrderedItem(product.getId(), item.quantity(), product.getPrice());
             orderedItemGateway.create(orderedItem);
             orderedItems.add(orderedItem);
         }
 
         order.setOrderedItems(orderedItems.stream().map(OrderedItem::getId).toList());
-        order.setTotal(BigDecimal.valueOf(orderedItems.stream().mapToDouble(orderedItem -> orderedItem.getTotalPrice().doubleValue()).sum()))   ;
+        order.setTotal(BigDecimal.valueOf(orderedItems.stream().mapToDouble(orderedItem -> orderedItem.getSubTotal().doubleValue()).sum()))   ;
 
         return CreateOrderOutput.from(this.orderGateway.create(order));
     }

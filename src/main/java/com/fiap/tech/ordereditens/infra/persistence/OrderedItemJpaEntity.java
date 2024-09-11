@@ -20,7 +20,7 @@ public class OrderedItemJpaEntity {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "subTotal", nullable = false)
     private BigDecimal price;
     @Column(name = "product_id", nullable = false)
     private String productId;
@@ -45,7 +45,7 @@ public class OrderedItemJpaEntity {
     }
 
     public OrderedItem toAggregate() {
-        return OrderedItem.with(OrderedItemID.from(this.id), ProductID.from(this.productId), product.getName(), product.getPrice(), this.quantity, this.price);
+        return OrderedItem.with(OrderedItemID.from(this.id), ProductID.from(this.productId), this.quantity, this.price);
     }
 
     public String getId() {

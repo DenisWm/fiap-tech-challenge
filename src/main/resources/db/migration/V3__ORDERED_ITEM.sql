@@ -6,7 +6,7 @@ CREATE TABLE ordered_item
 (
     id         VARCHAR(255) NOT NULL,
     quantity   INTEGER      NOT NULL,
-    price      DECIMAL      NOT NULL,
+    sub_total      DECIMAL      NOT NULL,
     product_id VARCHAR(255) NOT NULL,
     CONSTRAINT pk_ordered_item PRIMARY KEY (id)
 );
