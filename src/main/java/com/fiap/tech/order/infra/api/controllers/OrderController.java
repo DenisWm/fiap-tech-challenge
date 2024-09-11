@@ -3,6 +3,7 @@ package com.fiap.tech.order.infra.api.controllers;
 import com.fiap.tech.common.domain.pagination.Pagination;
 import com.fiap.tech.order.application.create.CreateOrderCommand;
 import com.fiap.tech.order.application.create.CreateOrderUseCase;
+import com.fiap.tech.order.application.create.ItemCommand;
 import com.fiap.tech.order.application.retrieve.get.GetOrderByIdUseCase;
 import com.fiap.tech.order.application.retrieve.list.ListOrderUseCase;
 import com.fiap.tech.order.infra.api.OrderAPI;
@@ -32,7 +33,9 @@ public class OrderController implements OrderAPI {
     public ResponseEntity<?> createProduct(final CreateOrderRequest input) {
         final var aCommand = CreateOrderCommand.with(
                 input.clientId(),
-                input.products()
+                input.items().stream()
+                        .map(item -> ItemCommand.with(item.productId(), item.quantity()))
+                        .toList()
         );
         final var output = this.createOrderUseCase.execute(aCommand);
         return ResponseEntity.created(URI.create("/orders/" + output.id())).body(output);

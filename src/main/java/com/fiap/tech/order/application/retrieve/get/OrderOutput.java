@@ -2,7 +2,9 @@ package com.fiap.tech.order.application.retrieve.get;
 
 import com.fiap.tech.order.domain.Order;
 import com.fiap.tech.order.domain.OrderStatus;
+import com.fiap.tech.ordereditens.domain.OrderedItem;
 import com.fiap.tech.product.domain.Product;
+import com.fiap.tech.product.domain.ProductID;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -14,15 +16,15 @@ public class OrderOutput {
     private String id;
     private Instant timestamp;
     private BigDecimal total;
-    private List<OrderProductOutput> products;
+    private List<OrderedItemOutput> orderedItems;
     private String clientId;
     private OrderStatus status;
 
-    public OrderOutput(String id, Instant timestamp, BigDecimal total, List<OrderProductOutput> products, String clientId, OrderStatus status) {
+    public OrderOutput(String id, Instant timestamp, BigDecimal total, List<OrderedItemOutput> orderedItems, String clientId, OrderStatus status) {
         this.id = id;
         this.timestamp = timestamp;
         this.total = total;
-        this.products = products;
+        this.orderedItems = orderedItems;
         this.clientId = clientId;
         this.status = status;
     }
@@ -39,21 +41,37 @@ public class OrderOutput {
         );
     }
 
-    public OrderOutput withProducts(final List<OrderProductOutput> products) {
-        return new OrderOutput(id, timestamp, total, products, clientId, status);
+    public OrderOutput withOrderedItems(final List<OrderedItem> orderedItems) {
+        return new OrderOutput(id, timestamp, total, orderedItems.stream().map(OrderedItemOutput::from).toList(), clientId, status);
     }
 
-    public List<OrderProductOutput> getProducts() {
-        return products;
+    public List<OrderedItemOutput> getOrderedItems() {
+        return orderedItems;
     }
 
-    public record OrderProductOutput(String id, BigDecimal price, String name) {
-        public static OrderProductOutput from(final Product aProduct) {
-            return new OrderProductOutput(
-                    aProduct.getId().getValue(),
-                    aProduct.getPrice(),
-                    aProduct.getName()
+    public record OrderedItemOutput(String id, Integer quantity, BigDecimal price, OrderedItemProductOutput product) {
+        public static OrderedItemOutput from(final OrderedItem aOrderedItem) {
+            return new OrderedItemOutput(
+                    aOrderedItem.getId().getValue(),
+                    aOrderedItem.getQuantity(),
+                    aOrderedItem.getPrice(),
+                    OrderedItemProductOutput.from(aOrderedItem.getProduct().getValue(), aOrderedItem.getProductName(), aOrderedItem.getProductPrice())
             );
+        }
+
+        public record OrderedItemProductOutput(
+                String id,
+                String name,
+                BigDecimal price
+        ) {
+
+            public static OrderedItemProductOutput from(final String id, final String name, final BigDecimal price) {
+                return new OrderedItemProductOutput(
+                        id,
+                        name,
+                        price
+                );
+            }
         }
     }
 }

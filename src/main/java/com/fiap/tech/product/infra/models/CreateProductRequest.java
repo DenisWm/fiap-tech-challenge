@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
 public record CreateProductRequest(
-        @JsonProperty("name") String name,
+        @JsonProperty("productId") String name,
         @JsonProperty("description") String description,
         @JsonProperty("price") BigDecimal price,
         @JsonProperty("category_id") String categoryId
