@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql-lanchonete
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql-lanchonete
+  template:
+    metadata:
+      labels:
+        app: postgresql-lanchonete
+    spec:
+      containers:
+        - name: postgresql-lanchonete
+          image: postgres:12.6
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: POSTGRES_DB
+              value: "lanchonete"
