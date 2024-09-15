@@ -15,6 +15,7 @@ spec:
       containers:
         - name: lanchonete-app
           image: lanchonete-app:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
           envFrom:
