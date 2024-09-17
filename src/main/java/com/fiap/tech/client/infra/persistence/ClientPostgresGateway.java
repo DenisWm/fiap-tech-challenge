@@ -2,6 +2,7 @@ package com.fiap.tech.client.infra.persistence;
 
 import com.fiap.tech.client.domain.Client;
 import com.fiap.tech.client.domain.ClientGateway;
+import com.fiap.tech.client.domain.ClientID;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -36,5 +37,10 @@ public class ClientPostgresGateway implements ClientGateway {
     @Override
     public boolean existsByID(String id) {
         return this.clientRepository.existsById(id);
+    }
+
+    @Override
+    public Optional<Client> findById(final ClientID clientId) {
+        return this.clientRepository.findById(clientId.getValue()).map(ClientJpaEntity::toAggregate);
     }
 }

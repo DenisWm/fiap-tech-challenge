@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public record CategoryResponse(
         @JsonProperty("id") String id,
-        @JsonProperty("name") String name,
+        @JsonProperty("productId") String name,
         @JsonProperty("description") String description
 ) {
 }
