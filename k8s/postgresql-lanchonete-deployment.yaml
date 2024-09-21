@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgresql-lanchonete
+  name: db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgresql-lanchonete
+      app: db
   template:
     metadata:
       labels:
-        app: postgresql-lanchonete
+        app: db
     spec:
       containers:
         - name: postgresql-lanchonete
