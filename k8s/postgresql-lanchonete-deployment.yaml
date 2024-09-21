@@ -24,3 +24,10 @@ spec:
               value: "postgres"
             - name: POSTGRES_DB
               value: "lanchonete"
+          volumeMounts:
+            - mountPath: "/var/lib/postgresql/data"
+              name: postgredb-storage
+      volumes:
+        - name: postgredb-storage
+          persistentVolumeClaim:
+            claimName: pvc-postgresql
