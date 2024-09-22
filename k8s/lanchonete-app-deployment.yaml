@@ -21,3 +21,21 @@ spec:
           envFrom:
             - configMapRef:
                 name: lanchonete-config
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 32000
+              host: host.minikube.internal
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 32000
+              host: host.minikube.internal
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 30
+            failureThreshold: 3
