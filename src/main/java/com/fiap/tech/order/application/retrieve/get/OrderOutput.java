@@ -53,7 +53,7 @@ public class OrderOutput {
                     .filter(p -> p.getId().getValue().equals(orderedItem.getProduct().getValue())).findFirst().orElse(null);
             orderedItemsOutput.add(OrderedItemOutput.from(orderedItem, product));
         }
-        return new OrderOutput(id, timestamp, total, orderedItemsOutput, OrderedItemOutput.OrderedItemClientOutput.from(client), status);
+        return new OrderOutput(id, timestamp, total, orderedItemsOutput, client != null ? OrderedItemOutput.OrderedItemClientOutput.from(client) : null, status);
     }
 
     public record OrderedItemOutput(String id, Integer quantity, BigDecimal subTotal, OrderedItemProductOutput product) {
