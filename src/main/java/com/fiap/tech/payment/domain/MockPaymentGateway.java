@@ -23,13 +23,6 @@ public class MockPaymentGateway implements PaymentGateway {
     }
 
     @Override
-    public Optional<Order> findOrderByPaymentId(PaymentID paymentId) {
-        return orders.values().stream()
-                .filter(order -> order.getPaymentId().equals(paymentId))
-                .findFirst();
-    }
-
-    @Override
     public Optional<Order> findOrderById(OrderID orderId) {
         return Optional.ofNullable(orders.get(orderId));
     }
