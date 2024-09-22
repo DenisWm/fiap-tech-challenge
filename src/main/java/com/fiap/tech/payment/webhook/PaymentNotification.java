@@ -1,10 +1,9 @@
 package com.fiap.tech.payment.webhook;
 
-//Classe temporaria, aguardando controller paymentID para reorganizar
-
 public class PaymentNotification {
 
     private String paymentId;
+    private String orderId;
     private String status;
 
 
@@ -14,6 +13,14 @@ public class PaymentNotification {
 
     public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getStatus() {
