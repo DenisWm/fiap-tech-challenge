@@ -6,6 +6,8 @@ import com.fiap.tech.order.domain.OrderID;
 import com.fiap.tech.order.domain.OrderStatus;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
 import com.fiap.tech.ordereditens.infra.persistence.OrderedItemJpaEntity;
+import com.fiap.tech.payment.domain.PaymentID;
+import com.fiap.tech.payment.domain.PaymentStatus;
 import com.fiap.tech.product.domain.ProductID;
 import jakarta.persistence.*;
 
@@ -23,13 +25,14 @@ public class OrderJpaEntity {
     private String id;
     private Instant timestamp;
     private String clientId;
+    private String paymentId;
     private BigDecimal total;
     private String status;    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<OrderOrderedItemJpaEntity> orderedItems;
     public OrderJpaEntity() {
     }
 
-    public OrderJpaEntity(String id, Instant timestamp, String clientId, BigDecimal total, String status) {
+    public OrderJpaEntity(String id, Instant timestamp, String clientId, String paymentId, BigDecimal total, String status) {
         this.id = id;
         this.timestamp = timestamp;
         this.orderedItems = new HashSet<>();
@@ -44,6 +47,7 @@ public class OrderJpaEntity {
                 order.getId().getValue(),
                 order.getTimestamp(),
                 order.getClientId() != null ? order.getClientId().getValue() : null,
+                order.getPaymentId() != null ? order.getPaymentId().getValue() : null,
                 order.getTotal(),
                 order.getStatus().getValue()
         );
@@ -51,14 +55,20 @@ public class OrderJpaEntity {
         return entity;
     }
 
+    public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentId){
+        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentId);
+    }
+
     public Order toAggregate() {
         return Order.with(
                 OrderID.from(this.id),
                 this.timestamp,
-                this.total,
                 getOrderedItemIDs(),
+                this.total,
+                this.status != null ? OrderStatus.valueOf(this.status) : null,
                 this.clientId != null ? ClientID.from(this.clientId) : null,
-                this.status != null ? OrderStatus.valueOf(this.status) : null
+                this.paymentId != null ? PaymentID.from(this.paymentId) : null
+
         );
     }
 

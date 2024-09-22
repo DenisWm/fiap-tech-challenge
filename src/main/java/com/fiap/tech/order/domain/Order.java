@@ -40,13 +40,18 @@ public class Order extends AggregateRoot<OrderID> {
         this.paymentId = paymentId;
     }
 
-    public static Order newOrder(ClientID clientID, PaymentID paymentID, BigDecimal total, List<OrderedItemID> orderedItems){
+
+
+    public static Order newOrder(BigDecimal total, List<OrderedItemID> orderedItems, ClientID clientID) {
         final var now = Instant.now();
         final var orderID = OrderID.unique();
         final var status = OrderStatus.RECEIVED;
+        final var paymentID = PaymentID.unique(); // Gera um novo PaymentID
 
-        return new Order(orderID,now,orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, paymentID);
+        return new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, paymentID);
     }
+
+
 
 
     public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentId){
