@@ -8,7 +8,10 @@ import java.util.Optional;
 public interface PaymentGateway {
     Payment create(Payment payment);
 
-    Optional<Payment> findById(PaymentID anId);
+    Optional<Payment> findById(PaymentID paymentID);
 
-    Optional<Order> findOrderById(OrderID orderId);
+    Optional<Order> findOrderById(OrderID orderID);
+
+    void save(Optional<Payment> payment);
+
 }

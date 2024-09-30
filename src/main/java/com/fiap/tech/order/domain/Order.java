@@ -5,6 +5,7 @@ import com.fiap.tech.common.domain.validation.ValidationHandler;
 import com.fiap.tech.client.domain.ClientID;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
 import com.fiap.tech.payment.domain.PaymentID;
+import com.fiap.tech.payment.domain.PaymentStatus;
 import com.fiap.tech.product.domain.ProductID;
 import lombok.Getter;
 import lombok.Setter;
@@ -114,4 +115,7 @@ public class Order extends AggregateRoot<OrderID> {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
+    public void updatePaymentId(PaymentID newPaymentId) {
+        this.paymentId = newPaymentId;}
 }

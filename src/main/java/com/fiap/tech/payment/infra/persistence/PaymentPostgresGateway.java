@@ -27,15 +27,19 @@ public class PaymentPostgresGateway implements PaymentGateway {
                 .toAggregate();
     }
 
-
     @Override
-    public Optional<Payment> findById(PaymentID anId) {
-        return this.paymentRepository.findById(anId.getValue()).map(PaymentJpaEntity::toAggregate);
+    public Optional<Payment> findById(PaymentID paymentID) {
+        return Optional.empty();
     }
 
     @Override
     public Optional<Order> findOrderById(OrderID orderId) {
         return Optional.empty();
+    }
+
+    @Override
+    public void save(Optional<Payment> payment) {
+
     }
 
     private Specification<PaymentJpaEntity> assembleSpecification(final String payment) {

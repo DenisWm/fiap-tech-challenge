@@ -47,7 +47,7 @@ public class PaymentJpaEntity {
                 PaymentID.from(this.id),
                 this.amount,
                 this.timestamp,
-                this.status != null ? PaymentStatus.of(this.status) : null
+                this.status != null ? PaymentStatus.valueOf(this.status) : null
 
         );
     }

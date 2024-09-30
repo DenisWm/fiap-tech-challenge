@@ -2,7 +2,10 @@ package com.fiap.tech.payment.application;
 
 import com.fiap.tech.order.domain.Order;
 import com.fiap.tech.order.domain.OrderID;
+import com.fiap.tech.payment.domain.Payment;
 import com.fiap.tech.payment.domain.PaymentGateway;
+import com.fiap.tech.payment.domain.PaymentID;
+import com.fiap.tech.payment.domain.PaymentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +44,53 @@ public class PaymentUseCase {
         System.out.println("Response from payment service: " + response.body());
     }
 
-    public Optional<Order> findOrderById(OrderID orderId) {
-        return paymentGateway.findOrderById(orderId);
+    public Optional<Payment> findPaymentById(PaymentID paymentID) {
+        return paymentGateway.findById(paymentID);
+    }
+
+    public Optional<Order> findOrderById(OrderID orderID) {
+        return paymentGateway.findOrderById(orderID);
+    }
+
+    public void approvePayment(PaymentID paymentId) {
+        Optional<Payment> payment = paymentGateway.findById(paymentId);
+        if (payment != null) {
+            payment.get().setStatus(PaymentStatus.APPROVED);
+            paymentGateway.save(payment);
+        }
+    }
+
+    // Gets the payment status for a given order
+    public PaymentStatus getPaymentStatus(Order order) {
+        // Simulates obtaining the payment status
+        // Here you can add logic to get the real payment status
+        // For example, by querying an external service or checking the order state
+        String status = "approved"; // or "rejected", "pending", etc.
+
+        switch (status) {
+            case "approved":
+                return PaymentStatus.APPROVED;
+            case "rejected":
+                return PaymentStatus.REJECTED;
+            case "pending":
+                return PaymentStatus.PENDING;
+            case "failed":
+                return PaymentStatus.FAILED;
+            case "cancelled":
+                return PaymentStatus.CANCELLED;
+            case "refunded":
+                return PaymentStatus.REFUNDED;
+            case "in review":
+                return PaymentStatus.IN_REVIEW;
+            case "completed":
+                return PaymentStatus.COMPLETED;
+            case "expired":
+                return PaymentStatus.EXPIRED;
+            default:
+                throw new IllegalArgumentException("Unknown payment status: " + status);
+        }
+    }
+
+    public void updatePaymentStatus(Optional<Payment> payment) {
     }
 }

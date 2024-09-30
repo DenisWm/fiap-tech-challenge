@@ -3,14 +3,14 @@ package com.fiap.tech.payment.webhook;
 import com.fiap.tech.payment.application.PaymentUseCase;
 import com.fiap.tech.order.domain.Order;
 import com.fiap.tech.order.domain.OrderID;
+import com.fiap.tech.payment.domain.Payment;
+import com.fiap.tech.payment.domain.PaymentID;
+import com.fiap.tech.payment.domain.PaymentStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -26,7 +26,7 @@ public class WebhookController {
         this.paymentUseCase = paymentUseCase;
     }
 
-    @PostMapping("/payment")
+    @PostMapping("/payment-notification")
     @Operation(summary = "Receives payment notifications")
     public ResponseEntity<String> handlePaymentNotification(@RequestBody PaymentNotification notification) {
         OrderID orderId = new OrderID(notification.getOrderId());
@@ -34,13 +34,19 @@ public class WebhookController {
 
         if (orderOpt.isPresent()) {
             Order order = orderOpt.get();
-            if ("approved".equals(notification.getStatus())) {
+            if ("approved".equalsIgnoreCase(notification.getStatus())) {
                 System.out.println("Payment approved for order: " + order.getId());
-                paymentUseCase.processPayment(order);
-                // Aqui está mockado, se necessário atualizar o status do pedido ou execute outras ações necessárias
-            } else if ("rejected".equals(notification.getStatus())) {
+                Optional<Payment> payment = paymentUseCase.findPaymentById(order.getPaymentId());
+                if (payment != null) {
+                    paymentUseCase.approvePayment(payment.get().getId());
+                    paymentUseCase.updatePaymentStatus(payment);
+                    paymentUseCase.processPayment(order);
+                } else {
+                    System.out.println("Payment not found for order: " + order.getId());
+                }
+            } else if ("rejected".equalsIgnoreCase(notification.getStatus())) {
                 System.out.println("Payment rejected for order: " + order.getId());
-                // Aqui está mockado, se necessário atualizar o status do pedido ou execute outras ações necessárias
+                // Atualize o status do pedido ou execute outras ações necessárias
             }
         } else {
             System.out.println("Order not found: " + notification.getOrderId());
@@ -48,4 +54,21 @@ public class WebhookController {
 
         return ResponseEntity.ok("Notification received successfully");
     }
+
+
+    @GetMapping("/{orderId}")
+    @Operation(summary = "Get payment status for a specific order")
+    public ResponseEntity<String> getPaymentStatus(@PathVariable String orderId) {
+        OrderID id = new OrderID(orderId);
+        Optional<Order> orderOpt = paymentUseCase.findOrderById(id);
+
+        if (orderOpt.isPresent()) {
+            Order order = orderOpt.get();
+            String status = String.valueOf(order.getStatus());
+            return ResponseEntity.ok("Payment status for order " + orderId + ": " + status);
+        } else {
+            return ResponseEntity.status(404).body("Order not found: " + orderId);
+        }
+    }
+
 }

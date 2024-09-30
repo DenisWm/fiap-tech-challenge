@@ -54,4 +54,5 @@ public class Payment extends Entity<PaymentID>{
     public void validate(ValidationHandler handler) {
 
     }
-}
+
+    }
