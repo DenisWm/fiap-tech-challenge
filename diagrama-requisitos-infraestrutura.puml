@@ -1,0 +1,43 @@
+@startuml
+!define RECTANGLE class1
+!define CLOUD cloud1
+!define DATABASE database1
+!define BOX box1
+
+' Estilos
+skinparam rectangle {
+  BackgroundColor #E0E0E0
+  BorderColor Black
+  BorderThickness 1
+}
+skinparam cloud {
+  BackgroundColor #CFE2F3
+  BorderColor Black
+  BorderThickness 1
+}
+skinparam database {
+  BackgroundColor #C1C1C1
+  BorderColor Black
+  BorderThickness 1
+}
+skinparam box {
+  BackgroundColor #F9F9F9
+  BorderColor Black
+  BorderThickness 1
+}
+
+' Componentes
+rectangle "Cliente\n(Usuário Final)" as client
+rectangle "Interface de Aplicação" as app_interface
+
+' Cluster Kubernetes
+cloud "Cluster Kubernetes" as k8s_cluster {
+  rectangle "Serviço Backend" as backend_service
+}
+
+database "Banco de Dados" as database
+
+' Interações
+
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+actor Cliente
+actor Administrador
+
+Cliente --> (Fazer Pedido)
+Cliente --> (Pagar Pedido)
+Cliente --> (Acompanhar Pedido)
+Cliente --> (Receber Notificação)
+
+Administrador --> (Gerenciar Clientes)
+Administrador --> (Gerenciar Produtos e Categorias)
+Administrador --> (Acompanhar Pedidos)
+
+(Fazer Pedido) --> (Selecionar Lanche)
+(Fazer Pedido) --> (Selecionar Acompanhamento)
+(Fazer Pedido) --> (Selecionar Bebida)
+(Pagar Pedido) --> (QRCode Mercado Pago)
+(Acompanhar Pedido) --> (Exibir Status)
+(Receber Notificação) --> (Pedido Pronto)
+
+@enduml
