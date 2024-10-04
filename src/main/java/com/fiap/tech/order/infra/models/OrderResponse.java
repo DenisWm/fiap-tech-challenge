@@ -3,7 +3,6 @@ package com.fiap.tech.order.infra.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fiap.tech.order.application.retrieve.get.OrderOutput;
 
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -14,7 +13,8 @@ public record OrderResponse(
         @JsonProperty("client") OrderClientResponse client,
         @JsonProperty("total") BigDecimal total,
         @JsonProperty("status") String status,
-        @JsonProperty("items") List<OrderItemResponse> items
+        @JsonProperty("items") List<OrderItemResponse> items,
+        @JsonProperty("payment_id") String paymentId // Adicionada a nova propriedade
 ) {
 
     public static OrderResponse from(final OrderOutput output) {
@@ -24,7 +24,8 @@ public record OrderResponse(
                 output.getClient() != null ? OrderClientResponse.from(output.getClient()) : null,
                 output.getTotal(),
                 output.getStatus() != null ? output.getStatus().getValue() : null,
-                output.getOrderedItems().stream().map(OrderItemResponse::from).toList()
+                output.getOrderedItems().stream().map(OrderItemResponse::from).toList(),
+                output.getPaymentId() // Ajuste no método from para incluir a nova propriedade
         );
     }
 

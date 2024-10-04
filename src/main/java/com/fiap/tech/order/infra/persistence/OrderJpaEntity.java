@@ -6,6 +6,7 @@ import com.fiap.tech.order.domain.OrderID;
 import com.fiap.tech.order.domain.OrderStatus;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
 import com.fiap.tech.ordereditens.infra.persistence.OrderedItemJpaEntity;
+import com.fiap.tech.payment.domain.Payment;
 import com.fiap.tech.payment.domain.PaymentID;
 import com.fiap.tech.payment.domain.PaymentStatus;
 import com.fiap.tech.product.domain.ProductID;
@@ -37,6 +38,7 @@ public class OrderJpaEntity {
         this.timestamp = timestamp;
         this.orderedItems = new HashSet<>();
         this.clientId = clientId;
+        this.paymentId = paymentId;
         this.total = total;
         this.status = status;
     }
@@ -71,6 +73,7 @@ public class OrderJpaEntity {
 
         );
     }
+
 
     private void addOrderedItem(final OrderedItemID anId) {
         this.orderedItems.add(OrderOrderedItemJpaEntity.from(this, anId));

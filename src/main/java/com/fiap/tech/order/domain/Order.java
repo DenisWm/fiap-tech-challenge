@@ -4,6 +4,7 @@ import com.fiap.tech.common.domain.AggregateRoot;
 import com.fiap.tech.common.domain.validation.ValidationHandler;
 import com.fiap.tech.client.domain.ClientID;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
+import com.fiap.tech.payment.domain.Payment;
 import com.fiap.tech.payment.domain.PaymentID;
 import com.fiap.tech.payment.domain.PaymentStatus;
 import com.fiap.tech.product.domain.ProductID;
@@ -47,7 +48,7 @@ public class Order extends AggregateRoot<OrderID> {
         final var now = Instant.now();
         final var orderID = OrderID.unique();
         final var status = OrderStatus.RECEIVED;
-        final var paymentID = PaymentID.unique(); // Gera um novo PaymentID
+        final var paymentID = PaymentID.unique();
 
         return new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, paymentID);
     }
@@ -55,8 +56,8 @@ public class Order extends AggregateRoot<OrderID> {
 
 
 
-    public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentId){
-        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentId);
+    public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentID){
+        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentID);
     }
 
     public static Order with(Order order){
@@ -116,6 +117,4 @@ public class Order extends AggregateRoot<OrderID> {
         this.status = status;
     }
 
-    public void updatePaymentId(PaymentID newPaymentId) {
-        this.paymentId = newPaymentId;}
 }

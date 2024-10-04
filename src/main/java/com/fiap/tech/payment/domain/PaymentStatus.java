@@ -39,6 +39,8 @@ public class PaymentStatus extends ValueObject {
     // Payment has expired due to inactivity within a specific time frame
     public static final PaymentStatus EXPIRED = new PaymentStatus("Expired");
 
+    public static final PaymentStatus UNIDENTIFIED = new PaymentStatus("Unidentified");
+
     public static PaymentStatus valueOf(String status) {
         return new PaymentStatus(status);
     }

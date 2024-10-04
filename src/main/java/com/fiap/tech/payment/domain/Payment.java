@@ -17,7 +17,6 @@ public class Payment extends Entity<PaymentID>{
     private final Instant timestamp;
     private PaymentStatus status;
 
-
     public Payment(PaymentID paymentId, BigDecimal amount, Instant timestamp, PaymentStatus status) {
         super(paymentId);
         this.amount = amount;
@@ -50,9 +49,19 @@ public class Payment extends Entity<PaymentID>{
         return with(payment.getId(), payment.getAmount(), payment.getTimestamp(), payment.getStatus());
     }
 
+    public static Payment unidentified() {
+        return new Payment(PaymentID.unique(), BigDecimal.ZERO, Instant.now(), PaymentStatus.UNIDENTIFIED);
+    }
+
+
     @Override
     public void validate(ValidationHandler handler) {
 
     }
 
+    @Override
+    public String toString() {
+        return "PaymentStatus = " +
+                status;
     }
+}
