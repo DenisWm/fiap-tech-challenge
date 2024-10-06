@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kube-state-metrics-config
+  namespace: kube-system
+data:
+  kube-state-metrics.yml: |
+    http:
+      listen:
+        address: 0.0.0.0

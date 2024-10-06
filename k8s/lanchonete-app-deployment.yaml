@@ -11,6 +11,10 @@ spec:
     metadata:
       labels:
         app: lanchonete-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "32000"
     spec:
       containers:
         - name: lanchonete-app
