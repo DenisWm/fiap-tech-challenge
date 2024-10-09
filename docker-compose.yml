@@ -1,8 +1,9 @@
-version: '3'
+version: '3.8'
 
 services:
   app:
     container_name: lanchonete-app
+    image: lanchonete-app:latest
     build: .
     ports:
       - 8080:8080

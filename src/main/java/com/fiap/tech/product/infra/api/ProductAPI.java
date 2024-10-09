@@ -30,7 +30,7 @@ public interface ProductAPI {
     ResponseEntity<?> createProduct(@RequestBody CreateProductRequest input);
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "List all products paginated")
+    @Operation(summary = "List all items paginated")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listed successfully"),
             @ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
@@ -40,7 +40,7 @@ public interface ProductAPI {
             @RequestParam(name = "categoryId", required = false, defaultValue = "") final String categoryId,
             @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
             @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,
-            @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
+            @RequestParam(name = "sort", required = false, defaultValue = "id") final String sort,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction
     );
 

@@ -8,50 +8,70 @@ import com.fiap.tech.client.domain.ClientGateway;
 import com.fiap.tech.client.domain.ClientID;
 import com.fiap.tech.order.domain.Order;
 import com.fiap.tech.order.domain.OrderGateway;
+import com.fiap.tech.order.domain.OrderID;
+import com.fiap.tech.order.domain.OrderStatus;
+import com.fiap.tech.ordereditens.domain.OrderedItem;
+import com.fiap.tech.ordereditens.domain.OrderedItemGateway;
+import com.fiap.tech.ordereditens.domain.OrderedItemID;
+import com.fiap.tech.payment.domain.PaymentID;
 import com.fiap.tech.product.domain.Product;
 import com.fiap.tech.product.domain.ProductGateway;
-import com.fiap.tech.product.domain.ProductID;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
 
     private final OrderGateway orderGateway;
-
     private final ClientGateway clientGateway;
-
     private final ProductGateway productGateway;
+    private final OrderedItemGateway orderedItemGateway;
 
-    public DefaultCreateOrderUseCase(OrderGateway orderGateway, ClientGateway clientGateway, ProductGateway productGateway) {
+    public DefaultCreateOrderUseCase(OrderGateway orderGateway, ClientGateway clientGateway, ProductGateway productGateway, OrderedItemGateway orderedItemGateway) {
         this.orderGateway = orderGateway;
         this.clientGateway = clientGateway;
         this.productGateway = productGateway;
+        this.orderedItemGateway = orderedItemGateway;
     }
 
     @Override
     public CreateOrderOutput execute(CreateOrderCommand command) {
         final var client = command.clientID();
-        final var products = command.products();
+        final var items = command.items();
 
         final var notification = Notification.create();
         notification.append(validateClient(client));
-        notification.append(validateProducts(products));
+        notification.append(validateItems(items));
+
+        ClientID clientId = client != null ? ClientID.from(client) : null;
+        final var order = Order.newOrder(BigDecimal.ZERO, null, clientId);
+
+
+
 
         if(notification.hasErrors()){
             throw NotificationException.with(notification.getErrors());
         }
-        final var order = Order.newOrder(client != null ? ClientID.from(client) : null, BigDecimal.ZERO, products.stream().map(
-                ProductID::from).toList());
 
-        List<Product> productsList = productGateway.findByIds(products);
+        List<Product> productsList = productGateway.findByIds(items.stream().map(ItemCommand::productID).toList());
 
-        final var total = productsList.stream().mapToDouble(product -> product.getPrice().doubleValue()).sum();
+        List<OrderedItem> orderedItems = new ArrayList<>();
 
-        order.setTotal(BigDecimal.valueOf(total));
+        for (int i = 0; i < items.size(); i++) {
+            final var item = items.get(i);
+            final var product = productsList.get(i);
+            final var orderedItem = OrderedItem.newOrderedItem(product.getId(), item.quantity(), product.getPrice());
+            orderedItemGateway.create(orderedItem);
+            orderedItems.add(orderedItem);
+        }
+
+        order.setOrderedItems(orderedItems.stream().map(OrderedItem::getId).toList());
+        order.setTotal(BigDecimal.valueOf(orderedItems.stream().mapToDouble(orderedItem -> orderedItem.getSubTotal().doubleValue()).sum()))   ;
 
         return CreateOrderOutput.from(this.orderGateway.create(order));
     }
@@ -69,17 +89,17 @@ public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
         return Notification.create();
     }
 
-    private  ValidationHandler validateProducts(List<String> products){
-        if(products == null || products.isEmpty()){
+    private  ValidationHandler validateItems(List<ItemCommand> itemCommands){
+        if(itemCommands == null || itemCommands.isEmpty()){
             return Notification.create(new Error("Order must have at least one product."));
         }
-        final var existsIDs = productGateway.existsByIds(products);
+        final var existsIDs = productGateway.existsByIds(itemCommands.stream().map(ItemCommand::productID).toList());
 
-        if(products.size() != existsIDs.size()){
-            final var missingIds = new ArrayList<>(products);
+        if(itemCommands.size() != existsIDs.size()){
+            final var missingIds = itemCommands.stream().map(ItemCommand::productID).collect(Collectors.toSet());
             missingIds.removeAll(existsIDs);
 
-            return Notification.create(new Error("Some products couldn't be found: %s".formatted(missingIds.stream().collect(Collectors.joining(", ")))));
+            return Notification.create(new Error("Some items couldn't be found: %s".formatted(missingIds.stream().collect(Collectors.joining(", ")))));
         }
         return Notification.create();
     }

@@ -11,4 +11,6 @@ public interface ClientGateway {
     boolean existsByCpf(String cpf);
 
     boolean existsByID(String id);
+
+    Optional<Client> findById(ClientID clientId);
 }

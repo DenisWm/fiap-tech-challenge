@@ -27,7 +27,7 @@ public interface OrderAPI {
             @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
             @ApiResponse(responseCode = "500", description = "An internal error was thrown"),
     })
-    ResponseEntity<?> createProduct(@RequestBody CreateOrderRequest input);
+    ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest input);
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "List all orders paginated")
@@ -36,7 +36,7 @@ public interface OrderAPI {
             @ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
             @ApiResponse(responseCode = "500", description = "An internal error was thrown"),
     })
-    Pagination<ListOrderResponse> listProducts(
+    Pagination<ListOrderResponse> listOrders(
             @RequestParam(name = "client_id", required = false, defaultValue = "") final String clientId,
             @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
             @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,

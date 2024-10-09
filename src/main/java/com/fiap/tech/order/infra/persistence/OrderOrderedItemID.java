@@ -7,23 +7,21 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class OrderProductID implements Serializable {
+public class OrderOrderedItemID implements Serializable {
     @Column(name = "order_id", nullable = false)
     private String orderId;
-    @Column(name = "product_id", nullable = false)
-    private String productId;
+    @Column(name = "ordered_item_id", nullable = false)
+    private String orderedItemId;
 
-
-    public OrderProductID() {
+    public OrderOrderedItemID() {
     }
-
-    private OrderProductID(final String aOrderId, final String aProductId) {
+    private OrderOrderedItemID(final String aOrderId, final String orderedItemId) {
         this.orderId = aOrderId;
-        this.productId = aProductId;
+        this.orderedItemId = orderedItemId;
     }
 
-    public static OrderProductID from(final String aOrderId, final String aProductId) {
-        return new OrderProductID(aOrderId, aProductId);
+    public static OrderOrderedItemID from(final String aOrderId, final String orderedItemId) {
+        return new OrderOrderedItemID(aOrderId, orderedItemId);
     }
 
     public String getOrderId() {
@@ -34,12 +32,12 @@ public class OrderProductID implements Serializable {
         this.orderId = orderId;
     }
 
-    public String getProductId() {
-        return productId;
+    public String getOrderedItemId() {
+        return orderedItemId;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setOrderedItemId(String orderedItemId) {
+        this.orderedItemId = orderedItemId;
     }
 
     @Override
@@ -47,16 +45,16 @@ public class OrderProductID implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OrderProductID that = (OrderProductID) o;
+        OrderOrderedItemID that = (OrderOrderedItemID) o;
 
         if (!Objects.equals(orderId, that.orderId)) return false;
-        return Objects.equals(productId, that.productId);
+        return Objects.equals(orderedItemId, that.orderedItemId);
     }
 
     @Override
     public int hashCode() {
         int result = orderId != null ? orderId.hashCode() : 0;
-        result = 31 * result + (productId != null ? productId.hashCode() : 0);
+        result = 31 * result + (orderedItemId != null ? orderedItemId.hashCode() : 0);
         return result;
     }
 }
