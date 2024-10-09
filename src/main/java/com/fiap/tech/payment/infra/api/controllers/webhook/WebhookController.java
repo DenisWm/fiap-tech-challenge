@@ -1,11 +1,9 @@
-package com.fiap.tech.payment.webhook;
+package com.fiap.tech.payment.infra.api.controllers.webhook;
 
 import com.fiap.tech.payment.application.PaymentUseCase;
 import com.fiap.tech.order.domain.Order;
 import com.fiap.tech.order.domain.OrderID;
 import com.fiap.tech.payment.domain.Payment;
-import com.fiap.tech.payment.domain.PaymentID;
-import com.fiap.tech.payment.domain.PaymentStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,32 +27,39 @@ public class WebhookController {
     @PostMapping("/payment-notification")
     @Operation(summary = "Receives payment notifications")
     public ResponseEntity<String> handlePaymentNotification(@RequestBody PaymentNotification notification) {
-        OrderID orderId = new OrderID(notification.getOrderId());
-        Optional<Order> orderOpt = paymentUseCase.findOrderById(orderId);
+       // try {
 
-        if (orderOpt.isPresent()) {
-            Order order = orderOpt.get();
-            if ("approved".equalsIgnoreCase(notification.getStatus())) {
-                System.out.println("Payment approved for order: " + order.getId());
-                Optional<Payment> payment = paymentUseCase.findPaymentById(order.getPaymentId());
-                if (payment != null) {
-                    paymentUseCase.approvePayment(payment.get().getId());
-                    paymentUseCase.updatePaymentStatus(payment);
-                    paymentUseCase.processPayment(order);
-                } else {
-                    System.out.println("Payment not found for order: " + order.getId());
+            //MercadoPagoConfig.configure();
+
+            OrderID orderId = new OrderID(notification.getOrderId());
+            Optional<Order> orderOpt = paymentUseCase.findOrderById(orderId);
+
+            if (orderOpt.isPresent()) {
+                Order order = orderOpt.get();
+                if ("approved".equalsIgnoreCase(notification.getStatus())) {
+                    System.out.println("Payment approved for order: " + order.getId());
+                    Optional<Payment> payment = paymentUseCase.findPaymentById(order.getPaymentId());
+                    if (payment.isPresent()) {
+                        paymentUseCase.approvePayment(payment.get().getId());
+                        paymentUseCase.updatePaymentStatus(payment);
+                        paymentUseCase.processPayment(order);
+                    } else {
+                        System.out.println("Payment not found for order: " + order.getId());
+                    }
+                } else if ("rejected".equalsIgnoreCase(notification.getStatus())) {
+                    System.out.println("Payment rejected for order: " + order.getId());
+                    // Atualize o status do pedido ou execute outras ações necessárias
                 }
-            } else if ("rejected".equalsIgnoreCase(notification.getStatus())) {
-                System.out.println("Payment rejected for order: " + order.getId());
-                // Atualize o status do pedido ou execute outras ações necessárias
+            } else {
+                System.out.println("Order not found: " + notification.getOrderId());
             }
-        } else {
-            System.out.println("Order not found: " + notification.getOrderId());
-        }
 
-        return ResponseEntity.ok("Notification received successfully");
+            return ResponseEntity.ok("Notification received successfully");
+     //   } catch (MPException e) {
+     //       e.printStackTrace();
+     //       return ResponseEntity.status(500).body("Error configuring Mercado Pago: " + e.getMessage());
+        //}
     }
-
 
     @GetMapping("/{orderId}")
     @Operation(summary = "Get payment status for a specific order")
@@ -70,5 +75,4 @@ public class WebhookController {
             return ResponseEntity.status(404).body("Order not found: " + orderId);
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package com.fiap.tech.payment.webhook;
+package com.fiap.tech.payment.infra.api.controllers.webhook;
 
 public class PaymentNotification {
 
