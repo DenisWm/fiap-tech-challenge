@@ -44,7 +44,7 @@ public class OrderControllerTest {
         when(createOrderUseCase.execute(any(CreateOrderCommand.class))).thenReturn(output);
 
         // Act
-        ResponseEntity<?> responseEntity = orderController.createProduct(request);
+        ResponseEntity<?> responseEntity = orderController.createOrder(request);
 
         // Assert
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());

@@ -30,7 +30,7 @@ public class OrderController implements OrderAPI {
     }
 
     @Override
-    public ResponseEntity<?> createProduct(final CreateOrderRequest input) {
+    public ResponseEntity<?> createOrder(final CreateOrderRequest input) {
         final var aCommand = CreateOrderCommand.with(
                 input.clientId(),
                 input.items().stream()
@@ -42,7 +42,7 @@ public class OrderController implements OrderAPI {
     }
 
     @Override
-    public Pagination<ListOrderResponse> listProducts(
+    public Pagination<ListOrderResponse> listOrders(
             final String clientId,
             final int page,
             final int perPage,
