@@ -53,7 +53,10 @@ public class Order extends AggregateRoot<OrderID> {
         return new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, paymentID);
     }
 
-
+    public Order update(final OrderStatus status) {
+        this.status = status;
+        return this;
+    }
 
 
     public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentID){

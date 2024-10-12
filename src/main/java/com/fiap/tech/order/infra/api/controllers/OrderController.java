@@ -6,10 +6,13 @@ import com.fiap.tech.order.application.create.CreateOrderUseCase;
 import com.fiap.tech.order.application.create.ItemCommand;
 import com.fiap.tech.order.application.retrieve.get.GetOrderByIdUseCase;
 import com.fiap.tech.order.application.retrieve.list.ListOrderUseCase;
+import com.fiap.tech.order.application.update.UpdateOrderCommand;
+import com.fiap.tech.order.application.update.UpdateOrderUseCase;
 import com.fiap.tech.order.infra.api.OrderAPI;
 import com.fiap.tech.order.infra.models.CreateOrderRequest;
 import com.fiap.tech.order.infra.models.ListOrderResponse;
 import com.fiap.tech.order.infra.models.OrderResponse;
+import com.fiap.tech.order.infra.models.UpdateOrderRequest;
 import com.fiap.tech.product.application.retrieve.list.OrderSearchQuery;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,11 +25,13 @@ public class OrderController implements OrderAPI {
     private final CreateOrderUseCase createOrderUseCase;
     private final GetOrderByIdUseCase getOrderByIdUseCase;
     private final ListOrderUseCase listOrderUseCase;
+    private final UpdateOrderUseCase updateOrderUseCase;
 
-    public OrderController(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, ListOrderUseCase listOrderUseCase) {
+    public OrderController(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, ListOrderUseCase listOrderUseCase, UpdateOrderUseCase updateOrderUseCase) {
         this.createOrderUseCase = createOrderUseCase;
         this.getOrderByIdUseCase = getOrderByIdUseCase;
         this.listOrderUseCase = listOrderUseCase;
+        this.updateOrderUseCase = updateOrderUseCase;
     }
 
     @Override
@@ -39,6 +44,15 @@ public class OrderController implements OrderAPI {
         );
         final var output = this.createOrderUseCase.execute(aCommand);
         return ResponseEntity.created(URI.create("/orders/" + output.id())).body(output);
+    }
+
+    @Override
+    public ResponseEntity<?> updateOrderById(String id, UpdateOrderRequest input) {
+        final var command = UpdateOrderCommand.with(id, input.status());
+
+        final var output = updateOrderUseCase.execute(command);
+
+        return ResponseEntity.ok(output);
     }
 
     @Override

@@ -65,7 +65,7 @@ public interface ProductAPI {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product was updated successfully"),
             @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
-            @ApiResponse(responseCode = "404", description = "Category was not found"),
+            @ApiResponse(responseCode = "404", description = "Product was not found"),
             @ApiResponse(responseCode = "500", description = "An internal error was thrown"),
     })
     ResponseEntity<?> updateProductById(
