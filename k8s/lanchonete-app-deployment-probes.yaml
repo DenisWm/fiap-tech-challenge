@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lanchonete-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lanchonete-app
+  template:
+    metadata:
+      labels:
+        app: lanchonete-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "32000"
+    spec:
+      containers:
+        - name: lanchonete-app
+          image: lanchonete-app:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: lanchonete-config
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 32000
+              host: host.minikube.internal
+            initialDelaySeconds: 60
+            periodSeconds: 120
+            timeoutSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 32000
+              host: host.minikube.internal
+            initialDelaySeconds: 60
+            periodSeconds: 120
+            timeoutSeconds: 30
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "50Mi"
+            limits:
+              cpu: "50m"
+              memory: "100Mi"

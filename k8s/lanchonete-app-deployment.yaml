@@ -7,6 +7,11 @@ spec:
   selector:
     matchLabels:
       app: lanchonete-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -25,21 +30,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: lanchonete-config
-          livenessProbe:
-            httpGet:
-              path: /actuator/health/liveness
-              port: 32000
-              host: host.minikube.internal
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 30
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /actuator/health/readiness
-              port: 32000
-              host: host.minikube.internal
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 30
-            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "150m"
+              memory: "128Mi"

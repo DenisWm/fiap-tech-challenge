@@ -53,6 +53,13 @@ spec:
             runAsUser: 65534
             seccompProfile:
               type: RuntimeDefault
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
       nodeSelector:
         kubernetes.io/os: linux
       serviceAccountName: kube-state-metrics
