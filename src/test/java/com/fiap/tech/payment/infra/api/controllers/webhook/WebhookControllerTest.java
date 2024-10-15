@@ -65,7 +65,7 @@ public class WebhookControllerTest {
         assertEquals(HttpStatus.CREATED, createOrderResponse.getStatusCode());
 
         List<OrderedItemID> orderedItems = items.stream()
-                .map(item -> new OrderedItemID(item.productId()))
+                .map(item -> OrderedItemID.from(item.productId()))
                 .collect(Collectors.toList());
 
         // Create an order instance using the provided constructor
