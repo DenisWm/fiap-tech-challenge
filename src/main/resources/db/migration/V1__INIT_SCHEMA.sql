@@ -22,6 +22,7 @@ CREATE TABLE orders
     client_id VARCHAR(255),
     total     DECIMAL,
     status    VARCHAR(255),
+    payment_id varchar(255),
     CONSTRAINT pk_orders PRIMARY KEY (id)
 );
 

@@ -8,15 +8,21 @@ import com.fiap.tech.client.domain.ClientGateway;
 import com.fiap.tech.client.domain.ClientID;
 import com.fiap.tech.order.domain.Order;
 import com.fiap.tech.order.domain.OrderGateway;
+import com.fiap.tech.order.domain.OrderID;
+import com.fiap.tech.order.domain.OrderStatus;
 import com.fiap.tech.ordereditens.domain.OrderedItem;
 import com.fiap.tech.ordereditens.domain.OrderedItemGateway;
+import com.fiap.tech.ordereditens.domain.OrderedItemID;
+import com.fiap.tech.payment.domain.PaymentID;
 import com.fiap.tech.product.domain.Product;
 import com.fiap.tech.product.domain.ProductGateway;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
@@ -41,7 +47,12 @@ public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
         final var notification = Notification.create();
         notification.append(validateClient(client));
         notification.append(validateItems(items));
-        final var order = Order.newOrder(client != null ? ClientID.from(client) : null, BigDecimal.ZERO, null);
+
+        ClientID clientId = client != null ? ClientID.from(client) : null;
+        final var order = Order.newOrder(BigDecimal.ZERO, null, clientId);
+
+
+
 
         if(notification.hasErrors()){
             throw NotificationException.with(notification.getErrors());

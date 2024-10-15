@@ -14,4 +14,8 @@ public final class SpecificationUtils {
     public static <T> Specification<T> like(final String prop, final String term) {
         return (root, query, cb) -> cb.like(cb.upper(root.get(prop)), "%" + term.toUpperCase() + "%");
     }
+
+    public static <T> Specification<T> notEqual(final String prop, final Object value) {
+        return (root, query, cb) -> cb.notEqual(root.get(prop), value);
+    }
 }

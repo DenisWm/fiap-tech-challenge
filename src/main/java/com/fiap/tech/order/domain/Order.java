@@ -4,7 +4,9 @@ import com.fiap.tech.common.domain.AggregateRoot;
 import com.fiap.tech.common.domain.validation.ValidationHandler;
 import com.fiap.tech.client.domain.ClientID;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
+import com.fiap.tech.payment.domain.Payment;
 import com.fiap.tech.payment.domain.PaymentID;
+import com.fiap.tech.payment.domain.PaymentStatus;
 import com.fiap.tech.product.domain.ProductID;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,40 +22,49 @@ public class Order extends AggregateRoot<OrderID> {
 
     private Instant timestamp;
 
-    private ClientID clientId;
-
-    private PaymentID paymentId;
-
     private List<OrderedItemID> orderedItems;
 
     private BigDecimal total;
 
     private OrderStatus status;
 
-    private Order(OrderID orderID, Instant timestamp, BigDecimal total, List<OrderedItemID> orderedItems, ClientID clientId, OrderStatus status) {
+    private ClientID clientId;
+
+    private PaymentID paymentId;
+
+    public Order(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentId) {
         super(orderID);
         this.timestamp = timestamp;
-        this.total = total;
         this.orderedItems = orderedItems;
-        this.clientId = clientId;
+        this.total = total;
         this.status = status;
+        this.clientId = clientId;
+        this.paymentId = paymentId;
     }
 
-    public static Order newOrder(ClientID clientID, BigDecimal total, List<OrderedItemID> orderedItems){
+
+
+    public static Order newOrder(BigDecimal total, List<OrderedItemID> orderedItems, ClientID clientID) {
         final var now = Instant.now();
         final var orderID = OrderID.unique();
         final var status = OrderStatus.RECEIVED;
+        final var paymentID = PaymentID.unique();
 
-        return new Order(orderID,now,total,orderedItems != null ? orderedItems : new ArrayList<>(), clientID, status);
+        return new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, paymentID);
+    }
+
+    public Order update(final OrderStatus status) {
+        this.status = status;
+        return this;
     }
 
 
-    public static Order with(OrderID orderID, Instant timestamp, BigDecimal total, List<OrderedItemID> orderedItems, ClientID client,OrderStatus status){
-        return new Order(orderID, timestamp, total, orderedItems,client, status);
+    public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentID){
+        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentID);
     }
 
     public static Order with(Order order){
-        return with(order.getId(), order.getTimestamp(), order.getTotal(), order.getOrderedItems(), order.getClientId(), order.getStatus());
+        return with(order.getId(), order.getTimestamp(), order.getOrderedItems(), order.getTotal(), order.getStatus(), order.getClientId(), order.getPaymentId());
     }
 
     @Override
@@ -108,4 +119,5 @@ public class Order extends AggregateRoot<OrderID> {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
 }

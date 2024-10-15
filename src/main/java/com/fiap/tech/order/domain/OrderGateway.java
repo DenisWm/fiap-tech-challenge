@@ -10,4 +10,6 @@ public interface OrderGateway {
     Pagination<Order> findAll(OrderSearchQuery aQuery);
 
     Optional<Order> findById(OrderID anId);
+
+    Order update(Order anOrder);
 }

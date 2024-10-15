@@ -7,6 +7,8 @@ import com.fiap.tech.order.application.retrieve.get.DefaultGetOrderByIdUseCase;
 import com.fiap.tech.order.application.retrieve.get.GetOrderByIdUseCase;
 import com.fiap.tech.order.application.retrieve.list.DefaultListOrderUseCase;
 import com.fiap.tech.order.application.retrieve.list.ListOrderUseCase;
+import com.fiap.tech.order.application.update.DefaultUpdateOrderUseCase;
+import com.fiap.tech.order.application.update.UpdateOrderUseCase;
 import com.fiap.tech.order.domain.OrderGateway;
 import com.fiap.tech.ordereditens.domain.OrderedItemGateway;
 import com.fiap.tech.product.domain.ProductGateway;
@@ -43,5 +45,10 @@ public class OrderUseCaseConfiguration {
     @Bean
     public ListOrderUseCase listOrderUseCase() {
         return new DefaultListOrderUseCase(orderGateway);
+    }
+
+    @Bean
+    public UpdateOrderUseCase updateOrderUseCase () {
+        return new DefaultUpdateOrderUseCase(orderGateway);
     }
 }

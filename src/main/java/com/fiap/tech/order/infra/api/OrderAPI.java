@@ -4,6 +4,8 @@ import com.fiap.tech.common.domain.pagination.Pagination;
 import com.fiap.tech.order.infra.models.CreateOrderRequest;
 import com.fiap.tech.order.infra.models.ListOrderResponse;
 import com.fiap.tech.order.infra.models.OrderResponse;
+import com.fiap.tech.order.infra.models.UpdateOrderRequest;
+import com.fiap.tech.product.infra.models.UpdateProductRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -27,8 +29,24 @@ public interface OrderAPI {
             @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
             @ApiResponse(responseCode = "500", description = "An internal error was thrown"),
     })
-    ResponseEntity<?> createProduct(@RequestBody CreateOrderRequest input);
+    ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest input);
 
+    @PutMapping(
+            value = "{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(summary = "Update a order by it's identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order was updated successfully"),
+            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
+            @ApiResponse(responseCode = "404", description = "Order was not found"),
+            @ApiResponse(responseCode = "500", description = "An internal error was thrown"),
+    })
+    ResponseEntity<?> updateOrderById(
+            @PathVariable(name = "id") String id,
+            @RequestBody UpdateOrderRequest input
+    );
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "List all orders paginated")
     @ApiResponses(value = {
@@ -36,7 +54,7 @@ public interface OrderAPI {
             @ApiResponse(responseCode = "422", description = "A invalid parameter was received"),
             @ApiResponse(responseCode = "500", description = "An internal error was thrown"),
     })
-    Pagination<ListOrderResponse> listProducts(
+    Pagination<ListOrderResponse> listOrders(
             @RequestParam(name = "client_id", required = false, defaultValue = "") final String clientId,
             @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
             @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,
