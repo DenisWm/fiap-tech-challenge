@@ -7,10 +7,19 @@ spec:
   selector:
     matchLabels:
       app: lanchonete-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
         app: lanchonete-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "32000"
     spec:
       containers:
         - name: lanchonete-app
@@ -21,3 +30,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: lanchonete-config
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "150m"
+              memory: "128Mi"
