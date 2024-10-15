@@ -1,4 +1,4 @@
-**Tech Challenge FIAP: fase 01.**
+## Tech Challenge FIAP: fase 01.
 
 **Objetivo:** criar um sistema de controle de pedidos para uma lanchonete do bairro que está se expandindo.
 
@@ -16,11 +16,14 @@ http://localhost:8080/swagger-ui/index.html#/
 - Ter o docker instalado na máquina;
 - Digitar no terminal dentro do projeto: docker compose up.
 
-**Tech Challenge FIAP: fase 02 - Kubernetes e Clean Architecture**
+## Tech Challenge FIAP: fase 02 - Kubernetes e Clean Architecture
 
 **Objetivo:** Escalabilidade com aumento e diminuição de Pods conforme demanda
 
-**Funcionalidades:** Deployments, Services, Configmaps, Secrets, PV, PVC, HPA, EFK (monitoramento de logs) e Kube-state-metrics (métricas monitoradas pelo Prometheus e Grafana)
+**Funcionalidades:** Deployments, Services, Configmaps, Secrets, PV, PVC, HPA, EFK (monitoramento de logs) e Kube-state-metrics (métricas monitoradas pelo Prometheus e Grafana).
+
+**Apresentação em vídeo:** 
+https://www.youtube.com/watch?v=zwh09buDOxM
 
 **Requisitos:**
 - Clonar o projeto localmente;
@@ -53,3 +56,16 @@ http://localhost:8080/swagger-ui/index.html#/
 - Executar os arquivos da pasta EFK:  kubectl apply -f .\k8s\EFK
 - Execute no terminal: kubectl port-forward svc/kibana 5601:5601
 - Quando os pods do EFK estiverem estáveis, monitore os logs nos gráficos que você configurou em http://localhost:5601
+
+## Desenvolvedores do Grupo 30
+
+- Denis William Mamoni
+
+- Gabriela Marques Fernandes Poncet
+
+- Jessica Prado Costa
+
+- Natalia Feitosa Santos
+
+- Rafael Ielo Almeida Ferreira
+
