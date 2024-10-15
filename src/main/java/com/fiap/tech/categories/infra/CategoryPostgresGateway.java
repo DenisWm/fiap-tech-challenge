@@ -57,6 +57,6 @@ public class CategoryPostgresGateway implements CategoryGateway {
     }
 
     private Specification<CategoryJpaEntity> assembleSpecification(final String name) {
-        return SpecificationUtils.like("name", name);
+        return SpecificationUtils.like("productId", name);
     }
 }

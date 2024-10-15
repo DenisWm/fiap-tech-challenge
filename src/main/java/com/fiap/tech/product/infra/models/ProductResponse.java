@@ -8,7 +8,7 @@ public record ProductResponse(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
-        @JsonProperty("price") BigDecimal price,
+        @JsonProperty("subTotal") BigDecimal price,
         @JsonProperty("category_id") String categoryId
 ) {
 

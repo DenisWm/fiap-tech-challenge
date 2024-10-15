@@ -1,7 +1,9 @@
 package com.fiap.tech.order.application.retrieve.get;
 
+import com.fiap.tech.client.domain.Client;
 import com.fiap.tech.order.domain.Order;
 import com.fiap.tech.order.domain.OrderStatus;
+import com.fiap.tech.ordereditens.domain.OrderedItem;
 import com.fiap.tech.product.domain.Product;
 import lombok.Getter;
 
@@ -14,16 +16,16 @@ public class OrderOutput {
     private String id;
     private Instant timestamp;
     private BigDecimal total;
-    private List<OrderProductOutput> products;
-    private String clientId;
+    private List<OrderedItemOutput> orderedItems;
+    private OrderedItemOutput.OrderedItemClientOutput client;
     private OrderStatus status;
 
-    public OrderOutput(String id, Instant timestamp, BigDecimal total, List<OrderProductOutput> products, String clientId, OrderStatus status) {
+    public OrderOutput(String id, Instant timestamp, BigDecimal total, List<OrderedItemOutput> orderedItems, OrderedItemOutput.OrderedItemClientOutput client, OrderStatus status) {
         this.id = id;
         this.timestamp = timestamp;
         this.total = total;
-        this.products = products;
-        this.clientId = clientId;
+        this.orderedItems = orderedItems;
+        this.client = client;
         this.status = status;
     }
 
@@ -34,26 +36,64 @@ public class OrderOutput {
                 aOrder.getTimestamp(),
                 aOrder.getTotal(),
                 new ArrayList<>(),
-                aOrder.getClientId() != null ? aOrder.getClientId().getValue() : null,
+                null,
                 aOrder.getStatus()
         );
     }
 
-    public OrderOutput withProducts(final List<OrderProductOutput> products) {
-        return new OrderOutput(id, timestamp, total, products, clientId, status);
+    public List<OrderedItemOutput> getOrderedItems() {
+        return orderedItems;
     }
 
-    public List<OrderProductOutput> getProducts() {
-        return products;
+    public OrderOutput withOrderedItemsProductsAndClient(List<OrderedItem> orderedItems, final List<Product> products, Client client) {
+        List<OrderedItemOutput> orderedItemsOutput = new ArrayList<>();
+        for (int i = 0; i < orderedItems.size(); i++) {
+            final var orderedItem = orderedItems.get(i);
+            final var product = products.stream()
+                    .filter(p -> p.getId().getValue().equals(orderedItem.getProduct().getValue())).findFirst().orElse(null);
+            orderedItemsOutput.add(OrderedItemOutput.from(orderedItem, product));
+        }
+        return new OrderOutput(id, timestamp, total, orderedItemsOutput, OrderedItemOutput.OrderedItemClientOutput.from(client), status);
     }
 
-    public record OrderProductOutput(String id, BigDecimal price, String name) {
-        public static OrderProductOutput from(final Product aProduct) {
-            return new OrderProductOutput(
-                    aProduct.getId().getValue(),
-                    aProduct.getPrice(),
-                    aProduct.getName()
+    public record OrderedItemOutput(String id, Integer quantity, BigDecimal subTotal, OrderedItemProductOutput product) {
+        public static OrderedItemOutput from(final OrderedItem aOrderedItem, final Product aProduct) {
+            return new OrderedItemOutput(
+                    aOrderedItem.getId().getValue(),
+                    aOrderedItem.getQuantity(),
+                    aOrderedItem.getSubTotal(),
+                    OrderedItemProductOutput.from(aProduct.getId().getValue(), aProduct.getName(), aProduct.getPrice())
             );
+        }
+
+        public record OrderedItemProductOutput(
+                String id,
+                String name,
+                BigDecimal price
+        ) {
+
+            public static OrderedItemProductOutput from(final String id, final String name, BigDecimal price) {
+                return new OrderedItemProductOutput(
+                        id,
+                        name,
+                        price
+                );
+            }
+        }
+
+        public record OrderedItemClientOutput(
+                String id,
+                String name,
+                String cpf
+        ) {
+
+            public static OrderedItemClientOutput from(final Client client) {
+                return new OrderedItemClientOutput(
+                        client.getId().getValue(),
+                        client.getName(),
+                        client.getCpf()
+                );
+            }
         }
     }
 }

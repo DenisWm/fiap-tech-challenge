@@ -1,30 +1,32 @@
 package com.fiap.tech.order.infra.persistence;
 
+import com.fiap.tech.ordereditens.domain.OrderedItem;
+import com.fiap.tech.ordereditens.domain.OrderedItemID;
 import com.fiap.tech.product.domain.ProductID;
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "orders_products")
-public class OrderProductJpaEntity {
+@Table(name = "ordered_items")
+public class OrderOrderedItemJpaEntity {
     @EmbeddedId
-    private OrderProductID id;
+    private OrderOrderedItemID id;
 
     @ManyToOne
     @MapsId("orderId")
     private OrderJpaEntity order;
 
-    public OrderProductJpaEntity() {
+    public OrderOrderedItemJpaEntity() {
     }
 
-    public OrderProductJpaEntity(final OrderJpaEntity anOrder, final ProductID aProductID) {
-        this.id = OrderProductID.from(anOrder.getId(), aProductID.getValue());
+    public OrderOrderedItemJpaEntity(final OrderJpaEntity anOrder, final OrderedItemID orderedItemId) {
+        this.id = OrderOrderedItemID.from(anOrder.getId(), orderedItemId.getValue());
         this.order = anOrder;
     }
 
-    public static OrderProductJpaEntity from(final OrderJpaEntity anOrder, final ProductID aProductID) {
-        return new OrderProductJpaEntity(anOrder, aProductID);
+    public static OrderOrderedItemJpaEntity from(final OrderJpaEntity anOrder, final OrderedItemID orderedItemId) {
+        return new OrderOrderedItemJpaEntity(anOrder, orderedItemId);
     }
 
     @Override
@@ -32,7 +34,7 @@ public class OrderProductJpaEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OrderProductJpaEntity that = (OrderProductJpaEntity) o;
+        OrderOrderedItemJpaEntity that = (OrderOrderedItemJpaEntity) o;
 
         if (!Objects.equals(id, that.id)) return false;
         return Objects.equals(order, that.order);
@@ -45,11 +47,11 @@ public class OrderProductJpaEntity {
         return result;
     }
 
-    public OrderProductID getId() {
+    public OrderOrderedItemID getId() {
         return id;
     }
 
-    public void setId(OrderProductID id) {
+    public void setId(OrderOrderedItemID id) {
         this.id = id;
     }
 

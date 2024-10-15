@@ -1,13 +1,16 @@
-version: '3'
-
+version: '3.9'
 services:
   app:
     container_name: lanchonete-app
+    image: lanchonete-app:latest
     build: .
     ports:
       - 8080:8080
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=container
   db:
     container_name: postgresql-lanchonete
     image: postgres:12.6
@@ -17,3 +20,8 @@ services:
       POSTGRES_DB: lanchonete
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
