@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.10'
 services:
   app:
     container_name: lanchonete-app
@@ -9,8 +9,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      - SPRING_PROFILES_ACTIVE=container
   db:
     container_name: postgresql-lanchonete
     image: postgres:12.6
@@ -25,3 +23,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"

@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: lanchonete-config
-data:
-  POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: "postgres"
-  POSTGRES_DB: "lanchonete"
-  POSTGRES_HOST: "postgresql-lanchonete"

@@ -14,7 +14,7 @@ spec:
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
-        prometheus.io/port: "32000"
+        prometheus.io/port: "8080"
     spec:
       containers:
         - name: lanchonete-app
@@ -25,28 +25,31 @@ spec:
           envFrom:
             - configMapRef:
                 name: lanchonete-config
+          env:
+            - name: JAVA_OPTS
+              value: "-Xms128m -Xmx200m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+PrintGCDetails -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: 32000
+              port: 8080
               host: host.minikube.internal
-            initialDelaySeconds: 60
+            initialDelaySeconds: 120
             periodSeconds: 120
-            timeoutSeconds: 30
-            failureThreshold: 3
+            timeoutSeconds: 10
+            failureThreshold: 10
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: 32000
+              port: 8080
               host: host.minikube.internal
-            initialDelaySeconds: 60
+            initialDelaySeconds: 120
             periodSeconds: 120
-            timeoutSeconds: 30
-            failureThreshold: 3
+            timeoutSeconds: 10
+            failureThreshold: 10
           resources:
             requests:
-              cpu: "10m"
-              memory: "50Mi"
+              cpu: "250m"
+              memory: "150Mi"
             limits:
-              cpu: "50m"
-              memory: "100Mi"
+              cpu: "400m"
+              memory: "250Mi"
