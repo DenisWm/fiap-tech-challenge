@@ -41,7 +41,7 @@ jobs:
         run: docker push gabiponcet/lanchonete-app:latest
 
       - name: Clone Kubernetes repo
-        run: git clone https://your-username:${{ secrets.PAT_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
+        run: git clone https://gabiponcet:${{ secrets.PAT_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
 
       - name: Copy Terraform files
         run: |
