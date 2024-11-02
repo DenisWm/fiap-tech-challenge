@@ -16,6 +16,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
+      - name: Set permissions for Gradle Wrapper
+        run: chmod +x ./gradlew
+
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
