@@ -52,6 +52,27 @@ jobs:
         run: |
           find k8s-repo -name 'deployment.yaml' -exec sed -i 's|image:.*|image: gabiponcet/lanchonete-app:latest|' {} +
 
+      - name: Install Terraform
+        run: |
+          sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update && sudo apt-get install -y terraform
+
+      - name: Install LocalStack
+        run: pip install localstack
+
+      - name: Start LocalStack
+        run: localstack start -d
+
+      - name: Initialize Terraform
+        run: terraform init
+        working-directory: k8s-repo/terraform
+
+      - name: Apply Terraform
+        run: terraform apply -auto-approve
+        working-directory: k8s-repo/terraform
+
       - name: Commit and push changes to Kubernetes repo
         run: |
           cd k8s-repo
