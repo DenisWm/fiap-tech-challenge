@@ -41,7 +41,8 @@ jobs:
         run: docker push gabiponcet/lanchonete-app:latest
 
       - name: Clone Kubernetes repo
-        run: git clone https://github.com/DenisWm/infra-k8s.git k8s-repo
+        run: |
+          git clone https://gabiponcet:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
 
       - name: Copy K8s files
         run: |
