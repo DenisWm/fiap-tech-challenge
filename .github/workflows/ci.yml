@@ -41,13 +41,18 @@ jobs:
         run: docker push gabiponcet/lanchonete-app:latest
 
       - name: Clone Kubernetes repo
-        run: git clone https://gabiponcet:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
+        run: git clone https://your-username:${{ secrets.PAT_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
 
       - name: Copy Terraform files
         run: |
           mkdir -p k8s-repo/Terraform
           cp -R k8s/Terraform/* k8s-repo/Terraform/
-          cp k8s/Terraform/lambda_function_payload.zip k8s-repo/Terraform/lambda_function_payload.zip
+          if [ -f k8s/Terraform/lambda_function_payload.zip ]; then
+            cp k8s/Terraform/lambda_function_payload.zip k8s-repo/Terraform/lambda_function_payload.zip
+          else
+            echo "File lambda_function_payload.zip not found"
+            exit 1
+          fi
 
       - name: Update Kubernetes manifests
         run: |
@@ -60,11 +65,15 @@ jobs:
           sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
           sudo apt-get update && sudo apt-get install -y terraform
 
-      - name: Install LocalStack
+      - name: Install LocalStack CLI
         run: pip install localstack
 
-      - name: Start LocalStack
-        run: localstack start -d
+      - name: Start LocalStack with Docker
+        run: |
+          export LAMBDA_EXECUTOR=docker
+          localstack start -d
+        env:
+          LAMBDA_EXECUTOR: docker
 
       - name: Initialize Terraform
         run: terraform init
@@ -83,4 +92,4 @@ jobs:
           git commit -m "Update deployment to latest image"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
