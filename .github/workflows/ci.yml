@@ -43,6 +43,10 @@ jobs:
       - name: Clone Kubernetes repo
         run: git clone https://github.com/DenisWm/infra-k8s.git k8s-repo
 
+      - name: Copy K8s files
+        run: |
+          cp -R k8s/* k8s-repo/
+
       - name: Update Kubernetes manifests
         run: |
           find k8s-repo -name 'deployment.yaml' -exec sed -i 's|image:.*|image: gabiponcet/lanchonete-app:latest|' {} +
