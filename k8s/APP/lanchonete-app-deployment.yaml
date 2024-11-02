@@ -19,7 +19,7 @@ spec:
       containers:
         - name: lanchonete-app
           image: lanchonete-app:latest
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:
@@ -32,20 +32,18 @@ spec:
             httpGet:
               path: /actuator/health/liveness
               port: 8080
-              host: host.minikube.internal
             initialDelaySeconds: 120
             periodSeconds: 120
             timeoutSeconds: 10
-            failureThreshold: 10
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8080
-              host: host.minikube.internal
             initialDelaySeconds: 120
             periodSeconds: 120
             timeoutSeconds: 10
-            failureThreshold: 10
+            failureThreshold: 3
           resources:
             requests:
               cpu: "250m"
