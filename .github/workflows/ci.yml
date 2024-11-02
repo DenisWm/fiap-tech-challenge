@@ -47,6 +47,7 @@ jobs:
         run: |
           mkdir -p k8s-repo/Terraform
           cp -R k8s/Terraform/* k8s-repo/Terraform/
+          cp k8s/Terraform/lambda_function_payload.zip k8s-repo/Terraform/lambda_function_payload.zip
 
       - name: Update Kubernetes manifests
         run: |
