@@ -41,12 +41,12 @@ jobs:
         run: docker push gabiponcet/lanchonete-app:latest
 
       - name: Clone Kubernetes repo
-        run: |
-          git clone https://gabiponcet:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
+        run: git clone https://gabiponcet:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
 
-      - name: Copy K8s files
+      - name: Copy Terraform files
         run: |
-          cp -R k8s/* k8s-repo/
+          mkdir -p k8s-repo/Terraform
+          cp -R k8s/Terraform/* k8s-repo/Terraform/
 
       - name: Update Kubernetes manifests
         run: |
@@ -67,11 +67,11 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init
-        working-directory: k8s-repo/terraform
+        working-directory: k8s-repo/Terraform
 
       - name: Apply Terraform
         run: terraform apply -auto-approve
-        working-directory: k8s-repo/terraform
+        working-directory: k8s-repo/Terraform
 
       - name: Commit and push changes to Kubernetes repo
         run: |
