@@ -88,9 +88,8 @@ jobs:
           cd k8s-repo
           git config --global user.email "gabiponcet@gmail.com"
           git config --global user.name "Gabriela Poncet"
-          git remote set-url origin https://gabiponcet:${{ secrets.PAT_TOKEN }}@github.com/DenisWm/infra-k8s.git
           git add .
           git commit -m "Update deployment to latest image"
-          git push https://gabiponcet:${{ secrets.PAT_TOKEN }}@github.com/DenisWm/infra-k8s.git HEAD:master
+          git push origin HEAD:master
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
