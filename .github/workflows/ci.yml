@@ -44,7 +44,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/gabiponcet/infra-k8s.git k8s-repo
           cd k8s-repo
 
       - name: Copy Terraform files
@@ -96,4 +96,4 @@ jobs:
           git config --global user.name "gabiponcet"
           git add .
           git commit -m "Update deployment to latest image"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git HEAD:master
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/gabiponcet/infra-k8s.git HEAD:master
