@@ -37,6 +37,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Print PAT Token
+        run: echo ${{ secrets.PAT_TOKEN }}
+
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
 
