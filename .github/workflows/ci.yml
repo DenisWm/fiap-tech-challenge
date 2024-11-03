@@ -37,8 +37,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Check PAT Token
+        run: |
+          if [ -z "${{ secrets.PAT_TOKEN }}" ]; then
+            echo "PAT Token is not set"
+            exit 1
+          else
+            echo "PAT Token is set"
+          fi
+
       - name: Print PAT Token
         run: echo ${{ secrets.PAT_TOKEN }}
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
@@ -93,7 +104,7 @@ jobs:
         run: |
           cd k8s-repo
           git config --global user.email "gabiponcet@gmail.com"
-          git config --global user.name "Gabriela Poncet"
+          git config --global user.name "gabiponcet"
           echo "TEST Using token: ${{ secrets.PAT_TOKEN }}"
           git add .
           git commit -m "Update deployment to latest image"
