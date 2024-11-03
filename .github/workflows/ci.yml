@@ -112,4 +112,4 @@ jobs:
           git add .
           git commit -m "Update deployment to latest image - $(date +'%Y-%m-%d %H:%M:%S')"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/gabiponcet/infra-k8s.git
-          git push --verbose origin HEAD:master
+          git push --force --verbose origin HEAD:master
