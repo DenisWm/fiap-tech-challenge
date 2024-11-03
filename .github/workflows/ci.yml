@@ -41,7 +41,10 @@ jobs:
         run: docker push gabiponcet/lanchonete-app:latest
 
       - name: Clone Kubernetes repo
-        run: git clone https://github.com/DenisWm/infra-k8s.git k8s-repo
+        run: |
+          git clone https://github.com/DenisWm/infra-k8s.git k8s-repo
+          cd k8s-repo
+          git remote set-url origin https://gabiponcet:${{ secrets.PAT_TOKEN }}@github.com/DenisWm/infra-k8s.git
 
       - name: Copy Terraform files
         run: |
@@ -88,7 +91,6 @@ jobs:
           cd k8s-repo
           git config --global user.email "gabiponcet@gmail.com"
           git config --global user.name "Gabriela Poncet"
-          git remote set-url origin https://gabiponcet:${{ secrets.PAT_TOKEN }}@github.com/DenisWm/infra-k8s.git
           git add .
           git commit -m "Update deployment to latest image"
           git push origin HEAD:master
