@@ -91,6 +91,9 @@ jobs:
           cd k8s-repo
           git config --global user.email "gabiponcet@gmail.com"
           git config --global user.name "Gabriela Poncet"
+          echo "Using token: ${{ secrets.PAT_TOKEN }}"
           git add .
           git commit -m "Update deployment to latest image"
           git push origin HEAD:master
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
