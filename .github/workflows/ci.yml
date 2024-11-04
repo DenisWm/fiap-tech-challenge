@@ -53,13 +53,13 @@ jobs:
           echo "Testing GITHUB_TOKEN permissions"
           curl -H "Authorization: token $GITHUB_TOKEN" \
                -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/gabiponcet/infra-k8s/contents/
+               https://api.github.com/repos/DenisWm/infra-k8s/contents/
 
       - name: Clone Kubernetes repo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/gabiponcet/infra-k8s.git k8s-repo
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
           cd k8s-repo
 
       - name: Copy Terraform files
@@ -107,8 +107,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd k8s-repo
-          git config --global user.email "gabiponcet@gmail.com"
-          git config --global user.name "gabiponcet"
+          git config --global user.email "denismamoni@hotmail.com"
+          git config --global user.name "DenisWm"
           git add .
           git commit -m "Update deployment to latest image - $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --verbose https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/gabiponcet/infra-k8s.git HEAD:master
+          git push --verbose https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git HEAD:master
