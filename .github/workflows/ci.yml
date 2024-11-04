@@ -109,6 +109,9 @@ jobs:
           cd k8s-repo
           git config --global user.email "denismamoni@hotmail.com"
           git config --global user.name "DenisWm"
+          git config --global credential.helper cache
+          git config --global credential.username "github-actions[bot]"
           git add .
           git commit -m "Update deployment to latest image - $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --force --verbose https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git HEAD:master
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git
+          git push --force --verbose origin HEAD:master
