@@ -111,4 +111,4 @@ jobs:
           git config --global user.name "DenisWm"
           git add .
           git commit -m "Update deployment to latest image - $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --verbose https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git HEAD:master
+          git push --force --verbose https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git HEAD:master
