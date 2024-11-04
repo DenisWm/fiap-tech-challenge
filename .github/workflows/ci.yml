@@ -110,6 +110,7 @@ jobs:
           git config --global user.email "denismamoni@hotmail.com"
           git config --global user.name "DenisWm"
           git config --global credential.username "github-actions[bot]"
+          git config --global credential.useHttpPath true
           git add .
           git commit -m "Update deployment to latest image - $(date +'%Y-%m-%d %H:%M:%S')"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git
