@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline - Application
 
 on:
   push:
@@ -8,14 +8,8 @@ on:
     branches:
       - master
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: write
-  repository-projects: write
-
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -45,70 +39,3 @@ jobs:
 
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
-
-      - name: Test GITHUB_TOKEN permissions
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Testing GITHUB_TOKEN permissions"
-          curl -H "Authorization: token $GITHUB_TOKEN" \
-               -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/DenisWm/infra-k8s/contents/
-
-      - name: Clone Kubernetes repo
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git k8s-repo
-          cd k8s-repo
-
-      - name: Copy Terraform files
-        run: |
-          mkdir -p k8s-repo/Terraform
-          cp -R k8s/Terraform/* k8s-repo/Terraform/
-          if [ -f k8s/Terraform/lambda_function_payload.zip ]; then
-            cp k8s/Terraform/lambda_function_payload.zip k8s-repo/Terraform/lambda_function_payload.zip
-          else
-            echo "File lambda_function_payload.zip not found"
-            exit 1
-          fi
-
-      - name: Update Kubernetes manifests
-        run: |
-          find k8s-repo -name 'deployment.yaml' -exec sed -i 's|image:.*|image: gabiponcet/lanchonete-app:latest|' {} +
-
-      - name: Install Terraform
-        run: |
-          sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
-          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
-          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-          sudo apt-get update && sudo apt-get install -y terraform
-
-      - name: Install LocalStack CLI
-        run: pip install localstack
-
-      - name: Start LocalStack with Docker
-        run: |
-          export LAMBDA_EXECUTOR=docker
-          localstack start -d
-        env:
-          LAMBDA_EXECUTOR: docker
-
-      - name: Initialize Terraform
-        run: terraform init
-        working-directory: k8s-repo/Terraform
-
-      - name: Apply Terraform
-        run: terraform apply -auto-approve
-        working-directory: k8s-repo/Terraform
-
-      - name: Commit and push changes to Kubernetes repo
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cd k8s-repo
-          git config --global user.email "denismamoni@hotmail.com"
-          git config --global user.name "DenisWm"
-          git add .
-          git commit -m "Test commit - $(date +'%Y-%m-%d %H:%M:%S')"
-          git push --verbose https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/DenisWm/infra-k8s.git HEAD:master
