@@ -39,3 +39,35 @@ jobs:
 
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
+
+      - name: Install LocalStack CLI
+        run: pip install localstack
+
+      - name: Start LocalStack with Docker
+        run: |
+          export LAMBDA_EXECUTOR=docker
+          localstack start -d
+        env:
+          LAMBDA_EXECUTOR: docker
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
+      - name: Install Minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+      - name: Start Minikube
+        run: |
+          minikube start --driver=docker --force
+          sudo chown -R $USER $HOME/.kube $HOME/.minikube
+          sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
+          export KUBECONFIG=$HOME/.kube/config
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -R -f k8s/
