@@ -39,3 +39,21 @@ jobs:
 
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
+
+      - name: Start LocalStack with Docker
+        run: |
+          export LAMBDA_EXECUTOR=docker
+          localstack start -d
+        env:
+          LAMBDA_EXECUTOR: docker
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/configmap.yaml
+          kubectl apply -f k8s/secret.yaml
+
+      - name: Deploy to Kubernetes
+        run: | 
+          kubectl apply -R -f k8s/
