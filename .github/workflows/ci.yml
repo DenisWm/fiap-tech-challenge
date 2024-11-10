@@ -63,7 +63,7 @@ jobs:
 
       - name: Start Minikube
         run: |
-          sudo minikube start --driver=docker
+          minikube start --driver=docker --force
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
           sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
           export KUBECONFIG=$HOME/.kube/config
