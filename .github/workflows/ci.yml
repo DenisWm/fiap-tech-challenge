@@ -40,6 +40,9 @@ jobs:
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
 
+      - name: Install LocalStack CLI
+        run: pip install localstack
+
       - name: Start LocalStack with Docker
         run: |
           export LAMBDA_EXECUTOR=docker
@@ -55,5 +58,5 @@ jobs:
           kubectl apply -f k8s/secret.yaml
 
       - name: Deploy to Kubernetes
-        run: | 
+        run: |
           kubectl apply -R -f k8s/
