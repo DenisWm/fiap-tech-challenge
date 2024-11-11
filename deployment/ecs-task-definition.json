@@ -1,0 +1,24 @@
+{
+  "family": "lanchonete-app",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "lanchonete-app",
+      "image": "060795911351.dkr.ecr.us-east-1.amazonaws.com/lanchonete-app:latest",
+      "memory": 512,
+      "cpu": 256,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080
+        }
+      ]
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "256",
+  "memory": "512"
+}
