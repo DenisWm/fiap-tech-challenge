@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,8 +28,33 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
 
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set permissions for Gradle Wrapper
+        run: chmod +x ./gradlew
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
       - name: Run Unit Tests
         run: ./gradlew test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
 
       - name: Build Docker image
         run: docker build -t gabiponcet/lanchonete-app:latest .
