@@ -86,7 +86,9 @@ jobs:
 
       - name: Deploy to Staging
         run: |
-          find k8s -name '*.yaml' -exec kubectl apply -f {} +
+          for file in $(find k8s -name '*.yaml'); do
+            kubectl apply -f $file
+          done
           kubectl rollout status deployment lanchonete-app-staging
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
@@ -142,7 +144,9 @@ jobs:
 
       - name: Deploy to Production
         run: |
-          find k8s -name '*.yaml' -exec kubectl apply -f {} +
+          for file in $(find k8s -name '*.yaml'); do
+            kubectl apply -f $file
+          done
           kubectl rollout status deployment lanchonete-app-production
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
