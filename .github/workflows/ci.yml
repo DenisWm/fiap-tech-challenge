@@ -58,9 +58,69 @@ jobs:
         run: ./gradlew check
         continue-on-error: true
 
-  deploy:
+  deploy-staging:
     runs-on: ubuntu-latest
     needs: test
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t gabiponcet/lanchonete-app:staging .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker image
+        run: docker push gabiponcet/lanchonete-app:staging
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
+      - name: Replace Placeholders in Manifests
+        run: |
+          sed -i 's/{{ENV}}/staging/g' k8s/*.yaml
+
+      - name: Deploy to Staging
+        run: |
+          kubectl apply -f k8s/
+          kubectl rollout status deployment lanchonete-app-staging
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+      - name: Rollback Deployment
+        if: failure()
+        run: |
+          kubectl rollout undo deployment lanchonete-app-staging
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+      - name: Send Discord Failure Notification
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ O deploy de staging falhou! A infra foi revertida. Verifique os logs para mais detalhes."}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Send Discord Success Notification
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"✅ O deploy de staging foi concluído com sucesso!"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-staging
 
     steps:
       - name: Check out code
@@ -78,34 +138,42 @@ jobs:
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
 
-      - name: Install LocalStack CLI
-        run: pip install localstack
-
-      - name: Start LocalStack with Docker
-        run: |
-          export LAMBDA_EXECUTOR=docker
-          localstack start -d
-        env:
-          LAMBDA_EXECUTOR: docker
-
       - name: Install kubectl
         run: |
           curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x ./kubectl
           sudo mv ./kubectl /usr/local/bin/kubectl
 
-      - name: Install Minikube
+      - name: Replace Placeholders in Manifests
         run: |
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          sed -i 's/{{ENV}}/production/g' k8s/*.yaml
 
-      - name: Start Minikube
+      - name: Deploy to Production
         run: |
-          minikube start --driver=docker --force
-          sudo chown -R $USER $HOME/.kube $HOME/.minikube
-          sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
-          export KUBECONFIG=$HOME/.kube/config
+          kubectl apply -f k8s/
+          kubectl rollout status deployment lanchonete-app-production
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
-      - name: Deploy to Kubernetes
+      - name: Rollback Deployment
+        if: failure()
         run: |
-          kubectl apply -R -f k8s/
+          kubectl rollout undo deployment lanchonete-app-production
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+      - name: Send Discord Failure Notification
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ O deploy de produção falhou! A infra foi revertida. Verifique os logs para mais detalhes."}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Send Discord Success Notification
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"✅ O deploy de produção foi concluído com sucesso!"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
