@@ -46,7 +46,17 @@ jobs:
           java-version: '17'
 
       - name: Run Unit Tests
-        run: ./gradlew test
+        run: ./gradlew test jacocoTestReport
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html/
+
+      - name: Check Quality Gate
+        run: ./gradlew check
+        continue-on-error: true
 
   deploy:
     runs-on: ubuntu-latest
