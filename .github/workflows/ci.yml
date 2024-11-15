@@ -84,13 +84,9 @@ jobs:
           chmod +x ./kubectl
           sudo mv ./kubectl /usr/local/bin/kubectl
 
-      - name: Replace Placeholders in Manifests
-        run: |
-          sed -i 's/{{ENV}}/staging/g' k8s/*.yaml
-
       - name: Deploy to Staging
         run: |
-          kubectl apply -f k8s/
+          find k8s -name '*.yaml' -exec kubectl apply -f {} +
           kubectl rollout status deployment lanchonete-app-staging
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
@@ -144,13 +140,9 @@ jobs:
           chmod +x ./kubectl
           sudo mv ./kubectl /usr/local/bin/kubectl
 
-      - name: Replace Placeholders in Manifests
-        run: |
-          sed -i 's/{{ENV}}/production/g' k8s/*.yaml
-
       - name: Deploy to Production
         run: |
-          kubectl apply -f k8s/
+          find k8s -name '*.yaml' -exec kubectl apply -f {} +
           kubectl rollout status deployment lanchonete-app-production
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
