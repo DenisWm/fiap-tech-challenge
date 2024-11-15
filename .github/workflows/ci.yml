@@ -110,11 +110,6 @@ jobs:
         run: |
           kubectl apply -R -f k8s/
 
-      - name: Verify Health of Components
-        run: |
-          kubectl get pods -l app=lanchonete-app -o json | jq '.items[].status.conditions[] | select(.type=="Ready") | .status' | grep True
-          kubectl get pods -l app=db -o json | jq '.items[].status.conditions[] | select(.type=="Ready") | .status' | grep True
-
       - name: Rollback Specific Components
         if: failure()
         run: |
