@@ -58,76 +58,9 @@ jobs:
         run: ./gradlew check
         continue-on-error: true
 
-  deploy-staging:
+  deploy:
     runs-on: ubuntu-latest
     needs: test
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Build Docker image
-        run: docker build -t gabiponcet/lanchonete-app:staging .
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Push Docker image
-        run: docker push gabiponcet/lanchonete-app:staging
-
-      - name: Install kubectl
-        run: |
-          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          sudo mv ./kubectl /usr/local/bin/kubectl
-
-      - name: Start Minikube
-        run: |
-          minikube start --driver=docker --force
-          sudo chown -R $USER $HOME/.kube $HOME/.minikube
-          sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
-          export KUBECONFIG=$HOME/.kube/config
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-
-      - name: Deploy to Staging
-        run: |
-          for file in $(find k8s -name '*.yaml'); do
-            kubectl apply -f $file --validate=false
-          done
-          kubectl rollout status deployment lanchonete-app
-
-      - name: Rollback All Deployments
-        if: failure()
-        run: |
-          for deployment in $(kubectl get deployments -o name); do
-            kubectl rollout undo $deployment
-          done
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-
-      - name: Send Discord Failure Notification
-        if: failure()
-        run: |
-          curl -X POST \
-            -H 'Content-type: application/json' \
-            --data '{"content":"⚠️ O deploy de staging falhou! A infra foi revertida. Verifique os logs para mais detalhes."}' \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
-
-      - name: Send Discord Success Notification
-        if: success()
-        run: |
-          curl -X POST \
-            -H 'Content-type: application/json' \
-            --data '{"content":"✅ O deploy de staging foi concluído com sucesso!"}' \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
-
-  deploy-production:
-    runs-on: ubuntu-latest
-    needs: deploy-staging
 
     steps:
       - name: Check out code
@@ -145,11 +78,26 @@ jobs:
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
 
+      - name: Install LocalStack CLI
+        run: pip install localstack
+
+      - name: Start LocalStack with Docker
+        run: |
+          export LAMBDA_EXECUTOR=docker
+          localstack start -d
+        env:
+          LAMBDA_EXECUTOR: docker
+
       - name: Install kubectl
         run: |
           curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x ./kubectl
           sudo mv ./kubectl /usr/local/bin/kubectl
+
+      - name: Install Minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
       - name: Start Minikube
         run: |
@@ -157,37 +105,23 @@ jobs:
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
           sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
           export KUBECONFIG=$HOME/.kube/config
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
-      - name: Deploy to Production
+      - name: Deploy to Kubernetes
         run: |
-          for file in $(find k8s -name '*.yaml'); do
-            kubectl apply -f $file --validate=false
-          done
-          kubectl rollout status deployment lanchonete-app
-
-      - name: Rollback All Deployments
-        if: failure()
-        run: |
-          for deployment in $(kubectl get deployments -o name); do
-            kubectl rollout undo $deployment
-          done
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
-
-      - name: Send Discord Failure Notification
-        if: failure()
-        run: |
-          curl -X POST \
-            -H 'Content-type: application/json' \
-            --data '{"content":"⚠️ O deploy de produção falhou! A infra foi revertida. Verifique os logs para mais detalhes."}' \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
+          kubectl apply -R -f k8s/
 
       - name: Send Discord Success Notification
         if: success()
         run: |
           curl -X POST \
             -H 'Content-type: application/json' \
-            --data '{"content":"✅ O deploy de produção foi concluído com sucesso!"}' \
+            --data '{"content":"✅ O deploy foi concluído com sucesso!"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Send Discord Failure Notification
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ O deploy falhou! Verifique os logs para mais detalhes."}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
