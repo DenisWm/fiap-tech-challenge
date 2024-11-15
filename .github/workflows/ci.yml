@@ -98,12 +98,14 @@ jobs:
           for file in $(find k8s -name '*.yaml'); do
             kubectl apply -f $file --validate=false
           done
-          kubectl rollout status deployment lanchonete-app-staging
+          kubectl rollout status deployment lanchonete-app
 
-      - name: Rollback Deployment
+      - name: Rollback All Deployments
         if: failure()
         run: |
-          kubectl rollout undo deployment lanchonete-app-staging
+          for deployment in $(kubectl get deployments -o name); do
+            kubectl rollout undo $deployment
+          done
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
@@ -163,12 +165,14 @@ jobs:
           for file in $(find k8s -name '*.yaml'); do
             kubectl apply -f $file --validate=false
           done
-          kubectl rollout status deployment lanchonete-app-production
+          kubectl rollout status deployment lanchonete-app
 
-      - name: Rollback Deployment
+      - name: Rollback All Deployments
         if: failure()
         run: |
-          kubectl rollout undo deployment lanchonete-app-production
+          for deployment in $(kubectl get deployments -o name); do
+            kubectl rollout undo $deployment
+          done
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
