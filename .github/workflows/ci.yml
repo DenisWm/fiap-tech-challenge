@@ -84,14 +84,21 @@ jobs:
           chmod +x ./kubectl
           sudo mv ./kubectl /usr/local/bin/kubectl
 
+      - name: Start Minikube
+        run: |
+          minikube start --driver=docker --force
+          sudo chown -R $USER $HOME/.kube $HOME/.minikube
+          sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
+          export KUBECONFIG=$HOME/.kube/config
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
       - name: Deploy to Staging
         run: |
           for file in $(find k8s -name '*.yaml'); do
-            kubectl apply -f $file
+            kubectl apply -f $file --validate=false
           done
           kubectl rollout status deployment lanchonete-app-staging
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
       - name: Rollback Deployment
         if: failure()
@@ -142,14 +149,21 @@ jobs:
           chmod +x ./kubectl
           sudo mv ./kubectl /usr/local/bin/kubectl
 
+      - name: Start Minikube
+        run: |
+          minikube start --driver=docker --force
+          sudo chown -R $USER $HOME/.kube $HOME/.minikube
+          sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
+          export KUBECONFIG=$HOME/.kube/config
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
       - name: Deploy to Production
         run: |
           for file in $(find k8s -name '*.yaml'); do
-            kubectl apply -f $file
+            kubectl apply -f $file --validate=false
           done
           kubectl rollout status deployment lanchonete-app-production
-        env:
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
       - name: Rollback Deployment
         if: failure()
