@@ -37,7 +37,7 @@ jobs:
           java-version: '17'
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew build --no-daemon -Dorg.gradle.jvmargs="-Xmx2g"
 
       - name: Send Discord Notification on Build Success
         if: success()
@@ -73,7 +73,7 @@ jobs:
           java-version: '17'
 
       - name: Run Unit Tests
-        run: ./gradlew test jacocoTestReport
+        run: ./gradlew test jacocoTestReport -Dorg.gradle.jvmargs="-Xmx2g"
 
       - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v4
@@ -82,11 +82,11 @@ jobs:
           path: build/reports/jacoco/test/html/
 
       - name: Check Quality Gate
-        run: ./gradlew check
+        run: ./gradlew check -Dorg.gradle.jvmargs="-Xmx2g"
         continue-on-error: true
 
       - name: Run security audit
-        run: ./gradlew dependencyCheckAnalyze || true
+        run: ./gradlew dependencyCheckAnalyze -Dorg.gradle.jvmargs="-Xmx2g" || true
         env:
           NODE_ENV: production
 
