@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN gradle build --no-daemon
+RUN gradle clean build --no-daemon
 
 FROM openjdk:17.0.2-slim-bullseye
 
