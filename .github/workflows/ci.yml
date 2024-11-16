@@ -175,7 +175,12 @@ jobs:
       - name: Print Docker logs
         if: failure()
         run: |
-          docker logs $(docker ps -q --filter name=lanchonete-app)
+          CONTAINER_ID=$(docker ps -q --filter name=lanchonete-app)
+          if [ -n "$CONTAINER_ID" ]; then
+            docker logs $CONTAINER_ID
+          else
+            echo "No running container found for lanchonete-app"
+          fi
 
       - name: Send Discord Notification on Deploy Success
         if: success()
