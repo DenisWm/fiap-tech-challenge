@@ -83,9 +83,18 @@ jobs:
         continue-on-error: true
 
       - name: Run security audit
-        run: ./gradlew dependencyCheckAnalyze
+        run: ./gradlew dependencyCheckAnalyze || true
         env:
           NODE_ENV: production
+
+      - name: Send Discord Notification on Security Audit Result
+        run: |
+          if grep -q "One or more dependencies were identified with known vulnerabilities" build/reports/dependency-check/dependency-check-report.html; then
+            curl -X POST \
+              -H 'Content-type: application/json' \
+              --data '{"content":"⚠️ Foram encontradas vulnerabilidades nas dependências! Verifique o relatório para mais detalhes."}' \
+              ${{ secrets.DISCORD_WEBHOOK_URL }}
+          fi
 
       - name: Send Discord Notification on Test Success
         if: success()

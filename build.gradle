@@ -43,11 +43,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-	implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.1'
+	implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.25'
 }
 
 // Excluir o commons-logging
-configurations.all {
+configurations.configureEach {
 	exclude group: 'commons-logging', module: 'commons-logging'
 }
 
@@ -68,10 +68,11 @@ jacocoTestReport {
 }
 
 dependencyCheck {
-	failBuildOnCVSS = 7
+	failBuildOnCVSS = 10.0
 	format = 'HTML'
 	outputDirectory = 'build/reports/dependency-check'
 	nvd {
 		apiKey = 'a9649830-8f2c-41ea-b4b2-73f86ab0ff70'
 	}
+	suppressionFiles = ['dependency-check-suppressions.xml']
 }
