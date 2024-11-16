@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN rm -rf /home/gradle/.gradle/caches/
-
 RUN gradle build --no-daemon
 
 FROM openjdk:17.0.2-slim-bullseye
