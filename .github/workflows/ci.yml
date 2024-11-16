@@ -172,23 +172,17 @@ jobs:
         env:
           KUBECONFIG: ${{ secrets.KUBECONFIG }}
 
-      - name: Print Docker logs
-        if: failure()
-        run: |
-          docker logs $(docker ps -q --filter name=lanchonete-app)
-
-      - name: Send Discord Notification on Deploy Success
+      - name: Send Discord Success Notification
         if: success()
         run: |
           curl -X POST \
             -H 'Content-type: application/json' \
-            --data '{"content":"✅ O deploy da aplicação Lanchonete-APP foi concluído com sucesso!"}' \
+            --data '{"content":"✅ O deploy foi concluído com sucesso!"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
-
-      - name: Send Discord Notification on Deploy Failure
+      - name: Send Discord Failure Notification
         if: failure()
         run: |
           curl -X POST \
             -H 'Content-type: application/json' \
-            --data '{"content":"⚠️ O deploy da aplicação Lanchonete-APP falhou! Verifique os logs para mais detalhes."}' \
+            --data '{"content":"⚠️ O deploy falhou! Verifique os logs para mais detalhes."}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
