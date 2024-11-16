@@ -86,6 +86,7 @@ jobs:
               --data '{"content":"⚠️ Foram encontradas vulnerabilidades nas dependências! Verifique o relatório para mais detalhes."}' \
               ${{ secrets.DISCORD_WEBHOOK_URL }}
           fi
+
       - name: Send Discord Notification on Test Success
         if: success()
         run: |
