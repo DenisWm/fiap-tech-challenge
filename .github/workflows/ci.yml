@@ -36,7 +36,23 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
 
-  test:
+      - name: Send Discord Notification on Build Success
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"✅ Build concluído com sucesso!"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Send Discord Notification on Build Failure
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ Falha no build! Verifique os logs para mais detalhes."}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+  tests:
     runs-on: ubuntu-latest
     needs: build
 
@@ -71,9 +87,25 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Send Discord Notification on Test Success
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"✅ Testes concluídos com sucesso!"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Send Discord Notification on Test Failure
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ Falha nos testes! Verifique os logs para mais detalhes."}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+
   deploy:
     runs-on: ubuntu-latest
-    needs: test
+    needs: tests
 
     steps:
       - name: Check out code
@@ -136,7 +168,7 @@ jobs:
         run: |
           docker logs $(docker ps -q --filter name=lanchonete-app)
 
-      - name: Send Discord Success Notification
+      - name: Send Discord Notification on Deploy Success
         if: success()
         run: |
           curl -X POST \
@@ -144,7 +176,7 @@ jobs:
             --data '{"content":"✅ O deploy da aplicação Lanchonete-APP foi concluído com sucesso!"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
 
-      - name: Send Discord Failure Notification
+      - name: Send Discord Notification on Deploy Failure
         if: failure()
         run: |
           curl -X POST \
