@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
 	id 'jacoco'
+	id 'org.owasp.dependencycheck' version '8.3.1'
 }
 
 group = 'com.fiap.tech'
@@ -64,4 +65,11 @@ jacocoTestReport {
 		html.required.set(true)
 		csv.required.set(false)
 	}
+}
+
+dependencyCheck {
+	failBuildOnCVSS = 7
+	suppressionFiles = ["dependency-check-suppressions.xml"]
+	format = 'HTML'
+	outputDirectory = 'build/reports/dependency-check'
 }
