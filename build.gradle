@@ -71,4 +71,7 @@ dependencyCheck {
 	failBuildOnCVSS = 7
 	format = 'HTML'
 	outputDirectory = 'build/reports/dependency-check'
+	nvd {
+		apiKey = 'a9649830-8f2c-41ea-b4b2-73f86ab0ff70'
+	}
 }
