@@ -46,7 +46,17 @@ jobs:
           java-version: '17'
 
       - name: Run Unit Tests
-        run: ./gradlew test
+        run: ./gradlew test jacocoTestReport
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html/
+
+      - name: Check Quality Gate
+        run: ./gradlew check
+        continue-on-error: true
 
   deploy:
     runs-on: ubuntu-latest
@@ -99,3 +109,25 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -R -f k8s/
+      - name: Rollback Specific Components
+        if: failure()
+        run: |
+          kubectl rollout undo deployment lanchonete-app
+          kubectl rollout undo deployment db
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+      - name: Send Discord Success Notification
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"✅ O deploy foi concluído com sucesso!"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Send Discord Failure Notification
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ O deploy falhou! Verifique os logs para mais detalhes."}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
