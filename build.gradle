@@ -87,10 +87,7 @@ dependencyCheck {
 	analyzers {
 		experimentalEnabled = false
 	}
-	nvd {
-		cve {
-			downloadUrl = 'https://nvd.nist.gov/'
-			apiKey = 'b7620b8f-f3bf-4008-92b6-379274669d95'
-		}
+	data {
+		apiKey = 'b7620b8f-f3bf-4008-92b6-379274669d95'
 	}
 }
