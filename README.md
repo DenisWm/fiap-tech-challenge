@@ -173,6 +173,12 @@ O pipeline é dividido em três etapas principais:
   - Variáveis de Ambiente:
     `KUBECONFIG: ${{ secrets.KUBECONFIG }}`
 
+**Notificações no Discord**
+
+Ao final de cada etapa do pipeline, notificações são enviadas ao Server no Discord. 
+
+- Exemplo de mensagens sinalizando o status da etapa de deploy:
+
   - Notificação de Sucesso no Discord:
     - Condição: `if: success()`
     - Comando:
