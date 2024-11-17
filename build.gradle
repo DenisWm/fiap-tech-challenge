@@ -86,10 +86,10 @@ dependencyCheck {
 	cveValidForHours = 24
 	analyzers {
 		experimentalEnabled = false
-		centralAnalyzerEnabled = true
 	}
+	// Declarar diretamente a chave NVD
 	properties = [
 			'centralAnalyzer.url': 'https://repo.maven.apache.org/maven2',
-			'nvd.api.key': ' b7620b8f-f3bf-4008-92b6-379274669d95'
+			'nvd.api.key': 'b7620b8f-f3bf-4008-92b6-379274669d95'
 	]
 }
