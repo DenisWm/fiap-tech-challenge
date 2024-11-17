@@ -87,7 +87,11 @@ dependencyCheck {
 	analyzers {
 		experimentalEnabled = false
 	}
+	suppressionFile = 'dependency-check-suppression.xml'
+	failBuildOnCVSS = 7
 	data {
-		apiKey = 'b7620b8f-f3bf-4008-92b6-379274669d95'
+		nvd {
+			apiKey = 'b7620b8f-f3bf-4008-92b6-379274669d95'
+		}
 	}
 }
