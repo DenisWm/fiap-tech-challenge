@@ -3,6 +3,8 @@ plugins {
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
 	id 'jacoco'
+	id 'checkstyle'
+	id 'org.owasp.dependencycheck' version '6.5.1'
 }
 
 group = 'com.fiap.tech'
@@ -65,4 +67,29 @@ jacocoTestReport {
 		html.required.set(true)
 		csv.required.set(false)
 	}
+}
+
+checkstyle {
+	toolVersion = '8.45.1'
+}
+
+tasks.withType(Checkstyle) {
+	reports {
+		xml.required.set(false)
+		html.required.set(true)
+	}
+}
+
+dependencyCheck {
+	format = 'HTML'
+	outputDirectory = 'build/reports/dependency-check'
+	cveValidForHours = 24
+	analyzers {
+		experimentalEnabled = false
+		centralAnalyzerEnabled = true
+	}
+	properties = [
+			'centralAnalyzer.url': 'https://repo.maven.apache.org/maven2',
+			'nvd.api.key': ' b7620b8f-f3bf-4008-92b6-379274669d95'
+	]
 }
