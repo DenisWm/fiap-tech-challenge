@@ -25,8 +25,32 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle
+
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
+
+      - name: Send Discord Notification - Build Success
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"✅ LANCHONETE-APP: Build concluído com sucesso!🛠️"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Send Discord Notification - Build Failure
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ LANCHONETE-APP: Build falhou 🚫! Verifique os logs para mais detalhes."}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   test:
     runs-on: ubuntu-latest
@@ -46,7 +70,32 @@ jobs:
           java-version: '17'
 
       - name: Run Unit Tests
-        run: ./gradlew test
+        run: ./gradlew test jacocoTestReport
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html/
+
+      - name: Check Quality Gate
+        run: ./gradlew check
+        continue-on-error: true
+
+      - name: Send Discord Notification - Test Success
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"✅ LANCHONETE-APP: Testes concluídos com sucesso!📒✏️"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Send Discord Notification - Test Failure
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ LANCHONETE-APP: Testes falharam! Verifique os logs para mais detalhes. 🚫"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -99,3 +148,26 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -R -f k8s/
+
+      - name: Rollback Specific Components
+        if: failure()
+        run: |
+          kubectl rollout undo deployment lanchonete-app
+          kubectl rollout undo deployment db
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+
+      - name: Send Discord Success Notification - Deploy
+        if: success()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"✅ LANCHONETE-APP: Deploy concluído com sucesso!🚀"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: Send Discord Failure Notification - Deploy
+        if: failure()
+        run: |
+          curl -X POST \
+            -H 'Content-type: application/json' \
+            --data '{"content":"⚠️ LANCHONETE-APP: Deploy falhou! Verifique os logs para mais detalhes.🚫"}' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
