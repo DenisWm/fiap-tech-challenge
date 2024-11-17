@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
+	id 'jacoco'
 }
 
 group = 'com.fiap.tech'
@@ -11,6 +12,8 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
 }
 
 bootJar {
@@ -37,11 +40,12 @@ dependencies {
 	testImplementation 'org.mockito:mockito-core:3.9.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	compileOnly 'org.projectlombok:lombok:1.18.34'
-	annotationProcessor 'org.projectlombok:lombok:1.18.20'
+	annotationProcessor 'org.projectlombok:lombok:1.18.34'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.1'
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
 }
 
 // Excluir o commons-logging
@@ -51,4 +55,16 @@ configurations.all {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+		csv.required.set(false)
+	}
 }
