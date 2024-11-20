@@ -44,6 +44,7 @@ jobs:
             -H 'Content-type: application/json' \
             --data '{"content":"✅ LANCHONETE-APP: Build concluído com sucesso!🛠️"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
+
       - name: Send Discord Notification - Build Failure
         if: failure()
         run: |
@@ -78,6 +79,9 @@ jobs:
           name: jacoco-report
           path: build/reports/jacoco/test/html/
 
+      - name: Run Integration Tests
+        run: ./gradlew integrationTest
+
       - name: Check Quality Gate
         run: ./gradlew check
         continue-on-error: true
@@ -89,6 +93,7 @@ jobs:
             -H 'Content-type: application/json' \
             --data '{"content":"✅ LANCHONETE-APP: Testes concluídos com sucesso!📒✏️"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
+
       - name: Send Discord Notification - Test Failure
         if: failure()
         run: |
@@ -113,6 +118,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Scan Docker image for vulnerabilities
+        run: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --severity HIGH,CRITICAL gabiponcet/lanchonete-app:latest
 
       - name: Push Docker image
         run: docker push gabiponcet/lanchonete-app:latest
@@ -164,6 +172,7 @@ jobs:
             -H 'Content-type: application/json' \
             --data '{"content":"✅ LANCHONETE-APP: Deploy concluído com sucesso!🚀"}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
+
       - name: Send Discord Failure Notification - Deploy
         if: failure()
         run: |
