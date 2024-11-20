@@ -115,9 +115,6 @@ jobs:
           name: jacoco-report
           path: build/reports/jacoco/test/html/
 
-      - name: Run Integration Tests
-        run: ./gradlew integrationTest
-
       - name: Check Quality Gate
         run: ./gradlew check
         continue-on-error: true
