@@ -53,44 +53,6 @@ jobs:
             --data '{"content":"⚠️ LANCHONETE-APP: Build falhou 🚫! Verifique os logs para mais detalhes."}' \
             ${{ secrets.DISCORD_WEBHOOK_URL }}
 
-  sonar:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          projectBaseDir: . # Adicione isso se seu projeto não estiver na raiz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Send Discord Notification - Sonar Success
-        if: success()
-        run: |
-          curl -X POST \
-            -H 'Content-type: application/json' \
-            --data '{"content":"✅ LANCHONETE-APP: Análise SonarCloud concluída com sucesso!🔍"}' \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
-
-      - name: Send Discord Notification - Sonar Failure
-        if: failure()
-        run: |
-          curl -X POST \
-            -H 'Content-type: application/json' \
-            --data '{"content":"⚠️ LANCHONETE-APP: Análise SonarCloud falhou! Verifique os logs para mais detalhes. 🚫"}' \
-            ${{ secrets.DISCORD_WEBHOOK_URL }}
-
   test:
     runs-on: ubuntu-latest
     needs: build
