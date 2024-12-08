@@ -207,6 +207,4 @@ Este pipeline de CI/CD garante um processo contínuo de integração e entrega p
 
 - Jessica Prado Costa
 
-- Natalia Feitosa Santos
-
 
