@@ -1,0 +1,41 @@
+@startuml
+entity categories {
+    +id: VARCHAR(255) [PK]
+    name: VARCHAR(255)
+    description: VARCHAR(255)
+}
+
+entity clients {
+    +id: VARCHAR(255) [PK]
+    name: VARCHAR(255)
+    email: VARCHAR(255)
+    cpf: VARCHAR(255)
+}
+
+entity orders {
+    +id: VARCHAR(255) [PK]
+    timestamp: TIMESTAMP
+    client_id: VARCHAR(255)
+    total: DECIMAL
+    status: VARCHAR(255)
+}
+
+entity orders_products {
+    +order_id: VARCHAR(255) [PK]
+    +product_id: VARCHAR(255) [PK]
+}
+
+entity products {
+    +id: VARCHAR(255) [PK]
+    name: VARCHAR(255)
+    category_id: VARCHAR(255)
+    price: DECIMAL
+    description: VARCHAR(255)
+}
+
+' Definindo os relacionamentos (chaves estrangeiras)
+orders_products::order_id --> orders::id
+orders_products::product_id --> products::id
+products::category_id --> categories::id
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+!define RECTANGLE class
+!define RECTANGLE_COLOR #ADD8E6
+
+skinparam rectangle {
+  BackgroundColor RECTANGLE_COLOR
+  BorderColor Black
+  BorderThickness 1
+}
+
+RECTANGLE "Cliente" as client {
+  + Interage com a interface
+}
+RECTANGLE "Interface do Cliente" as client_interface {
+  + Solicita dados ao backend
+}
+RECTANGLE "Backend" as backend {
+  + Processa pagamento
+  + Consulta/Armazena dados
+  + Atualiza status dos pedidos
+}
+RECTANGLE "Sistema de Pagamento" as payment_system {
+  + Processa pagamento
+}
+RECTANGLE "Banco de Dados" as database {
+  + Armazena dados
+}
+RECTANGLE "Monitoramento e Notificação" as monitoring {
+  + Exibe status do pedido
+}
+RECTANGLE "Acesso Administrativo" as admin_panel {
+  + Gerencia dados
+}
+RECTANGLE "Sistema de Acompanhamento de Pedidos" as order_tracking {
+  + Atualiza status dos pedidos
+}
+
+client --> client_interface : Interage com
+client_interface --> backend : Solicita dados
+backend --> payment_system : Processa pagamento
+backend --> database : Consulta/Armazena dados
+backend --> order_tracking : Atualiza status dos pedidos
+order_tracking --> monitoring : Exibe status
+admin_panel --> database : Gerencia dados
+
+@enduml
+l --> database : Gerencia dados
+@enduml

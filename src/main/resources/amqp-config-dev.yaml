@@ -1,0 +1,7 @@
+amqp:
+  admin:
+    auto-create: true
+  host: localhost
+  port: 5672
+  username: adm_order
+  password: 123456

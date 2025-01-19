@@ -1,0 +1,16 @@
+@startuml
+node "Load Balancer (K8s)" as LB
+node "Lanchonete App (Container)\n3 Réplicas (K8s Deployment)" as App
+node "PostgreSQL Service (Container)" as DB
+
+LB --> App : "Redireciona para Lanchonete App"
+App --> DB : "Consulta/Posta dados no PostgreSQL"
+
+note right of App
+  Ambiente local: Minikube
+end note
+
+@enduml
+
+
+

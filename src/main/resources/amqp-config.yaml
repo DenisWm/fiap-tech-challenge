@@ -1,0 +1,20 @@
+amqp:
+  admin:
+    auto-create: false
+  queues:
+    order-created:
+      exchange: order.events
+      routing-key: order.created
+      queue: order.created.queue
+    order-encoded:
+      exchange: order.events
+      routing-key: order.encoded
+      queue: order.encoded.queue
+
+  spring:
+    rabbitmq:
+      dynamic: ${amqp.admin.auto-create}
+      host: ${amqp.host}
+      port: ${amqp.port}
+      username: ${amqp.username}
+      password: ${amqp.password}

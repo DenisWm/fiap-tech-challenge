@@ -12,7 +12,9 @@
   <property name="show-needs-to-compile" value="false" />
   <property name="project-type" value="classpath" />
   <property name="hide-externals" value="true" />
-  <classpath />
+  <classpath>
+    <classpathentry kind="lib" path="build/classes/java/main" module="fiap-tech-challenge___main" displaymodule="fiap-tech-challenge.main" />
+  </classpath>
   <pom-root-files />
   <modules>
     <module name="fiap-tech-challenge___main" kind="ide-project" />

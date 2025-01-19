@@ -1,5 +1,6 @@
 package com.fiap.tech;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,5 +23,10 @@ public class FiapTechChallengeApplication {
 			CreateClientCommand newClient = new CreateClientCommand("Usuario Teste",
 					"usuarioteste@hotmail.com", "185.482.357-48");
 		};
+	}
+
+	@RabbitListener(queues="order.encoded.queue")
+	void dummyListener(){
+
 	}
 }
