@@ -30,6 +30,7 @@ public class OrderJpaEntity {
     private BigDecimal total;
     private String status;    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<OrderOrderedItemJpaEntity> orderedItems;
+
     public OrderJpaEntity() {
     }
 
@@ -58,7 +59,7 @@ public class OrderJpaEntity {
     }
 
     public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentId){
-        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentId);
+        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentId, null);
     }
 
     public Order toAggregate() {

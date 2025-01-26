@@ -3,6 +3,7 @@ package com.fiap.tech.order.domain;
 import com.fiap.tech.common.domain.AggregateRoot;
 import com.fiap.tech.common.domain.validation.ValidationHandler;
 import com.fiap.tech.client.domain.ClientID;
+import com.fiap.tech.event.DomainEvent;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
 import com.fiap.tech.payment.domain.Payment;
 import com.fiap.tech.payment.domain.PaymentID;
@@ -32,8 +33,8 @@ public class Order extends AggregateRoot<OrderID> {
 
     private PaymentID paymentId;
 
-    public Order(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentId) {
-        super(orderID);
+    public Order(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentId, final List<DomainEvent> domainEvents) {
+        super(orderID, domainEvents);
         this.timestamp = timestamp;
         this.orderedItems = orderedItems;
         this.total = total;
@@ -50,7 +51,7 @@ public class Order extends AggregateRoot<OrderID> {
         final var status = OrderStatus.RECEIVED;
         final var paymentID = PaymentID.unique();
 
-        return new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, paymentID);
+        return new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, paymentID, null);
     }
 
     public Order update(final OrderStatus status) {
@@ -60,7 +61,7 @@ public class Order extends AggregateRoot<OrderID> {
 
 
     public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentID){
-        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentID);
+        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentID, null);
     }
 
     public static Order with(Order order){
