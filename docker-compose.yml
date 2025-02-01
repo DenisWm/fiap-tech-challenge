@@ -7,7 +7,7 @@ services:
     image: postgres:12.6
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: lanchonete
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: pedido
     ports:
       - 5432:5432
