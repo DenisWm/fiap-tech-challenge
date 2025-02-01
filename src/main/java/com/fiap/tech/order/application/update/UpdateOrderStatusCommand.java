@@ -1,4 +1,4 @@
-package com.fiap.tech.order.application;
+package com.fiap.tech.order.application.update;
 
 import com.fiap.tech.order.domain.OrderStatus;
 

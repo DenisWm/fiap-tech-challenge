@@ -54,4 +54,5 @@ public class QueueProperties implements InitializingBean {
     public void setQueue(String queue) {
         this.queue = queue;
     }
+
 }

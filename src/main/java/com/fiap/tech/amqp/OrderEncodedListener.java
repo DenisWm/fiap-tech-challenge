@@ -5,9 +5,8 @@ import com.fiap.tech.order.domain.OrderStatus;
 import com.fiap.tech.order.infra.models.OrderEncoderCompleted;
 import com.fiap.tech.order.infra.models.OrderEncoderErro;
 import com.fiap.tech.order.infra.models.OrderEncoderResult;
-import com.fiap.tech.order.update.UpdateOrderStatusUseCase;
-import com.fiap.tech.order.application.UpdateOrderStatusCommand;
-import com.fiap.tech.order.update.UpdateOrderStatusUseCase;
+import com.fiap.tech.order.application.update.UpdateOrderStatusUseCase;
+import com.fiap.tech.order.application.update.UpdateOrderStatusCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class OrderEncodedListener {
 
     private static final Logger log = LoggerFactory.getLogger(OrderEncodedListener.class);
-    private static final String LISTENER_ID = "orderEncodedListener";
+    public static final String LISTENER_ID = "orderEncodedListener";
     private final UpdateOrderStatusUseCase updateOrderStatusUseCase;
     private final ObjectMapper objectMapper;
 
