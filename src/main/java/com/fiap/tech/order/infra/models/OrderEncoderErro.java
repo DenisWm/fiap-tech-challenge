@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("ERROR")
-public record OrderEnconderErro(
+public record OrderEncoderErro(
         @JsonProperty("message") OrderMessage message,
         @JsonProperty("error") String error
 ) implements OrderEncoderResult{

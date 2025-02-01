@@ -1,6 +1,5 @@
 package com.fiap.tech.order.infra.models;
 
-import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
@@ -14,7 +13,7 @@ import java.lang.annotation.Retention;
 @JacksonAnnotationsInside
 @JsonSubTypes({
         @JsonSubTypes.Type(value = OrderEncoderCompleted.class),
-        @JsonSubTypes.Type(value = OrderEnconderErro.class),
+        @JsonSubTypes.Type(value = OrderEncoderErro.class),
 })
 public @interface OrderResponseTypes {
 
