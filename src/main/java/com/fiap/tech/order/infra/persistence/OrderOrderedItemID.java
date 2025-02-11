@@ -1,8 +1,7 @@
 package com.fiap.tech.order.infra.persistence;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -15,6 +14,7 @@ public class OrderOrderedItemID implements Serializable {
 
     public OrderOrderedItemID() {
     }
+
     private OrderOrderedItemID(final String aOrderId, final String orderedItemId) {
         this.orderId = aOrderId;
         this.orderedItemId = orderedItemId;

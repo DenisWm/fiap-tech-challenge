@@ -3,6 +3,7 @@ package com.fiap.tech.order.domain;
 import com.fiap.tech.common.domain.AggregateRoot;
 import com.fiap.tech.common.domain.validation.ValidationHandler;
 import com.fiap.tech.client.domain.ClientID;
+import com.fiap.tech.order.domain.event.OrderCreated;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
 import com.fiap.tech.payment.domain.Payment;
 import com.fiap.tech.payment.domain.PaymentID;
@@ -16,8 +17,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 public class Order extends AggregateRoot<OrderID> {
 
     private Instant timestamp;
@@ -32,7 +31,15 @@ public class Order extends AggregateRoot<OrderID> {
 
     private PaymentID paymentId;
 
-    public Order(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentId) {
+    public Order(
+            final OrderID orderID,
+            final Instant timestamp,
+            final List<OrderedItemID> orderedItems,
+            final BigDecimal total,
+            final OrderStatus status,
+            final ClientID clientId,
+            final PaymentID paymentId
+    ) {
         super(orderID);
         this.timestamp = timestamp;
         this.orderedItems = orderedItems;
@@ -42,15 +49,18 @@ public class Order extends AggregateRoot<OrderID> {
         this.paymentId = paymentId;
     }
 
-
-
-    public static Order newOrder(BigDecimal total, List<OrderedItemID> orderedItems, ClientID clientID) {
+    public static Order newOrder(
+            final BigDecimal total,
+            final List<OrderedItemID> orderedItems,
+            final ClientID clientID
+    ) {
         final var now = Instant.now();
         final var orderID = OrderID.unique();
         final var status = OrderStatus.RECEIVED;
-        final var paymentID = PaymentID.unique();
+        final var order = new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, null);
 
-        return new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList<>(), total, status, clientID, paymentID);
+
+        return order;
     }
 
     public Order update(final OrderStatus status) {
@@ -59,16 +69,38 @@ public class Order extends AggregateRoot<OrderID> {
     }
 
 
-    public static Order with(OrderID orderID, Instant timestamp, List<OrderedItemID> orderedItems, BigDecimal total, OrderStatus status, ClientID clientId, PaymentID paymentID){
-        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentID);
+    public static Order with(
+            final OrderID orderID,
+            final Instant timestamp,
+            final List<OrderedItemID> orderedItems,
+            final BigDecimal total,
+            final OrderStatus status,
+            final ClientID clientId,
+            final PaymentID paymentID
+    ){
+        return new Order(orderID,
+                timestamp,
+                orderedItems,
+                total,
+                status,
+                clientId,
+                paymentID);
     }
 
-    public static Order with(Order order){
-        return with(order.getId(), order.getTimestamp(), order.getOrderedItems(), order.getTotal(), order.getStatus(), order.getClientId(), order.getPaymentId());
+    public static Order with(final Order order){
+        return with(
+                order.getId(),
+                order.getTimestamp(),
+                order.getOrderedItems(),
+                order.getTotal(),
+                order.getStatus(),
+                order.getClientId(),
+                order.getPaymentId()
+        );
     }
 
     @Override
-    public void validate(ValidationHandler handler) {
+    public void validate(final ValidationHandler handler) {
 
     }
 
@@ -92,8 +124,9 @@ public class Order extends AggregateRoot<OrderID> {
         return paymentId;
     }
 
-    public void setPaymentId(PaymentID paymentId) {
+    public Order setPaymentId(PaymentID paymentId) {
         this.paymentId = paymentId;
+        return this;
     }
 
     public List<OrderedItemID> getOrderedItems() {

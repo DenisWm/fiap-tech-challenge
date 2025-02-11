@@ -1,17 +1,25 @@
 package com.fiap.tech.order.infra.persistence;
 
+import com.fiap.tech.common.domain.events.DomainEvent;
 import com.fiap.tech.common.domain.pagination.Pagination;
+import com.fiap.tech.common.infra.annotations.OrderCreatedQueue;
+import com.fiap.tech.common.infra.annotations.OrderPayedQueue;
+import com.fiap.tech.common.infra.annotations.ProductionStatusChangedQueue;
 import com.fiap.tech.common.infra.utils.SpecificationUtils;
+import com.fiap.tech.common.service.EventService;
 import com.fiap.tech.order.domain.Order;
 import com.fiap.tech.order.domain.OrderGateway;
 import com.fiap.tech.order.domain.OrderID;
 import com.fiap.tech.order.domain.OrderStatus;
+import com.fiap.tech.order.domain.event.OrderCreated;
+import com.fiap.tech.order.domain.event.OrderPayed;
 import com.fiap.tech.product.application.retrieve.list.OrderSearchQuery;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,15 +28,24 @@ import java.util.Optional;
 public class OrderPostgresGateway implements OrderGateway {
 
     private final OrderRepository orderRepository;
-    public OrderPostgresGateway(final OrderRepository orderRepository) {
+
+    private final EventService orderCreatedEventService;
+
+    private final EventService orderPayedEventService;
+
+    public OrderPostgresGateway(
+            final OrderRepository orderRepository,
+            @OrderCreatedQueue final EventService orderCreatedEventService,
+            @OrderPayedQueue final EventService orderPayedEventService
+    ) {
         this.orderRepository = Objects.requireNonNull(orderRepository);
+        this.orderCreatedEventService = Objects.requireNonNull(orderCreatedEventService);
+        this.orderPayedEventService = Objects.requireNonNull(orderPayedEventService);
     }
 
     @Override
     public Order create(final Order order) {
-        return orderRepository
-                .save(OrderJpaEntity.from(order))
-                .toAggregate();
+        return save(order);
     }
 
     @Override
@@ -77,7 +94,28 @@ public class OrderPostgresGateway implements OrderGateway {
 
     @Override
     public Order update(Order anOrder) {
-        return this.orderRepository.save(OrderJpaEntity.from(anOrder)).toAggregate();
+        return save(anOrder);
+    }
+
+    private Order save(Order anOrder) {
+        final var order = this.orderRepository.save(OrderJpaEntity.from(anOrder)).toAggregate();
+
+        sendDomainEvents(anOrder);
+
+        return order;
+    }
+
+    private void sendDomainEvents(final Order anOrder) {
+        if(anOrder.getDomainEvents().isEmpty()) {
+            return;
+        }
+        anOrder.getDomainEvents().forEach(domainEvent -> {
+            if(domainEvent instanceof OrderCreated) {
+                orderCreatedEventService.send(domainEvent);
+            } else if (domainEvent instanceof OrderPayed) {
+                orderPayedEventService.send(domainEvent);
+            }
+        });
     }
 
     private Specification<OrderJpaEntity> assembleSpecification(final String client) {

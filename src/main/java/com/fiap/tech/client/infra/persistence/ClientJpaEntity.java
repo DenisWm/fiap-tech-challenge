@@ -2,11 +2,12 @@ package com.fiap.tech.client.infra.persistence;
 
 import com.fiap.tech.client.domain.Client;
 import com.fiap.tech.client.domain.ClientID;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "clients")

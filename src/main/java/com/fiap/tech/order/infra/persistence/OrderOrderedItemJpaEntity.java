@@ -1,10 +1,8 @@
 package com.fiap.tech.order.infra.persistence;
 
-import com.fiap.tech.ordereditens.domain.OrderedItem;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
-import com.fiap.tech.product.domain.ProductID;
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity

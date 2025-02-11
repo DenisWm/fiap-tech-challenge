@@ -4,9 +4,11 @@ import com.fiap.tech.categories.domain.CategoryID;
 import com.fiap.tech.categories.infra.CategoryJpaEntity;
 import com.fiap.tech.product.domain.Product;
 import com.fiap.tech.product.domain.ProductID;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity(name="Product")
