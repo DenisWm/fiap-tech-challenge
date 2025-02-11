@@ -1,13 +1,11 @@
 package com.fiap.tech.ordereditens.infra.persistence;
 
-import com.fiap.tech.categories.infra.CategoryJpaEntity;
-import com.fiap.tech.order.infra.persistence.OrderJpaEntity;
 import com.fiap.tech.ordereditens.domain.OrderedItem;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
 import com.fiap.tech.product.domain.ProductID;
 import com.fiap.tech.product.infra.persistense.ProductJpaEntity;
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity(name = "OrderedItem")
@@ -29,6 +27,7 @@ public class OrderedItemJpaEntity {
     @ManyToOne(targetEntity = ProductJpaEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", insertable = false, updatable = false)
     private ProductJpaEntity product;
+
     public OrderedItemJpaEntity() {
     }
 
@@ -83,6 +82,7 @@ public class OrderedItemJpaEntity {
     public ProductJpaEntity getProduct() {
         return product;
     }
+
     public void setProduct(ProductJpaEntity product) {
         this.product = product;
     }

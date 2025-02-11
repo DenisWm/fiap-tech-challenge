@@ -6,12 +6,11 @@ import com.fiap.tech.order.domain.OrderID;
 import java.util.Optional;
 
 public interface PaymentGateway {
+
     Payment create(Payment payment);
 
+    Payment update(Payment payment);
+
     Optional<Payment> findById(PaymentID paymentID);
-
-    Optional<Order> findOrderById(OrderID orderID);
-
-    void save(Optional<Payment> payment);
 
 }

@@ -1,18 +1,12 @@
 package com.fiap.tech.payment.domain;
 
-import com.fiap.tech.client.domain.ClientID;
-import com.fiap.tech.common.domain.Entity;
+import com.fiap.tech.common.domain.AggregateRoot;
 import com.fiap.tech.common.domain.validation.ValidationHandler;
-import com.fiap.tech.order.domain.Order;
-import com.fiap.tech.order.domain.OrderID;
-import com.fiap.tech.order.domain.OrderStatus;
-import com.fiap.tech.ordereditens.domain.OrderedItemID;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
 
-public class Payment extends Entity<PaymentID>{
+public class Payment extends AggregateRoot<PaymentID> {
     private final BigDecimal amount;
     private final Instant timestamp;
     private PaymentStatus status;
@@ -24,6 +18,9 @@ public class Payment extends Entity<PaymentID>{
         this.status = status;
     }
 
+    public static Payment receivePayment(PaymentID paymentId, BigDecimal amount, Instant timestamp, PaymentStatus status) {
+        return new Payment(paymentId, amount, timestamp, status);
+    }
     public BigDecimal getAmount() {
         return amount;
     }
@@ -41,11 +38,11 @@ public class Payment extends Entity<PaymentID>{
     }
 
 
-    public static Payment with(PaymentID paymentID, BigDecimal amount, Instant timestamp, PaymentStatus status){
+    public static Payment with(PaymentID paymentID, BigDecimal amount, Instant timestamp, PaymentStatus status) {
         return new Payment(paymentID, amount, timestamp, status);
     }
 
-    public static Payment with(Payment payment){
+    public static Payment with(Payment payment) {
         return with(payment.getId(), payment.getAmount(), payment.getTimestamp(), payment.getStatus());
     }
 

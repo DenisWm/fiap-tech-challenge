@@ -20,7 +20,6 @@ public class OrderedItem extends AggregateRoot<OrderedItemID> {
     ) {
         super(id);
         this.product = product;
-
         this.quantity = quantity;
         this.price = price;
     }

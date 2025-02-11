@@ -4,10 +4,10 @@ package com.fiap.tech.categories.infra;
 import com.fiap.tech.categories.domain.Category;
 import com.fiap.tech.categories.domain.CategoryID;
 import com.fiap.tech.product.infra.persistense.ProductJpaEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import lombok.Data;
 
 import java.util.List;

@@ -3,8 +3,11 @@ package com.fiap.tech.payment.infra.persistence;
 import com.fiap.tech.payment.domain.Payment;
 import com.fiap.tech.payment.domain.PaymentID;
 import com.fiap.tech.payment.domain.PaymentStatus;
-import jakarta.persistence.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -61,7 +64,8 @@ public class PaymentJpaEntity {
     }
 
     public BigDecimal getAmount() {
-        return amount;    }
+        return amount;
+    }
 
 }
 
