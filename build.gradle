@@ -4,6 +4,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.7'
 	id 'io.spring.dependency-management' version '1.1.0'
 	id 'jacoco'
+	id "org.sonarqube" version "6.0.1.5171"
 }
 
 group = 'com.fiap.tech'
@@ -44,8 +45,6 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.20'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
-//	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-//	implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.1'
 	implementation 'com.fasterxml.jackson.core:jackson-core'
 	implementation 'com.fasterxml.jackson.module:jackson-module-afterburner'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
@@ -56,7 +55,7 @@ configurations.all {
 	exclude group: 'commons-logging', module: 'commons-logging'
 }
 
-tasks.named('test') {
+tasks.named("test") {
 	useJUnitPlatform()
 }
 
@@ -67,7 +66,40 @@ jacoco {
 jacocoTestReport {
 	reports {
 		xml.required.set(true)
+		xml.outputLocation.set(file("$rootDir/build/reports/jacoco/test/jacocoTestReport.xml"))
 		html.required.set(true)
-		csv.required.set(false)
+		html.outputLocation.set(file("$rootDir/build/reports/jacoco/test/"))
 	}
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "fiap-g30_pedido"
+		property "sonar.organization", "fiap-g30"
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.token", System.getenv("SONAR_TOKEN")
+		property "sonar.coverage.jacoco.xmlReportPaths", "$rootDir/build/reports/jacoco/test/jacocoTestReport.xml"
+	}
+}
+
+test {
+	reports {
+		junitXml.required.set(true)
+		junitXml.outputLocation.set(file("$rootDir/build/reports/junit/test-results"))
+		html.required.set(true)
+		html.outputLocation.set(file("$rootDir/build/reports/junit/test-results-html"))
+	}
+}
+
+task createReportDirs {
+	doLast {
+		mkdir("$rootDir/build/reports/jacoco/test")
+		mkdir("$rootDir/build/reports/junit/test-results")
+		mkdir("$rootDir/build/reports/junit/test-results-html")
+	}
+}
+
+test {
+	dependsOn createReportDirs
+	useJUnitPlatform()
 }
