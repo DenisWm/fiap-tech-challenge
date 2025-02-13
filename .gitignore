@@ -6,6 +6,8 @@ build/
 !**/src/test/**/build/
 !build/reports/
 !build/reports/**
+!build/reports/jacoco/
+!build/reports/jacoco/test/
 
 ### STS ###
 .apt_generated
@@ -37,3 +39,23 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Diretórios de Build ###
+target/
+
+### Arquivos Temporários ###
+*.log
+*.tmp
+
+### Configurações do Terraform ###
+.terraform/
+*.tfstate
+*.tfstate.*
+*.terraform.lock.hcl
+crash.log
+
+### Arquivos executáveis ###
+*.exe
