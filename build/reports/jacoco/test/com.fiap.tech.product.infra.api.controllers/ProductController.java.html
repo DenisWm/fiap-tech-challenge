@@ -76,17 +76,17 @@ public class ProductController implements ProductAPI {
 
     @Override
     public ResponseEntity&lt;?&gt; updateProductById(final String id, final UpdateProductRequest input) {
-<span class="nc" id="L79">        final var aCommand = UpdateProductCommand.with(</span>
+<span class="fc" id="L79">        final var aCommand = UpdateProductCommand.with(</span>
                 id,
-<span class="nc" id="L81">                input.name(),</span>
-<span class="nc" id="L82">                input.description(),</span>
-<span class="nc" id="L83">                input.price(),</span>
-<span class="nc" id="L84">                input.categoryId()</span>
+<span class="fc" id="L81">                input.name(),</span>
+<span class="fc" id="L82">                input.description(),</span>
+<span class="fc" id="L83">                input.price(),</span>
+<span class="fc" id="L84">                input.categoryId()</span>
         );
 
-<span class="nc" id="L87">        final var output = this.updateProductUseCase.execute(aCommand);</span>
+<span class="fc" id="L87">        final var output = this.updateProductUseCase.execute(aCommand);</span>
 
-<span class="nc" id="L89">        return ResponseEntity.ok(output);</span>
+<span class="fc" id="L89">        return ResponseEntity.ok(output);</span>
     }
 
     @Override
