@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.infra.models</a> &gt; <span class="el_source">OrderResponse.java</span></div><h1>OrderResponse.java</h1><pre class="source lang-java linenums">package com.fiap.tech.order.infra.models;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fiap.tech.order.application.retrieve.get.OrderOutput;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
+
+<span class="fc" id="L10">public record OrderResponse(</span>
+        @JsonProperty(&quot;id&quot;) String id,
+        @JsonProperty(&quot;timestamp&quot;) Instant timestamp,
+        @JsonProperty(&quot;client&quot;) OrderClientResponse client,
+        @JsonProperty(&quot;total&quot;) BigDecimal total,
+        @JsonProperty(&quot;status&quot;) String status,
+        @JsonProperty(&quot;items&quot;) List&lt;OrderItemResponse&gt; items,
+        @JsonProperty(&quot;payment_id&quot;) String paymentId
+) {
+
+    public static OrderResponse from(final OrderOutput output) {
+<span class="fc" id="L21">        return new OrderResponse(</span>
+<span class="fc" id="L22">                output.getId(),</span>
+<span class="fc" id="L23">                output.getTimestamp(),</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">                output.getClient() != null ? OrderClientResponse.from(output.getClient()) : null,</span>
+<span class="fc" id="L25">                output.getTotal(),</span>
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">                output.getStatus() != null ? output.getStatus().getValue() : null,</span>
+<span class="fc" id="L27">                output.getOrderedItems().stream().map(OrderItemResponse::from).toList(),</span>
+<span class="fc" id="L28">                output.getPaymentId()</span>
+        );
+    }
+
+<span class="fc" id="L32">    public record OrderItemResponse(</span>
+            String id, Integer quantity, BigDecimal subTotal, OrderedItemProductResponse product
+    ) {
+
+        public static OrderItemResponse from(final OrderOutput.OrderedItemOutput output) {
+<span class="fc" id="L37">            return new OrderItemResponse(</span>
+<span class="fc" id="L38">                    output.id(),</span>
+<span class="fc" id="L39">                    output.quantity(),</span>
+<span class="fc" id="L40">                    output.subTotal(),</span>
+<span class="fc" id="L41">                    OrderItemResponse.OrderedItemProductResponse.from(output.product())</span>
+            );
+        }
+
+<span class="fc" id="L45">        public record OrderedItemProductResponse(</span>
+                String id,
+                String name,
+                BigDecimal price
+        ) {
+            public static OrderedItemProductResponse from(final OrderOutput.OrderedItemOutput.OrderedItemProductOutput output) {
+<span class="fc" id="L51">                return new OrderedItemProductResponse(</span>
+<span class="fc" id="L52">                        output.id(),</span>
+<span class="fc" id="L53">                        output.name(),</span>
+<span class="fc" id="L54">                        output.price()</span>
+                );
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

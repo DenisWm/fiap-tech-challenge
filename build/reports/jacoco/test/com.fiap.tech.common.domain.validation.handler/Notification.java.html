@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Notification.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.common.domain.validation.handler</a> &gt; <span class="el_source">Notification.java</span></div><h1>Notification.java</h1><pre class="source lang-java linenums">package com.fiap.tech.common.domain.validation.handler;
+
+
+
+import com.fiap.tech.common.domain.validation.Error;
+import com.fiap.tech.common.domain.validation.ValidationHandler;
+import com.fiap.tech.common.domain.exceptions.DomainException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Notification implements ValidationHandler {
+
+    private final List&lt;Error&gt; errors;
+    @Override
+    public Notification append(Error anError) {
+<span class="fc" id="L17">        this.errors.add(anError);</span>
+<span class="fc" id="L18">        return this;</span>
+    }
+
+<span class="fc" id="L21">    private Notification(final List&lt;Error&gt; errors) {</span>
+<span class="fc" id="L22">        this.errors = errors;</span>
+<span class="fc" id="L23">    }</span>
+    public static Notification create(final Throwable t) {
+<span class="nc" id="L25">        return create(new Error(t.getMessage()));</span>
+    }
+    public static Notification create() {
+<span class="fc" id="L28">        return new Notification(new ArrayList&lt;&gt;());</span>
+    }
+    public static Notification create(Error anError) {
+<span class="fc" id="L31">        return new Notification(new ArrayList&lt;&gt;()).append(anError);</span>
+    }
+    @Override
+    public ValidationHandler append(final ValidationHandler aHandler) {
+<span class="fc" id="L35">        this.errors.addAll(aHandler.getErrors());</span>
+<span class="fc" id="L36">        return this;</span>
+    }
+
+    @Override
+    public &lt;T&gt; T validate(final Validation&lt;T&gt; aValidation) {
+        try {
+<span class="fc" id="L42">            return aValidation.validate();</span>
+<span class="nc" id="L43">        } catch (DomainException ex) {</span>
+<span class="nc" id="L44">            this.errors.addAll(ex.getErrors());</span>
+<span class="nc" id="L45">        } catch (Throwable t) {</span>
+<span class="nc" id="L46">            this.errors.add(new Error(t.getMessage()));</span>
+<span class="nc" id="L47">        }</span>
+<span class="nc" id="L48">        return null;</span>
+    }
+
+    @Override
+    public List&lt;Error&gt; getErrors() {
+<span class="fc" id="L53">        return this.errors;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentUseCaseConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.common.infra.configuration.usecases</a> &gt; <span class="el_source">PaymentUseCaseConfiguration.java</span></div><h1>PaymentUseCaseConfiguration.java</h1><pre class="source lang-java linenums">package com.fiap.tech.common.infra.configuration.usecases;
+
+import com.fiap.tech.order.domain.OrderGateway;
+import com.fiap.tech.ordereditens.domain.OrderedItemGateway;
+import com.fiap.tech.payment.application.receive.DefaultReceivePaymentUseCase;
+import com.fiap.tech.payment.application.receive.ReceivePaymentUseCase;
+import com.fiap.tech.payment.domain.PaymentGateway;
+import com.fiap.tech.product.domain.ProductGateway;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Objects;
+
+@Configuration
+public class PaymentUseCaseConfiguration {
+
+    private final OrderGateway orderGateway;
+    private final ProductGateway productGateway;
+    private final OrderedItemGateway orderedItemGateway;
+    private final PaymentGateway paymentGateway;
+
+    public PaymentUseCaseConfiguration(
+            final OrderGateway orderGateway,
+            final ProductGateway productGateway,
+            final OrderedItemGateway orderedItemGateway,
+            final PaymentGateway paymentGateway
+<span class="fc" id="L27">    ) {</span>
+<span class="fc" id="L28">        this.orderGateway = Objects.requireNonNull(orderGateway);</span>
+<span class="fc" id="L29">        this.productGateway = Objects.requireNonNull(productGateway);</span>
+<span class="fc" id="L30">        this.orderedItemGateway = Objects.requireNonNull(orderedItemGateway);</span>
+<span class="fc" id="L31">        this.paymentGateway = Objects.requireNonNull(paymentGateway);</span>
+<span class="fc" id="L32">    }</span>
+
+    @Bean
+    public ReceivePaymentUseCase receivePaymentUseCase() {
+<span class="fc" id="L36">        return new DefaultReceivePaymentUseCase(</span>
+                paymentGateway,
+                orderGateway,
+                orderedItemGateway,
+                productGateway);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

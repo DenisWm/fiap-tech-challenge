@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductPostgresGateway.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.product.infra.persistense</a> &gt; <span class="el_source">ProductPostgresGateway.java</span></div><h1>ProductPostgresGateway.java</h1><pre class="source lang-java linenums">package com.fiap.tech.product.infra.persistense;
+
+import com.fiap.tech.common.domain.pagination.Pagination;
+import com.fiap.tech.common.infra.utils.SpecificationUtils;
+import com.fiap.tech.product.domain.Product;
+import com.fiap.tech.product.domain.ProductGateway;
+import com.fiap.tech.product.domain.ProductID;
+import com.fiap.tech.product.domain.pagination.ProductSearchQuery;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+@Component
+public class ProductPostgresGateway implements ProductGateway {
+
+    private final ProductRepository productRepository;
+
+<span class="fc" id="L22">    public ProductPostgresGateway(final ProductRepository productRepository) {</span>
+<span class="fc" id="L23">        this.productRepository = Objects.requireNonNull(productRepository);</span>
+<span class="fc" id="L24">    }</span>
+
+    @Override
+    public Product create(final Product aProduct) {
+<span class="fc" id="L28">        return save(aProduct).toAggregate();</span>
+    }
+
+    @Override
+    public void deleteById(final ProductID anId) {
+<span class="fc" id="L33">        final var aGenreId = anId.getValue();</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if(this.productRepository.existsById(aGenreId)) {</span>
+<span class="fc" id="L35">            productRepository.deleteById(aGenreId);</span>
+        }
+<span class="fc" id="L37">    }</span>
+
+    @Override
+    public List&lt;ProductID&gt; existsByIds(List&lt;String&gt; products) {
+<span class="fc" id="L41">        return this.productRepository.existsByIds(products)</span>
+<span class="fc" id="L42">                .stream()</span>
+<span class="fc" id="L43">                .map(ProductID::from)</span>
+<span class="fc" id="L44">                .toList();</span>
+    }
+
+    @Override
+    public List&lt;Product&gt; findByIds(List&lt;String&gt; productIds) {
+<span class="fc" id="L49">        return this.productRepository.findByIdIn(productIds)</span>
+<span class="fc" id="L50">                .stream()</span>
+<span class="fc" id="L51">                .map(ProductJpaEntity::toAggregate)</span>
+<span class="fc" id="L52">                .toList();</span>
+    }
+
+    @Override
+    public Optional&lt;Product&gt; findById(final ProductID anId) {
+<span class="fc" id="L57">        return this.productRepository.findById(anId.getValue()).map(ProductJpaEntity::toAggregate);</span>
+    }
+
+    @Override
+    public Product update(Product aGenre) {
+<span class="fc" id="L62">        return save(aGenre).toAggregate();</span>
+
+    }
+
+    @Override
+    public Pagination&lt;Product&gt; findAll(final ProductSearchQuery aQuery) {
+<span class="fc" id="L68">        final var page = PageRequest.of(</span>
+<span class="fc" id="L69">                aQuery.page(),</span>
+<span class="fc" id="L70">                aQuery.perPage(),</span>
+<span class="fc" id="L71">                Sort.by(Sort.Direction.fromString(aQuery.direction()), aQuery.sort())</span>
+        );
+
+<span class="fc" id="L74">        final var where = Optional.ofNullable(aQuery.categoryId())</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">                .filter(str -&gt; !str.isBlank())</span>
+<span class="fc" id="L76">                .map(this::assembleSpecification)</span>
+<span class="fc" id="L77">                .orElse(null);</span>
+
+<span class="fc" id="L79">        final var results = this.productRepository.findAll(Specification.where(where), page);</span>
+<span class="fc" id="L80">        return new Pagination&lt;&gt;(</span>
+<span class="fc" id="L81">                results.getNumber(),</span>
+<span class="fc" id="L82">                results.getSize(),</span>
+<span class="fc" id="L83">                results.getTotalElements(),</span>
+<span class="fc" id="L84">                results.map(ProductJpaEntity::toAggregate).stream().toList()</span>
+        );
+    }
+
+    private Specification&lt;ProductJpaEntity&gt; assembleSpecification(final String category) {
+<span class="fc" id="L89">        return SpecificationUtils.equal(&quot;categoryId&quot;, category);</span>
+    }
+
+    private ProductJpaEntity save(Product aProduct) {
+<span class="fc" id="L93">        return this.productRepository.save(ProductJpaEntity.from(aProduct));</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

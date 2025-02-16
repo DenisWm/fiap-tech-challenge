@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.product.domain</a> &gt; <span class="el_source">ProductValidator.java</span></div><h1>ProductValidator.java</h1><pre class="source lang-java linenums">package com.fiap.tech.product.domain;
+
+
+import com.fiap.tech.common.domain.validation.Error;
+import com.fiap.tech.common.domain.validation.ValidationHandler;
+import com.fiap.tech.common.domain.validation.Validator;
+
+import java.math.BigDecimal;
+
+public class ProductValidator extends Validator {
+
+    public static final int NAME_MAX_LENGTH = 255;
+    public static final int NAME_MIN_LENGTH = 1;
+    public static final String NAME_SHOULD_NOT_BE_NULL = &quot;'name' should not be null&quot;;
+    public static final String NAME_SHOULD_NOT_BE_EMPTY = &quot;'name' should not be empty&quot;;
+    public static final String NAME_MUST_BE_BETWEEN_1_AND_255_CHARACTERS = &quot;'name' must be between 1 and 255 characters&quot;;
+    public static final String PRICE_SHOULD_NOT_BE_NULL = &quot;'price' should not be null&quot;;
+    public static final String PRICE_MUST_BE_GREATER_THAN_0 = &quot;'price' must be greater than 0&quot;;
+    private final Product product;
+    public ProductValidator(Product product, ValidationHandler aHandler) {
+<span class="fc" id="L21">        super(aHandler);</span>
+<span class="fc" id="L22">        this.product = product;</span>
+<span class="fc" id="L23">    }</span>
+
+    @Override
+    public void validate() {
+<span class="fc" id="L27">        checkNameConstraints();</span>
+<span class="fc" id="L28">        checkPriceConstraints();</span>
+<span class="fc" id="L29">    }</span>
+
+    private void checkNameConstraints() {
+<span class="fc" id="L32">        final var name = this.product.getName();</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if(name == null) {</span>
+<span class="fc" id="L34">            getHandler().append(new Error(NAME_SHOULD_NOT_BE_NULL));</span>
+<span class="fc" id="L35">            return;</span>
+        }
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if(name.isBlank()) {</span>
+<span class="fc" id="L38">            getHandler().append(new Error(NAME_SHOULD_NOT_BE_EMPTY));</span>
+<span class="fc" id="L39">            return;</span>
+        }
+<span class="fc" id="L41">        final int nameLength = name.trim().length();</span>
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">        if(nameLength &lt; NAME_MIN_LENGTH || nameLength &gt; NAME_MAX_LENGTH) {</span>
+<span class="fc" id="L43">            getHandler().append(new Error(NAME_MUST_BE_BETWEEN_1_AND_255_CHARACTERS));</span>
+        }
+<span class="fc" id="L45">    }</span>
+
+    private void checkPriceConstraints() {
+<span class="fc" id="L48">        final var price = this.product.getPrice();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if(price == null) {</span>
+<span class="fc" id="L50">            getHandler().append(new Error(PRICE_SHOULD_NOT_BE_NULL));</span>
+<span class="fc" id="L51">            return;</span>
+        }
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if(price.compareTo(BigDecimal.ZERO) &lt;= 0) {</span>
+<span class="fc" id="L54">            getHandler().append(new Error(PRICE_MUST_BE_GREATER_THAN_0));</span>
+        }
+<span class="fc" id="L56">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

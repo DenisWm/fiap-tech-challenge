@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultUpdateOrderUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.application.update</a> &gt; <span class="el_source">DefaultUpdateOrderUseCase.java</span></div><h1>DefaultUpdateOrderUseCase.java</h1><pre class="source lang-java linenums">package com.fiap.tech.order.application.update;
+
+import com.fiap.tech.common.domain.exceptions.NotificationException;
+import com.fiap.tech.common.domain.validation.Error;
+import com.fiap.tech.common.domain.validation.handler.Notification;
+import com.fiap.tech.order.domain.Order;
+import com.fiap.tech.order.domain.OrderGateway;
+import com.fiap.tech.order.domain.OrderID;
+import com.fiap.tech.order.domain.OrderStatus;
+import com.fiap.tech.product.application.update.UpdateProductCommand;
+
+import java.util.Objects;
+
+import static com.fiap.tech.common.application.utils.IDNotFoundUtils.notFound;
+
+public class DefaultUpdateOrderUseCase extends UpdateOrderUseCase {
+
+    private final OrderGateway orderGateway;
+
+<span class="fc" id="L20">    public DefaultUpdateOrderUseCase(final OrderGateway orderGateway) {</span>
+<span class="fc" id="L21">        this.orderGateway = Objects.requireNonNull(orderGateway);</span>
+<span class="fc" id="L22">    }</span>
+
+    @Override
+    public UpdateOrderOutput execute(final UpdateOrderCommand command) {
+<span class="fc" id="L26">        final var anId = OrderID.from(command.id());</span>
+<span class="fc" id="L27">        final var newStatus = OrderStatus.valueOf(command.status());</span>
+
+<span class="fc" id="L29">        final var anOrder = orderGateway.findById(anId)</span>
+<span class="fc" id="L30">                .orElseThrow(notFound(anId, Order.class));</span>
+
+<span class="fc" id="L32">        final var notification = Notification.create();</span>
+<span class="fc" id="L33">        notification.append(validateOrderStatus(anOrder, newStatus));</span>
+<span class="fc" id="L34">        notification.validate(() -&gt; anOrder.update(newStatus));</span>
+
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if (notification.hasErrors()) {</span>
+<span class="nc" id="L37">            throw new NotificationException(&quot;Could not update Order&quot;, notification);</span>
+        }
+
+<span class="fc" id="L40">        return UpdateOrderOutput.from(this.orderGateway.update(anOrder));</span>
+    }
+
+    private Notification validateOrderStatus(final Order anOrder, final OrderStatus newStatus) {
+<span class="fc" id="L44">        final var notification = Notification.create();</span>
+
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (OrderStatus.COMPLETED.equals(anOrder.getStatus())) {</span>
+<span class="nc" id="L47">            notification.append(new Error(&quot;Cannot update an order that is already completed&quot;));</span>
+        }
+
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (OrderStatus.RECEIVED.equals(newStatus)) {</span>
+<span class="nc" id="L51">            notification.append(new Error(&quot;Cannot update order status to 'received'&quot;));</span>
+        }
+
+<span class="fc" id="L54">        return notification;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

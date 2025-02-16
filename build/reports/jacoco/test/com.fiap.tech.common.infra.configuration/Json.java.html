@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Json.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.common.infra.configuration</a> &gt; <span class="el_source">Json.java</span></div><h1>Json.java</h1><pre class="source lang-java linenums">package com.fiap.tech.common.infra.configuration;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+
+import java.util.concurrent.Callable;
+
+<span class="fc" id="L15">public enum Json {</span>
+<span class="fc" id="L16">    INSTANCE;</span>
+
+    public static ObjectMapper mapper() {
+<span class="fc" id="L19">        return INSTANCE.mapper.copy();</span>
+    }
+
+    public static String writeValueAsString(final Object obj) {
+<span class="fc" id="L23">        return invoke(() -&gt; INSTANCE.mapper.writeValueAsString(obj));</span>
+    }
+
+    public static &lt;T&gt; T readValue(final String json, final Class&lt;T&gt; clazz) {
+<span class="fc" id="L27">        return invoke(() -&gt; INSTANCE.mapper.readValue(json, clazz));</span>
+    }
+
+<span class="fc" id="L30">    private final ObjectMapper mapper = new Jackson2ObjectMapperBuilder()</span>
+<span class="fc" id="L31">            .dateFormat(new StdDateFormat())</span>
+<span class="fc" id="L32">            .featuresToDisable(</span>
+                    DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                    DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES,
+                    DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES,
+                    SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
+            )
+<span class="fc" id="L38">            .modules(new JavaTimeModule(), new Jdk8Module(), afterburnerModule())</span>
+<span class="fc" id="L39">            .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)</span>
+<span class="fc" id="L40">            .build();</span>
+
+    private AfterburnerModule afterburnerModule() {
+<span class="fc" id="L43">        var module = new AfterburnerModule();</span>
+        // make Afterburner generate bytecode only for public getters/setter and fields
+        // without this, Java 9+ complains of &quot;Illegal reflective access&quot;
+<span class="fc" id="L46">        module.setUseValueClassLoader(false);</span>
+<span class="fc" id="L47">        return module;</span>
+    }
+
+    private static &lt;T&gt; T invoke(final Callable&lt;T&gt; callable) {
+        try {
+<span class="fc" id="L52">            return callable.call();</span>
+<span class="nc" id="L53">        } catch (final Exception e) {</span>
+<span class="nc" id="L54">            throw new RuntimeException(e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

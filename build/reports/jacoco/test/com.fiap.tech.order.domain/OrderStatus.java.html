@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderStatus.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.domain</a> &gt; <span class="el_source">OrderStatus.java</span></div><h1>OrderStatus.java</h1><pre class="source lang-java linenums">    package com.fiap.tech.order.domain;
+
+    import com.fiap.tech.common.domain.ValueObject;
+    import lombok.Getter;
+
+    @Getter
+    public final class OrderStatus extends ValueObject {
+<span class="fc" id="L8">            private final String value;</span>
+
+<span class="fc" id="L10">            private OrderStatus(String value) {</span>
+<span class="fc" id="L11">                this.value = value;</span>
+<span class="fc" id="L12">            }</span>
+
+<span class="fc" id="L14">            public static final OrderStatus RECEIVED = new OrderStatus(&quot;received&quot;);</span>
+<span class="fc" id="L15">            public static final OrderStatus IN_PREPARATION = new OrderStatus(&quot;in preparation&quot;);</span>
+<span class="fc" id="L16">            public static final OrderStatus READY = new OrderStatus(&quot;ready&quot;);</span>
+<span class="fc" id="L17">            public static final OrderStatus COMPLETED = new OrderStatus(&quot;completed&quot;);</span>
+
+        public static OrderStatus valueOf(String status) {
+<span class="fc" id="L20">            return new OrderStatus(status);</span>
+        }
+
+        @Override
+            public boolean equals(Object o) {
+<span class="fc bfc" id="L25" title="All 2 branches covered.">                if (this == o) return true;</span>
+<span class="pc bpc" id="L26" title="2 of 4 branches missed.">                if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc" id="L27">                OrderStatus that = (OrderStatus) o;</span>
+<span class="fc" id="L28">                return value.equals(that.value);</span>
+            }
+
+            @Override
+            public int hashCode() {
+<span class="nc" id="L33">                return value.hashCode();</span>
+            }
+
+            @Override
+            public String toString() {
+<span class="nc" id="L38">                return &quot;OrderStatus{&quot; +</span>
+                        &quot;status='&quot; + value + '\'' +
+                        '}';
+            }
+    }
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderedItemID.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.ordereditens.domain</a> &gt; <span class="el_source">OrderedItemID.java</span></div><h1>OrderedItemID.java</h1><pre class="source lang-java linenums">package com.fiap.tech.ordereditens.domain;
+
+import com.fiap.tech.common.domain.Identifier;
+import com.fiap.tech.common.domain.ValueObject;
+
+import java.util.Objects;
+import java.util.UUID;
+
+public class OrderedItemID extends Identifier {
+
+    private String value;
+
+<span class="fc" id="L13">    private OrderedItemID(String value) {</span>
+<span class="fc" id="L14">        this.value = value;</span>
+<span class="fc" id="L15">    }</span>
+
+    public static OrderedItemID unique() {
+<span class="fc" id="L18">        return new OrderedItemID(UUID.randomUUID().toString());</span>
+    }
+    public static OrderedItemID from(final String id) {
+<span class="fc" id="L21">        return new OrderedItemID(id);</span>
+    }
+
+    public static OrderedItemID from(final UUID id) {
+<span class="nc" id="L25">        return from(id.toString());</span>
+    }
+
+    public String getValue() {
+<span class="fc" id="L29">        return value;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

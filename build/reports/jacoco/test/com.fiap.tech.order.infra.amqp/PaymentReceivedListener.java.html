@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PaymentReceivedListener.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.infra.amqp</a> &gt; <span class="el_source">PaymentReceivedListener.java</span></div><h1>PaymentReceivedListener.java</h1><pre class="source lang-java linenums">package com.fiap.tech.order.infra.amqp;
+
+
+import com.fiap.tech.common.infra.configuration.Json;
+import com.fiap.tech.order.application.update.UpdateOrderCommand;
+import com.fiap.tech.order.infra.models.PaymentReceivedResult;
+import com.fiap.tech.order.infra.models.ProductionStatusChangedResult;
+import com.fiap.tech.payment.application.receive.ReceivePaymentCommand;
+import com.fiap.tech.payment.application.receive.ReceivePaymentUseCase;
+import com.fiap.tech.payment.domain.PaymentStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Component;
+
+import java.util.Objects;
+
+@Component
+public class PaymentReceivedListener {
+
+<span class="fc" id="L22">    private final static Logger log = LoggerFactory.getLogger(PaymentReceivedListener.class);</span>
+
+    public static final String LISTENER_ID = &quot;paymentReceiveListener&quot;;
+
+    private final ReceivePaymentUseCase receivePaymentUseCase;
+
+<span class="fc" id="L28">    public PaymentReceivedListener(final ReceivePaymentUseCase receivePaymentUseCase) {</span>
+<span class="fc" id="L29">        this.receivePaymentUseCase = Objects.requireNonNull(receivePaymentUseCase);</span>
+<span class="fc" id="L30">    }</span>
+
+    @RabbitListener(id = LISTENER_ID, queues = &quot;${amqp.queues.payment-received.queue}&quot;)
+    public void onProductionStatusChangedMessage(@Payload final String message) {
+        try {
+<span class="fc" id="L35">            final var aResult = Json.readValue(message, PaymentReceivedResult.class);</span>
+
+<span class="fc" id="L37">            log.info(&quot;[message:payment.received.income] [status:{}] [payload:{}]&quot;, aResult.paymentStatus(), message);</span>
+
+<span class="fc" id="L39">            final var aCmd = ReceivePaymentCommand.with(</span>
+<span class="fc" id="L40">                    aResult.paymentID(),</span>
+<span class="fc" id="L41">                    aResult.orderID(),</span>
+<span class="fc" id="L42">                    aResult.clientID(),</span>
+<span class="fc" id="L43">                    aResult.amount(),</span>
+<span class="fc" id="L44">                    aResult.createdAt(),</span>
+<span class="fc" id="L45">                    PaymentStatus.valueOf(aResult.paymentStatus())</span>
+            );
+
+<span class="fc" id="L48">            this.receivePaymentUseCase.execute(aCmd);</span>
+
+<span class="nc" id="L50">        } catch(Exception e) {</span>
+<span class="nc" id="L51">            log.error(&quot;[message:payment.received.income] [status:unknown] [payload:{}] [message:{}]&quot;, message, e.getMessage());</span>
+<span class="fc" id="L52">        }</span>
+<span class="fc" id="L53">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

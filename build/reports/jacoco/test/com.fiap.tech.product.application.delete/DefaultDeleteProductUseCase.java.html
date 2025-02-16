@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultDeleteProductUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.product.application.delete</a> &gt; <span class="el_source">DefaultDeleteProductUseCase.java</span></div><h1>DefaultDeleteProductUseCase.java</h1><pre class="source lang-java linenums">package com.fiap.tech.product.application.delete;
+
+
+
+import com.fiap.tech.product.domain.ProductGateway;
+import com.fiap.tech.product.domain.ProductID;
+
+import java.util.Objects;
+
+public class DefaultDeleteProductUseCase extends DeleteProductUseCase {
+    private final ProductGateway productGateway;
+
+<span class="fc" id="L13">    public DefaultDeleteProductUseCase(final ProductGateway productGateway) {</span>
+<span class="fc" id="L14">        this.productGateway = Objects.requireNonNull(productGateway);</span>
+<span class="fc" id="L15">    }</span>
+
+    @Override
+    public void execute(String anId) {
+<span class="fc" id="L19">        productGateway.deleteById(ProductID.from(anId));</span>
+<span class="fc" id="L20">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
