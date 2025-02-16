@@ -29,7 +29,7 @@ public class PaymentReceivedListener {
         this.receivePaymentUseCase = Objects.requireNonNull(receivePaymentUseCase);
     }
 
-    @RabbitListener(id = LISTENER_ID, queues = "payment.response.queue")
+    @RabbitListener(id = LISTENER_ID, queues = "${amqp.queues.payment-received.queue}")
     public void onProductionStatusChangedMessage(@Payload final String message) {
         try {
             final var aResult = Json.readValue(message, PaymentReceivedResult.class);

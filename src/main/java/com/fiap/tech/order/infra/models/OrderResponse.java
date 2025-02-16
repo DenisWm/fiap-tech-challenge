@@ -14,7 +14,7 @@ public record OrderResponse(
         @JsonProperty("total") BigDecimal total,
         @JsonProperty("status") String status,
         @JsonProperty("items") List<OrderItemResponse> items,
-        @JsonProperty("payment_id") String paymentId // Adicionada a nova propriedade
+        @JsonProperty("payment_id") String paymentId
 ) {
 
     public static OrderResponse from(final OrderOutput output) {
@@ -25,7 +25,7 @@ public record OrderResponse(
                 output.getTotal(),
                 output.getStatus() != null ? output.getStatus().getValue() : null,
                 output.getOrderedItems().stream().map(OrderItemResponse::from).toList(),
-                output.getPaymentId() // Ajuste no método from para incluir a nova propriedade
+                output.getPaymentId()
         );
     }
 

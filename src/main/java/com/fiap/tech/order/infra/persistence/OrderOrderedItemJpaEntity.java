@@ -27,24 +27,6 @@ public class OrderOrderedItemJpaEntity {
         return new OrderOrderedItemJpaEntity(anOrder, orderedItemId);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrderOrderedItemJpaEntity that = (OrderOrderedItemJpaEntity) o;
-
-        if (!Objects.equals(id, that.id)) return false;
-        return Objects.equals(order, that.order);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (order != null ? order.hashCode() : 0);
-        return result;
-    }
-
     public OrderOrderedItemID getId() {
         return id;
     }

@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class Category extends AggregateRoot<CategoryID> {
-
 
     private String name;
 
@@ -22,6 +20,10 @@ public class Category extends AggregateRoot<CategoryID> {
 
     public static Category with(CategoryID id, String name, String description) {
         return new Category(id, name, description);
+    }
+
+    public static Category with(Category aCategory) {
+        return Category.with(aCategory.getId(), aCategory.getName(), aCategory.getDescription());
     }
 
     @Override

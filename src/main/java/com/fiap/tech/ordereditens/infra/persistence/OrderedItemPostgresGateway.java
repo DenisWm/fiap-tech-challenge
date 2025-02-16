@@ -14,11 +14,9 @@ import java.util.Optional;
 @Service
 public class OrderedItemPostgresGateway implements OrderedItemGateway {
     private final OrderedItemRepository repository;
-    private final ProductRepository productRepository;
 
-    public OrderedItemPostgresGateway(OrderedItemRepository repository, ProductRepository productRepository) {
+    public OrderedItemPostgresGateway(OrderedItemRepository repository) {
         this.repository = repository;
-        this.productRepository = productRepository;
     }
 
     @Override

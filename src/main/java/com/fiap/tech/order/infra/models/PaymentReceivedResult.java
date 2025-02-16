@@ -1,9 +1,6 @@
 package com.fiap.tech.order.infra.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fiap.tech.payment.domain.PaymentStatus;
-import com.fiap.tech.payment.domain.PaymentStatusDeserializer;
 
 import java.math.BigDecimal;
 import java.time.Instant;

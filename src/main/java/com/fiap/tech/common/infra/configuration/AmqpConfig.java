@@ -1,10 +1,7 @@
 package com.fiap.tech.common.infra.configuration;
 
 
-import com.fiap.tech.common.infra.annotations.OrderCreatedQueue;
-import com.fiap.tech.common.infra.annotations.OrderEvents;
-import com.fiap.tech.common.infra.annotations.OrderPayedQueue;
-import com.fiap.tech.common.infra.annotations.ProductionStatusChangedQueue;
+import com.fiap.tech.common.infra.annotations.*;
 import com.fiap.tech.common.infra.configuration.amqp.QueueProperties;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -35,6 +32,13 @@ public class AmqpConfig {
     @ConfigurationProperties("amqp.queues.production-status-changed")
     @ProductionStatusChangedQueue
     public QueueProperties productionStatusChangedQueueProperties() {
+        return new QueueProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties("amqp.queues.payment-received")
+    @PaymentReceivedQueue
+    public QueueProperties paymentReceivedQueueProperties() {
         return new QueueProperties();
     }
 

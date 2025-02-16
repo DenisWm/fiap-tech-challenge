@@ -21,7 +21,15 @@ public class OrderOutput {
     private OrderStatus status;
     private String paymentId;
 
-    public OrderOutput(String id, Instant timestamp, BigDecimal total, List<OrderedItemOutput> orderedItems, OrderedItemOutput.OrderedItemClientOutput client, OrderStatus status, String paymentId) {
+    public OrderOutput(
+            String id,
+            Instant timestamp,
+            BigDecimal total,
+            List<OrderedItemOutput> orderedItems,
+            OrderedItemOutput.OrderedItemClientOutput client,
+            OrderStatus status,
+            String paymentId
+    ) {
         this.id = id;
         this.timestamp = timestamp;
         this.total = total;
@@ -40,7 +48,7 @@ public class OrderOutput {
                 new ArrayList<>(),
                 null,
                 aOrder.getStatus(),
-                aOrder.getPaymentId().getValue()
+                aOrder.getPaymentId() != null ? aOrder.getPaymentId().getValue() : null
         );
     }
 

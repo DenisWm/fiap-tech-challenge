@@ -8,9 +8,9 @@ public class ClientValidator extends Validator {
 
     public static final int NAME_MAX_LENGTH = 255;
     public static final int NAME_MIN_LENGTH = 1;
-    public static final String NAME_SHOULD_NOT_BE_NULL = "'productId' should not be null";
-    public static final String NAME_SHOULD_NOT_BE_EMPTY = "'productId' should not be empty";
-    public static final String NAME_MUST_BE_BETWEEN_1_AND_255_CHARACTERS = "'productId' must be between 1 and 255 characters";
+    public static final String NAME_SHOULD_NOT_BE_NULL = "'name' should not be null";
+    public static final String NAME_SHOULD_NOT_BE_EMPTY = "'name' should not be empty";
+    public static final String NAME_MUST_BE_BETWEEN_1_AND_255_CHARACTERS = "'name' must be between 1 and 255 characters";
     private final Client client;
 
     protected ClientValidator(ValidationHandler aHandler, Client client) {

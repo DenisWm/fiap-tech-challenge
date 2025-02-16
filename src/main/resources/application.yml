@@ -1,0 +1,77 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  health:
+    readinessState:
+      enabled: 'true'
+    livenessState:
+      enabled: 'true'
+  prometheus:
+    metrics:
+      export:
+        enabled: 'true'
+  server:
+    port: '8081'
+  endpoint:
+    health:
+      probes:
+        enabled: 'true'
+      show-details: always
+    prometheus:
+      enabled: 'true'
+spring:
+  flyway:
+    enabled: 'true'
+    locations: classpath:/db/migration
+  rabbitmq:
+    password: ${AMQP_PASSWORD:123456}
+    host: ${AMQP_HOST:localhost}
+    port: ${AMQP_PORT:5672}
+    username: ${AMQP_USER:adm_order}
+  elasticsearch:
+    rest:
+      uris: http://elasticsearch:9200
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
+      "[hibernate.generate_statistics]": false
+      "[hibernate.connection.provider_disables_autocommit]": true
+  datasource:
+    url: jdbc:postgresql://${postgres.url}/${postgres.schema}
+    username: ${postgres.username}
+    password: ${postgres.password}
+
+amqp:
+  queues:
+    order-payed:
+      queue: order.payed.queue
+      routing-key: order.payed
+      exchange: order.events
+    order-created:
+      routing-key: order.created
+      exchange: order.events
+      queue: order.created.queue
+    production-status-changed:
+      routing-key: production.status-changed
+      queue: production.status-changed.queue
+      exchange: production.events
+    payment-received:
+      routing-key: payment.events
+      queue: payment.response
+      exchange: payment.response.queue
+logging:
+  level:
+    org:
+      springframework:
+        nodeValue: INFO
+        web: INFO
+    root: INFO
+    com:
+      fiap:
+        tech: DEBUG
