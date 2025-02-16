@@ -86,7 +86,7 @@ public class ProductPostgresGateway implements ProductGateway {
     }
 
     private Specification<ProductJpaEntity> assembleSpecification(final String category) {
-        return SpecificationUtils.equal("categoryId", category);
+        return SpecificationUtils.equalsProp("categoryId", category);
     }
 
     private ProductJpaEntity save(Product aProduct) {
