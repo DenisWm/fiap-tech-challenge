@@ -100,7 +100,9 @@ public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
 
         if (itemCommands.size() != existsIDs.size()) {
             final var missingIds = itemCommands.stream().map(ItemCommand::productID).collect(Collectors.toSet());
-            existsIDs.forEach(missingIds::remove);
+            if(!missingIds.isEmpty()) {
+                existsIDs.forEach(missingIds::remove);
+            }
 
             return Notification.create(new Error("Some items couldn't be found: %s".formatted(missingIds.stream().collect(Collectors.joining(", ")))));
         }
