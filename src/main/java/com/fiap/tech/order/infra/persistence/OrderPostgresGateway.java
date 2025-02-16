@@ -116,6 +116,6 @@ public class OrderPostgresGateway implements OrderGateway {
     }
 
     private Specification<OrderJpaEntity> assembleSpecification(final String client) {
-        return SpecificationUtils.equal("clientId", client);
+        return SpecificationUtils.equalsProp("clientId", client);
     }
 }
