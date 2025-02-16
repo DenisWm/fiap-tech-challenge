@@ -11,8 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class DeleteProductUseCaseTest extends UseCaseTest {
 
@@ -34,5 +33,7 @@ class DeleteProductUseCaseTest extends UseCaseTest {
         doNothing().when(productGateway).deleteById(any());
 
         useCase.execute(expectedId.getValue());
+
+        verify(productGateway, times(1)).deleteById(expectedId);
     }
 }

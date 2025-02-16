@@ -72,7 +72,6 @@ class CategoryPostgresGatewayTest {
 
         final var aResult = categoryGateway.existsByIds(expectedId);
 
-        assertNotNull(aResult);
         assertTrue(aResult);
 
         final var actualCategory = categoryGateway.findById(aCategory.getId()).get();
