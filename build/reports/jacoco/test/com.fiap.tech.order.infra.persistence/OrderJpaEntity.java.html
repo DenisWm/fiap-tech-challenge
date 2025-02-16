@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderJpaEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.infra.persistence</a> &gt; <span class="el_source">OrderJpaEntity.java</span></div><h1>OrderJpaEntity.java</h1><pre class="source lang-java linenums">package com.fiap.tech.order.infra.persistence;
+
+import com.fiap.tech.client.domain.ClientID;
+import com.fiap.tech.order.domain.Order;
+import com.fiap.tech.order.domain.OrderID;
+import com.fiap.tech.order.domain.OrderStatus;
+import com.fiap.tech.ordereditens.domain.OrderedItemID;
+import com.fiap.tech.payment.domain.PaymentID;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Entity(name = &quot;Order&quot;)
+@Table(name = &quot;orders&quot;)
+public class OrderJpaEntity {
+
+    @Id
+    private String id;
+    private Instant timestamp;
+    private String clientId;
+    private String paymentId;
+    private BigDecimal total;
+    private String status;
+    @OneToMany(mappedBy = &quot;order&quot;, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set&lt;OrderOrderedItemJpaEntity&gt; orderedItems;
+
+<span class="fc" id="L31">    public OrderJpaEntity() {</span>
+<span class="fc" id="L32">    }</span>
+
+<span class="fc" id="L34">    public OrderJpaEntity(String id, Instant timestamp, String clientId, String paymentId, BigDecimal total, String status) {</span>
+<span class="fc" id="L35">        this.id = id;</span>
+<span class="fc" id="L36">        this.timestamp = timestamp;</span>
+<span class="fc" id="L37">        this.orderedItems = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L38">        this.clientId = clientId;</span>
+<span class="fc" id="L39">        this.paymentId = paymentId;</span>
+<span class="fc" id="L40">        this.total = total;</span>
+<span class="fc" id="L41">        this.status = status;</span>
+<span class="fc" id="L42">    }</span>
+
+
+    public static OrderJpaEntity from(final Order order) {
+<span class="fc" id="L46">        final var entity = new OrderJpaEntity(</span>
+<span class="fc" id="L47">                order.getId().getValue(),</span>
+<span class="fc" id="L48">                order.getTimestamp(),</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">                order.getClientId() != null ? order.getClientId().getValue() : null,</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">                order.getPaymentId() != null ? order.getPaymentId().getValue() : null,</span>
+<span class="fc" id="L51">                order.getTotal(),</span>
+<span class="fc" id="L52">                order.getStatus().getValue()</span>
+        );
+<span class="fc" id="L54">        order.getOrderedItems().forEach(it -&gt; entity.addOrderedItem(it));</span>
+<span class="fc" id="L55">        return entity;</span>
+    }
+
+    public static Order with(
+            final OrderID orderID,
+            final Instant timestamp,
+            final List&lt;OrderedItemID&gt; orderedItems,
+            final BigDecimal total,
+            final OrderStatus status,
+            final ClientID clientId,
+            final PaymentID paymentId
+    ) {
+<span class="nc" id="L67">        return new Order(orderID, timestamp, orderedItems, total, status, clientId, paymentId);</span>
+    }
+
+    public Order toAggregate() {
+<span class="fc" id="L71">        return Order.with(</span>
+<span class="fc" id="L72">                OrderID.from(this.id),</span>
+                this.timestamp,
+<span class="fc" id="L74">                getOrderedItemIDs(),</span>
+                this.total,
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                this.status != null ? OrderStatus.valueOf(this.status) : null,</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">                this.clientId != null ? ClientID.from(this.clientId) : null,</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">                this.paymentId != null ? PaymentID.from(this.paymentId) : null</span>
+
+        );
+    }
+
+
+    private void addOrderedItem(final OrderedItemID anId) {
+<span class="fc" id="L85">        this.orderedItems.add(OrderOrderedItemJpaEntity.from(this, anId));</span>
+<span class="fc" id="L86">    }</span>
+
+    public String getId() {
+<span class="fc" id="L89">        return id;</span>
+    }
+
+    public Instant getTimestamp() {
+<span class="nc" id="L93">        return timestamp;</span>
+    }
+
+    public String getClientId() {
+<span class="nc" id="L97">        return clientId;</span>
+    }
+
+    public BigDecimal getTotal() {
+<span class="nc" id="L101">        return total;</span>
+    }
+
+    public Set&lt;OrderOrderedItemJpaEntity&gt; getOrderedItems() {
+<span class="nc" id="L105">        return orderedItems;</span>
+    }
+
+    public List&lt;OrderedItemID&gt; getOrderedItemIDs() {
+<span class="fc" id="L109">        return orderedItems.stream()</span>
+<span class="fc" id="L110">                .map(it -&gt; OrderedItemID.from(it.getId().getOrderedItemId())).toList();</span>
+    }
+
+    public void setOrderedItems(Set&lt;OrderOrderedItemJpaEntity&gt; orderedItems) {
+<span class="nc" id="L114">        this.orderedItems = orderedItems;</span>
+<span class="nc" id="L115">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

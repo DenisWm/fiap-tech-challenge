@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderOrderedItemJpaEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.infra.persistence</a> &gt; <span class="el_source">OrderOrderedItemJpaEntity.java</span></div><h1>OrderOrderedItemJpaEntity.java</h1><pre class="source lang-java linenums">package com.fiap.tech.order.infra.persistence;
+
+import com.fiap.tech.ordereditens.domain.OrderedItemID;
+
+import javax.persistence.*;
+import java.util.Objects;
+
+@Entity
+@Table(name = &quot;ordered_items&quot;)
+public class OrderOrderedItemJpaEntity {
+    @EmbeddedId
+    private OrderOrderedItemID id;
+
+    @ManyToOne
+    @MapsId(&quot;orderId&quot;)
+    private OrderJpaEntity order;
+
+<span class="fc" id="L18">    public OrderOrderedItemJpaEntity() {</span>
+<span class="fc" id="L19">    }</span>
+
+<span class="fc" id="L21">    public OrderOrderedItemJpaEntity(final OrderJpaEntity anOrder, final OrderedItemID orderedItemId) {</span>
+<span class="fc" id="L22">        this.id = OrderOrderedItemID.from(anOrder.getId(), orderedItemId.getValue());</span>
+<span class="fc" id="L23">        this.order = anOrder;</span>
+<span class="fc" id="L24">    }</span>
+
+    public static OrderOrderedItemJpaEntity from(final OrderJpaEntity anOrder, final OrderedItemID orderedItemId) {
+<span class="fc" id="L27">        return new OrderOrderedItemJpaEntity(anOrder, orderedItemId);</span>
+    }
+
+    public OrderOrderedItemID getId() {
+<span class="fc" id="L31">        return id;</span>
+    }
+
+    public void setId(OrderOrderedItemID id) {
+<span class="nc" id="L35">        this.id = id;</span>
+<span class="nc" id="L36">    }</span>
+
+    public OrderJpaEntity getOrder() {
+<span class="nc" id="L39">        return order;</span>
+    }
+
+    public void setOrder(OrderJpaEntity order) {
+<span class="nc" id="L43">        this.order = order;</span>
+<span class="nc" id="L44">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

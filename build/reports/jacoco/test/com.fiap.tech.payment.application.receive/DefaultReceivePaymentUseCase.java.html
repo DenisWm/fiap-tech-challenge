@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultReceivePaymentUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.payment.application.receive</a> &gt; <span class="el_source">DefaultReceivePaymentUseCase.java</span></div><h1>DefaultReceivePaymentUseCase.java</h1><pre class="source lang-java linenums">package com.fiap.tech.payment.application.receive;
+
+import com.fiap.tech.order.domain.Order;
+import com.fiap.tech.order.domain.OrderGateway;
+import com.fiap.tech.order.domain.OrderID;
+import com.fiap.tech.order.domain.event.OrderPayed;
+import com.fiap.tech.ordereditens.domain.OrderedItem;
+import com.fiap.tech.ordereditens.domain.OrderedItemGateway;
+import com.fiap.tech.ordereditens.domain.OrderedItemID;
+import com.fiap.tech.payment.domain.Payment;
+import com.fiap.tech.payment.domain.PaymentGateway;
+import com.fiap.tech.payment.domain.PaymentID;
+import com.fiap.tech.product.domain.ProductGateway;
+
+import java.util.List;
+import java.util.Objects;
+
+import static com.fiap.tech.order.domain.event.OrderPayed.*;
+
+public class DefaultReceivePaymentUseCase extends ReceivePaymentUseCase {
+
+    private final PaymentGateway paymentGateway;
+    private final OrderGateway orderGateway;
+    private final OrderedItemGateway orderedItemGateway;
+    private final ProductGateway productGateway;
+
+    public DefaultReceivePaymentUseCase(final PaymentGateway paymentGateway,
+                                        final OrderGateway orderGateway,
+                                        final OrderedItemGateway orderedItemGateway,
+<span class="fc" id="L30">                                        final ProductGateway productGateway) {</span>
+<span class="fc" id="L31">        this.paymentGateway = Objects.requireNonNull(paymentGateway);</span>
+<span class="fc" id="L32">        this.orderGateway = Objects.requireNonNull(orderGateway);</span>
+<span class="fc" id="L33">        this.orderedItemGateway = Objects.requireNonNull(orderedItemGateway);</span>
+<span class="fc" id="L34">        this.productGateway = Objects.requireNonNull(productGateway);</span>
+<span class="fc" id="L35">    }</span>
+
+    @Override
+    public ReceivePaymentOutput execute(final ReceivePaymentCommand aCmd) {
+<span class="fc" id="L39">        return orderGateway.findById(OrderID.from(aCmd.orderID()))</span>
+<span class="fc" id="L40">                .map(order -&gt; processOrderPayment(order, aCmd))</span>
+<span class="pc" id="L41">                .orElseGet(() -&gt; ReceivePaymentOutput.from(paymentGateway.create(Payment.unidentified())));</span>
+    }
+
+    private ReceivePaymentOutput processOrderPayment(Order order, ReceivePaymentCommand aCmd) {
+<span class="fc" id="L45">        final var payment = Payment.receivePayment(</span>
+<span class="fc" id="L46">                PaymentID.from(aCmd.paymentID()),</span>
+<span class="fc" id="L47">                aCmd.amount(),</span>
+<span class="fc" id="L48">                aCmd.createdAt(),</span>
+<span class="fc" id="L49">                aCmd.status()</span>
+        );
+
+<span class="fc" id="L52">        final var updatedOrder = order.setPaymentId(PaymentID.from(aCmd.paymentID()));</span>
+
+<span class="fc" id="L54">        final var orderedItems = fetchOrderedItems(updatedOrder);</span>
+<span class="fc" id="L55">        final var items = mapToOrderPayedItems(orderedItems);</span>
+
+<span class="fc" id="L57">        updatedOrder.registerEvent(new OrderPayed(updatedOrder.getId().getValue(), items));</span>
+<span class="fc" id="L58">        orderGateway.update(updatedOrder);</span>
+
+<span class="fc" id="L60">        return ReceivePaymentOutput.from(paymentGateway.create(payment));</span>
+    }
+
+    private List&lt;OrderedItem&gt; fetchOrderedItems(final Order updatedOrder) {
+<span class="fc" id="L64">        var orderedItemIds = updatedOrder.getOrderedItems().stream()</span>
+<span class="fc" id="L65">                .map(OrderedItemID::getValue)</span>
+<span class="fc" id="L66">                .toList();</span>
+<span class="fc" id="L67">        return orderedItemGateway.findByIds(orderedItemIds);</span>
+    }
+
+    private List&lt;Item&gt; mapToOrderPayedItems(final List&lt;OrderedItem&gt; orderedItems) {
+<span class="fc" id="L71">        var productIds = orderedItems.stream()</span>
+<span class="fc" id="L72">                .map(item -&gt; item.getProduct().getValue())</span>
+<span class="fc" id="L73">                .toList();</span>
+
+<span class="fc" id="L75">        var products = productGateway.findByIds(productIds);</span>
+
+<span class="fc" id="L77">        return products.stream()</span>
+<span class="fc" id="L78">                .map(product -&gt; {</span>
+<span class="fc" id="L79">                    int quantity = orderedItems.stream()</span>
+<span class="fc" id="L80">                            .filter(item -&gt; item.getProduct().equals(product.getId()))</span>
+<span class="fc" id="L81">                            .map(OrderedItem::getQuantity)</span>
+<span class="fc" id="L82">                            .findFirst()</span>
+<span class="fc" id="L83">                            .orElse(0);</span>
+
+<span class="fc" id="L85">                    return Item.with(product.getId().getValue(), product.getName(), quantity);</span>
+                })
+<span class="fc" id="L87">                .toList();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

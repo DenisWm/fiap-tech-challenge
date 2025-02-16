@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultUpdateProductUseCase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.product.application.update</a> &gt; <span class="el_source">DefaultUpdateProductUseCase.java</span></div><h1>DefaultUpdateProductUseCase.java</h1><pre class="source lang-java linenums">package com.fiap.tech.product.application.update;
+
+import com.fiap.tech.categories.domain.CategoryGateway;
+import com.fiap.tech.categories.domain.CategoryID;
+import com.fiap.tech.common.domain.exceptions.NotificationException;
+import com.fiap.tech.common.domain.validation.Error;
+import com.fiap.tech.common.domain.validation.ValidationHandler;
+import com.fiap.tech.common.domain.validation.handler.Notification;
+import com.fiap.tech.product.domain.Product;
+import com.fiap.tech.product.domain.ProductGateway;
+import com.fiap.tech.product.domain.ProductID;
+
+import java.util.Objects;
+
+import static com.fiap.tech.common.application.utils.IDNotFoundUtils.notFound;
+
+
+public class DefaultUpdateProductUseCase extends UpdateProductUseCase {
+    private final ProductGateway productGateway;
+    private final CategoryGateway categoryGateway;
+
+<span class="fc" id="L22">    public DefaultUpdateProductUseCase(final ProductGateway productGateway, final CategoryGateway categoryGateway) {</span>
+<span class="fc" id="L23">        this.productGateway = Objects.requireNonNull(productGateway);</span>
+<span class="fc" id="L24">        this.categoryGateway = Objects.requireNonNull(categoryGateway);</span>
+<span class="fc" id="L25">    }</span>
+
+    @Override
+    public UpdateProductOutput execute(final UpdateProductCommand aCommand) {
+<span class="fc" id="L29">        final var anId = ProductID.from(aCommand.id());</span>
+<span class="fc" id="L30">        final var aName = aCommand.name();</span>
+<span class="fc" id="L31">        final var aPrice = aCommand.price();</span>
+<span class="fc" id="L32">        final var aDescription = aCommand.description();</span>
+<span class="fc" id="L33">        final var aCategoryID = aCommand.categoryID();</span>
+
+<span class="fc" id="L35">        final var aProduct = productGateway.findById(anId).orElseThrow(notFound(anId, Product.class));</span>
+
+<span class="fc" id="L37">        final var notification = Notification.create();</span>
+
+<span class="fc" id="L39">        notification.append(validateCategory(aCategoryID));</span>
+
+<span class="fc" id="L41">        notification.validate(() -&gt; aProduct.update(aName, aDescription, aPrice));</span>
+
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (notification.hasErrors()) {</span>
+<span class="fc" id="L44">            throw new NotificationException(&quot;Could not create Aggregate Product&quot;, notification);</span>
+        }
+
+<span class="fc" id="L47">        aProduct.setCategory(CategoryID.from(aCategoryID));</span>
+
+<span class="fc" id="L49">        return UpdateProductOutput.from(this.productGateway.update(aProduct));</span>
+    }
+
+    private ValidationHandler validateCategory(final String aCategoryID) {
+<span class="fc" id="L53">        final var notification = Notification.create();</span>
+
+<span class="pc bpc" id="L55" title="1 of 4 branches missed.">        if (aCategoryID == null || aCategoryID.isBlank()){</span>
+<span class="fc" id="L56">            return notification.append(new Error(&quot;Not allowed create a product without a category&quot;));</span>
+        }
+
+<span class="fc" id="L59">        final var hasCategory = categoryGateway.existsByIds(CategoryID.from(aCategoryID));</span>
+
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if(!hasCategory){</span>
+<span class="fc" id="L62">            notification.append(new Error(&quot;Category with id %s was not found&quot;.formatted(aCategoryID)));</span>
+        }
+<span class="fc" id="L64">        return notification;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Order.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.domain</a> &gt; <span class="el_source">Order.java</span></div><h1>Order.java</h1><pre class="source lang-java linenums">package com.fiap.tech.order.domain;
+
+import com.fiap.tech.client.domain.ClientID;
+import com.fiap.tech.common.domain.AggregateRoot;
+import com.fiap.tech.common.domain.validation.ValidationHandler;
+import com.fiap.tech.ordereditens.domain.OrderedItemID;
+import com.fiap.tech.payment.domain.PaymentID;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Order extends AggregateRoot&lt;OrderID&gt; {
+
+    private Instant timestamp;
+
+    private List&lt;OrderedItemID&gt; orderedItems;
+
+    private BigDecimal total;
+
+    private OrderStatus status;
+
+    private ClientID clientId;
+
+    private PaymentID paymentId;
+
+    public Order(
+            final OrderID orderID,
+            final Instant timestamp,
+            final List&lt;OrderedItemID&gt; orderedItems,
+            final BigDecimal total,
+            final OrderStatus status,
+            final ClientID clientId,
+            final PaymentID paymentId
+    ) {
+<span class="fc" id="L37">        super(orderID);</span>
+<span class="fc" id="L38">        this.timestamp = timestamp;</span>
+<span class="fc" id="L39">        this.orderedItems = orderedItems;</span>
+<span class="fc" id="L40">        this.total = total;</span>
+<span class="fc" id="L41">        this.status = status;</span>
+<span class="fc" id="L42">        this.clientId = clientId;</span>
+<span class="fc" id="L43">        this.paymentId = paymentId;</span>
+<span class="fc" id="L44">    }</span>
+
+    public static Order newOrder(
+            final BigDecimal total,
+            final List&lt;OrderedItemID&gt; orderedItems,
+            final ClientID clientID
+    ) {
+<span class="fc" id="L51">        final var now = Instant.now();</span>
+<span class="fc" id="L52">        final var orderID = OrderID.unique();</span>
+<span class="fc" id="L53">        final var status = OrderStatus.RECEIVED;</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        final var order = new Order(orderID, now, orderedItems != null ? orderedItems : new ArrayList&lt;&gt;(), total, status, clientID, null);</span>
+
+
+<span class="fc" id="L57">        return order;</span>
+    }
+
+    public Order update(final OrderStatus status) {
+<span class="fc" id="L61">        this.status = status;</span>
+<span class="fc" id="L62">        return this;</span>
+    }
+
+
+    public static Order with(
+            final OrderID orderID,
+            final Instant timestamp,
+            final List&lt;OrderedItemID&gt; orderedItems,
+            final BigDecimal total,
+            final OrderStatus status,
+            final ClientID clientId,
+            final PaymentID paymentID
+    ) {
+<span class="fc" id="L75">        return new Order(orderID,</span>
+                timestamp,
+                orderedItems,
+                total,
+                status,
+                clientId,
+                paymentID);
+    }
+
+    public static Order with(final Order order) {
+<span class="fc" id="L85">        return with(</span>
+<span class="fc" id="L86">                order.getId(),</span>
+<span class="fc" id="L87">                order.getTimestamp(),</span>
+<span class="fc" id="L88">                order.getOrderedItems(),</span>
+<span class="fc" id="L89">                order.getTotal(),</span>
+<span class="fc" id="L90">                order.getStatus(),</span>
+<span class="fc" id="L91">                order.getClientId(),</span>
+<span class="fc" id="L92">                order.getPaymentId()</span>
+        );
+    }
+
+    @Override
+    public void validate(final ValidationHandler handler) {
+
+<span class="nc" id="L99">    }</span>
+
+    public Instant getTimestamp() {
+<span class="fc" id="L102">        return timestamp;</span>
+    }
+
+    public void setTimestamp(Instant timestamp) {
+<span class="nc" id="L106">        this.timestamp = timestamp;</span>
+<span class="nc" id="L107">    }</span>
+
+    public ClientID getClientId() {
+<span class="fc" id="L110">        return clientId;</span>
+    }
+
+    public void setClientId(ClientID clientId) {
+<span class="nc" id="L114">        this.clientId = clientId;</span>
+<span class="nc" id="L115">    }</span>
+
+    public PaymentID getPaymentId() {
+<span class="fc" id="L118">        return paymentId;</span>
+    }
+
+    public Order setPaymentId(PaymentID paymentId) {
+<span class="fc" id="L122">        this.paymentId = paymentId;</span>
+<span class="fc" id="L123">        return this;</span>
+    }
+
+    public List&lt;OrderedItemID&gt; getOrderedItems() {
+<span class="fc" id="L127">        return orderedItems;</span>
+    }
+
+    public void setOrderedItems(List&lt;OrderedItemID&gt; orderedItems) {
+<span class="fc" id="L131">        this.orderedItems = orderedItems;</span>
+<span class="fc" id="L132">    }</span>
+
+    public BigDecimal getTotal() {
+<span class="fc" id="L135">        return total;</span>
+    }
+
+    public void setTotal(BigDecimal total) {
+<span class="fc" id="L139">        this.total = total;</span>
+<span class="fc" id="L140">    }</span>
+
+    public OrderStatus getStatus() {
+<span class="fc" id="L143">        return status;</span>
+    }
+
+    public void setStatus(OrderStatus status) {
+<span class="nc" id="L147">        this.status = status;</span>
+<span class="nc" id="L148">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
