@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.infra.api.controllers</a> &gt; <span class="el_source">OrderController.java</span></div><h1>OrderController.java</h1><pre class="source lang-java linenums">package com.fiap.tech.order.infra.api.controllers;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OrderController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">fiap-tech-challenge</a> &gt; <a href="index.source.html" class="el_package">com.fiap.tech.order.infra.api.controllers</a> &gt; <span class="el_source">OrderController.java</span></div><h1>OrderController.java</h1><pre class="source lang-java linenums">package com.fiap.tech.order.infra.api.controllers;
 
 import com.fiap.tech.common.domain.pagination.Pagination;
 import com.fiap.tech.order.application.create.CreateOrderCommand;
@@ -35,14 +35,14 @@ public class OrderController implements OrderAPI {
 
     @Override
     public ResponseEntity&lt;?&gt; createOrder(final CreateOrderRequest input) {
-<span class="nc" id="L38">        final var aCommand = CreateOrderCommand.with(</span>
-<span class="nc" id="L39">                input.clientId(),</span>
-<span class="nc" id="L40">                input.items().stream()</span>
-<span class="nc" id="L41">                        .map(item -&gt; ItemCommand.with(item.productId(), item.quantity()))</span>
-<span class="nc" id="L42">                        .toList()</span>
+<span class="fc" id="L38">        final var aCommand = CreateOrderCommand.with(</span>
+<span class="fc" id="L39">                input.clientId(),</span>
+<span class="fc" id="L40">                input.items().stream()</span>
+<span class="fc" id="L41">                        .map(item -&gt; ItemCommand.with(item.productId(), item.quantity()))</span>
+<span class="fc" id="L42">                        .toList()</span>
         );
-<span class="nc" id="L44">        final var output = this.createOrderUseCase.execute(aCommand);</span>
-<span class="nc" id="L45">        return ResponseEntity.created(URI.create(&quot;/orders/&quot; + output.id())).body(output);</span>
+<span class="fc" id="L44">        final var output = this.createOrderUseCase.execute(aCommand);</span>
+<span class="fc" id="L45">        return ResponseEntity.created(URI.create(&quot;/orders/&quot; + output.id())).body(output);</span>
     }
 
     @Override
