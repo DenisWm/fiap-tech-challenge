@@ -1,10 +1,8 @@
 package com.fiap.tech.order.infra.persistence;
 
-import com.fiap.tech.common.domain.events.DomainEvent;
 import com.fiap.tech.common.domain.pagination.Pagination;
 import com.fiap.tech.common.infra.annotations.OrderCreatedQueue;
 import com.fiap.tech.common.infra.annotations.OrderPayedQueue;
-import com.fiap.tech.common.infra.annotations.ProductionStatusChangedQueue;
 import com.fiap.tech.common.infra.utils.SpecificationUtils;
 import com.fiap.tech.common.service.EventService;
 import com.fiap.tech.order.domain.Order;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -106,11 +103,11 @@ public class OrderPostgresGateway implements OrderGateway {
     }
 
     private void sendDomainEvents(final Order anOrder) {
-        if(anOrder.getDomainEvents().isEmpty()) {
+        if (anOrder.getDomainEvents().isEmpty()) {
             return;
         }
         anOrder.getDomainEvents().forEach(domainEvent -> {
-            if(domainEvent instanceof OrderCreated) {
+            if (domainEvent instanceof OrderCreated) {
                 orderCreatedEventService.send(domainEvent);
             } else if (domainEvent instanceof OrderPayed) {
                 orderPayedEventService.send(domainEvent);

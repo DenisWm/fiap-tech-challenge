@@ -1,0 +1,18 @@
+amqp:
+  host: ${AMQP_RABBIT_HOST}
+  port: ${AMQP_RABBIT_PORT}
+  username: ${AMQP_RABBIT_USERNAME}
+  password: ${AMQP_RABBIT_PASSWORD}
+
+postgres:
+  username: ${DATABASE_POSTGRES_USERNAME:postgres}
+  password: ${DATABASE_POSTGRES_PASSWORD:postgres}
+  schema: lanchonete
+  url: ${DATABASE_POSTGRES_URL:localhost:5433}
+
+spring:
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none

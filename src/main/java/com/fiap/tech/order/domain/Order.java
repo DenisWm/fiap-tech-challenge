@@ -1,16 +1,10 @@
 package com.fiap.tech.order.domain;
 
+import com.fiap.tech.client.domain.ClientID;
 import com.fiap.tech.common.domain.AggregateRoot;
 import com.fiap.tech.common.domain.validation.ValidationHandler;
-import com.fiap.tech.client.domain.ClientID;
-import com.fiap.tech.order.domain.event.OrderCreated;
 import com.fiap.tech.ordereditens.domain.OrderedItemID;
-import com.fiap.tech.payment.domain.Payment;
 import com.fiap.tech.payment.domain.PaymentID;
-import com.fiap.tech.payment.domain.PaymentStatus;
-import com.fiap.tech.product.domain.ProductID;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -77,7 +71,7 @@ public class Order extends AggregateRoot<OrderID> {
             final OrderStatus status,
             final ClientID clientId,
             final PaymentID paymentID
-    ){
+    ) {
         return new Order(orderID,
                 timestamp,
                 orderedItems,
@@ -87,7 +81,7 @@ public class Order extends AggregateRoot<OrderID> {
                 paymentID);
     }
 
-    public static Order with(final Order order){
+    public static Order with(final Order order) {
         return with(
                 order.getId(),
                 order.getTimestamp(),

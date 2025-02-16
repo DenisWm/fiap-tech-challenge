@@ -63,9 +63,5 @@ public class PaymentJpaEntity {
         return timestamp;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
 }
 

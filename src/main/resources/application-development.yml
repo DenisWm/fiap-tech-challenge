@@ -1,0 +1,13 @@
+postgres:
+  username: postgres
+  password: postgres
+  schema: lanchonete
+  url: localhost:5433
+
+amqp:
+  admin:
+    auto-create: true
+  host: localhost
+  port: 5672
+  username: adm_order
+  password: 123456

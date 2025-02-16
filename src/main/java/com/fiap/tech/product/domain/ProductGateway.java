@@ -15,7 +15,6 @@ public interface ProductGateway {
     Product update(Product aProduct);
     void deleteById(ProductID anId);
 
-
     List<ProductID> existsByIds(List<String> products);
 
     List<Product> findByIds(List<String> productIds);

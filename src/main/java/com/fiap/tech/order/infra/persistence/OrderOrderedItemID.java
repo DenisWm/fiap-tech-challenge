@@ -40,21 +40,4 @@ public class OrderOrderedItemID implements Serializable {
         this.orderedItemId = orderedItemId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrderOrderedItemID that = (OrderOrderedItemID) o;
-
-        if (!Objects.equals(orderId, that.orderId)) return false;
-        return Objects.equals(orderedItemId, that.orderedItemId);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = orderId != null ? orderId.hashCode() : 0;
-        result = 31 * result + (orderedItemId != null ? orderedItemId.hashCode() : 0);
-        return result;
-    }
 }

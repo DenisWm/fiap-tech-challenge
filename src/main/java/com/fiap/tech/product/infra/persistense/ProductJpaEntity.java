@@ -6,6 +6,8 @@ import com.fiap.tech.product.domain.Product;
 import com.fiap.tech.product.domain.ProductID;
 import javax.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,7 +15,8 @@ import java.math.BigDecimal;
 
 @Entity(name="Product")
 @Table(name="products")
-@Data
+@Getter
+@Setter
 public class ProductJpaEntity {
 
     @Id
