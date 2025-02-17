@@ -13,6 +13,7 @@ import com.fiap.tech.ordereditens.domain.OrderedItem;
 import com.fiap.tech.ordereditens.domain.OrderedItemGateway;
 import com.fiap.tech.product.domain.Product;
 import com.fiap.tech.product.domain.ProductGateway;
+import com.fiap.tech.product.domain.ProductID;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -96,15 +97,17 @@ public class DefaultCreateOrderUseCase extends CreateOrderUseCase {
         if (itemCommands == null || itemCommands.isEmpty()) {
             return Notification.create(new Error("Order must have at least one product."));
         }
-        final var existsIDs = productGateway.existsByIds(itemCommands.stream().map(ItemCommand::productID).toList());
+        final var ids = itemCommands.stream().map(ItemCommand::productID).toList();
 
-        if (itemCommands.size() != existsIDs.size()) {
-            final var missingIds = itemCommands.stream().map(ItemCommand::productID).collect(Collectors.toSet());
-            if(!missingIds.isEmpty()) {
-                existsIDs.forEach(missingIds::remove);
-            }
+        final var retrievedIds = productGateway.existsByIds(ids);
 
-            return Notification.create(new Error("Some items couldn't be found: %s".formatted(missingIds.stream().collect(Collectors.joining(", ")))));
+        if (ids.size() != retrievedIds.size()) {
+            final var missingIds = new ArrayList<>(ids);
+            missingIds.removeAll(retrievedIds.stream().map(ProductID::getValue).toList());
+
+            final var missingIdsMessage = String.join(", ", missingIds);
+
+            return Notification.create(new Error("Some items couldn't be found: %s".formatted(missingIdsMessage)));
         }
         return Notification.create();
     }
