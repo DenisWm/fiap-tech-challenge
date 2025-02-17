@@ -4,7 +4,7 @@ logging:
 
 postgres:
   username: postgres
-  password: postgres
+  password: ${DATABASE_POSTGRES_PASSWORD:postgres}
   schema: producao
   url: localhost:${postgres.port}
 
