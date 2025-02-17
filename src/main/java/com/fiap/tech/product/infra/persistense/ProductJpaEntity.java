@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @Entity(name="Product")
 @Table(name="products")
 @Getter
-@Setter
 public class ProductJpaEntity {
 
     @Id

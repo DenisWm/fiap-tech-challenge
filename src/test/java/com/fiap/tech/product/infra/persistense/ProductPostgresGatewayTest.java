@@ -197,6 +197,38 @@ class ProductPostgresGatewayTest {
         assertEquals(expectedTotal, aResult.items().size());
     }
 
+
+    @Test
+    void givenProductWithBlankCategoryId_whenFindAll_thenShouldProduct() {
+        final var aCategory = categoryRepository.saveAndFlush(
+                CategoryJpaEntity.from(
+                        new Category(CategoryID.unique(), "categoryName", "description"))).toAggregate();
+        assertEquals(0, productRepository.count());
+
+        final var aProduct = Product.newProduct("Lanche", "description", BigDecimal.valueOf(1.0));
+        aProduct.setCategory(aCategory.getId());
+
+        productGateway.create(aProduct);
+
+        final var expectedPage = 0;
+        final var expectedPerPage = 10;
+        final var expectedTotal = 1;
+        final var expectedCategoryId = "";
+        final var expectedSort = "name";
+        final var expectedDir = "asc";
+
+        assertEquals(1, productRepository.count());
+
+        final var aQuery = new ProductSearchQuery(expectedPage, expectedPerPage, expectedCategoryId, expectedSort, expectedDir);
+
+        final var aResult = productGateway.findAll(aQuery);
+
+        assertEquals(expectedPage, aResult.currentPage());
+        assertEquals(expectedPerPage, aResult.perPage());
+        assertEquals(expectedTotal, aResult.total());
+        assertEquals(expectedTotal, aResult.items().size());
+    }
+
     @Test
     void givenProduct_whenDeleteById_thenShouldDelete() {
         final var aCategory = categoryRepository.saveAndFlush(

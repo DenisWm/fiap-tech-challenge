@@ -2,6 +2,7 @@ package com.fiap.tech.categories.domain;
 
 import com.fiap.tech.common.domain.AggregateRoot;
 import com.fiap.tech.common.domain.validation.ValidationHandler;
+import com.fiap.tech.common.domain.validation.handler.ThrowsValidationHandler;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class Category extends AggregateRoot<CategoryID> {
         super(aCategoryId);
         this.name= aName;
         this.description = aDescription;
+        validate(new ThrowsValidationHandler());
     }
 
     public static Category with(CategoryID id, String name, String description) {

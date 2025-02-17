@@ -82,4 +82,39 @@ class CreateOrderUseCaseTest extends UseCaseTest {
         assertEquals(expectedItems.get(0).quantity(), aOrderedItem.getQuantity());
         assertEquals(expectedItems.get(0).productID(), aOrderedItem.getProduct().getValue());
     }
+
+    @Test
+    void givenValidCmdWithNullClientId_whenCallsCreate_thenShouldSuccess() {
+        final var aProduct = Product.newProduct("Product", "Description", BigDecimal.TEN);
+        final var expectedItems = List.of(ItemCommand.with(aProduct.getId().getValue(), 5));
+
+        when(productGateway.existsByIds(any())).thenReturn(List.of(aProduct.getId()));
+        when(productGateway.findByIds(any())).thenReturn(List.of(aProduct));
+        when(orderedItemGateway.create(any())).thenAnswer(returnsFirstArg());
+        when(orderGateway.create(any())).thenAnswer(returnsFirstArg());
+
+        final var aCmd = CreateOrderCommand.with(null, expectedItems);
+
+        final var aResult = useCase.execute(aCmd);
+
+        assertNotNull(aResult);
+        assertNotNull(aResult.id());
+
+        final var captorOrder = ArgumentCaptor.forClass(Order.class);
+        final var captorOrderedItem = ArgumentCaptor.forClass(OrderedItem.class);
+
+        verify(orderGateway).create(captorOrder.capture());
+        verify(orderedItemGateway).create(captorOrderedItem.capture());
+
+        final var aOrder = captorOrder.getValue();
+        final var aOrderedItem = captorOrderedItem.getValue();
+
+        assertNotNull(aOrder);
+        assertEquals(null, aOrder.getClientId());
+        assertEquals(aProduct.getId(), aOrderedItem.getProduct());
+        assertEquals(aProduct.getId(), aOrderedItem.getProduct());
+        assertEquals(aProduct.getPrice(), aOrderedItem.getPrice());
+        assertEquals(expectedItems.get(0).quantity(), aOrderedItem.getQuantity());
+        assertEquals(expectedItems.get(0).productID(), aOrderedItem.getProduct().getValue());
+    }
 }
