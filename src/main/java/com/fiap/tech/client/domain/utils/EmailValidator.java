@@ -7,7 +7,7 @@ public final class EmailValidator {
 
     private EmailValidator(){}
 
-    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(\\.[a-zA-Z0-9_+&*-]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,7})+$";
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]++(?:\\.[a-zA-Z0-9_+&*-]++)*+@[a-zA-Z0-9-]++(?:\\.[a-zA-Z]{2,7})++$";
 
     public static boolean isEmailValid(String email) {
         if (email == null) return false;
