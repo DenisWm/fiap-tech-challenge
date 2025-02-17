@@ -86,7 +86,6 @@ class CreateOrderUseCaseTest extends UseCaseTest {
     @Test
     void givenValidCmdWithNullClientId_whenCallsCreate_thenShouldSuccess() {
         final var aProduct = Product.newProduct("Product", "Description", BigDecimal.TEN);
-        final String expectedClientId = null;
         final var expectedItems = List.of(ItemCommand.with(aProduct.getId().getValue(), 5));
 
         when(productGateway.existsByIds(any())).thenReturn(List.of(aProduct.getId()));
@@ -94,7 +93,7 @@ class CreateOrderUseCaseTest extends UseCaseTest {
         when(orderedItemGateway.create(any())).thenAnswer(returnsFirstArg());
         when(orderGateway.create(any())).thenAnswer(returnsFirstArg());
 
-        final var aCmd = CreateOrderCommand.with(expectedClientId, expectedItems);
+        final var aCmd = CreateOrderCommand.with(null, expectedItems);
 
         final var aResult = useCase.execute(aCmd);
 
@@ -111,7 +110,7 @@ class CreateOrderUseCaseTest extends UseCaseTest {
         final var aOrderedItem = captorOrderedItem.getValue();
 
         assertNotNull(aOrder);
-        assertEquals(expectedClientId, aOrder.getClientId());
+        assertEquals(null, aOrder.getClientId());
         assertEquals(aProduct.getId(), aOrderedItem.getProduct());
         assertEquals(aProduct.getId(), aOrderedItem.getProduct());
         assertEquals(aProduct.getPrice(), aOrderedItem.getPrice());
